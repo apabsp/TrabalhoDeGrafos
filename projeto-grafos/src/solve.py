@@ -12,6 +12,7 @@ OUTPUT_DIR = 'out'
 FILE_OUT_GLOBAL = os.path.join(OUTPUT_DIR, 'recife_global.json')
 FILE_OUT_MICRO = os.path.join(OUTPUT_DIR, 'microrregioes.json')
 FILE_OUT_EGO = os.path.join(OUTPUT_DIR, 'ego_bairro.csv')
+FILE_OUT_GRAUS = os.path.join(OUTPUT_DIR, 'graus.csv')
 
 # ===================================================================
 # PARTE 1: CONSTRUÇÃO DO GRAFO
@@ -214,3 +215,51 @@ def analisar_ego_redes(grafo_principal: Grafo, df_adjacencias: pd.DataFrame):
         print(f"Erro ao salvar '{FILE_OUT_EGO}': {e}")
     
     return df_ego_final
+
+
+'''
+    Graus e Rankings ( Pergunta 4 )
+
+'''
+
+def analisar_graus_e_rankings(grafo_principal: Grafo):
+    """
+    Ponto 4 da entrega: Calculando graus, gerando ranking e identificando bairro MAIS DENSO(maior densidade_ego) e bairro com MAIOR GRAU.
+
+    Salvar em out/graus.csv
+    
+    """
+
+    print("\n--- 4. Análise: Graus e Rankings")
+
+    lista_graus = []
+    for bairro in grafo_principal.get_todos_os_nos():
+        # Adding every bairo's grau
+        vizinhos = grafo_principal.get_vizinhos(bairro)
+        grau = len(vizinhos) if vizinhos is not None else 0 #gotta be a better way to write this though. checklater
+
+        lista_graus.append({"bairro": bairro, "grau": grau})
+    
+    df_graus = pd.DataFrame(lista_graus)
+
+
+    # Save
+    try:
+        df_graus.to_csv(FILE_OUT_GRAUS, index = False)
+        print(f"Lista de graus salva em '{FILE_OUT_GRAUS}'")
+    except Exception as e:
+        print(f"Erro ao salvar '{FILE_OUT_GRAUS}': {e}")
+
+    #Highest grau
+
+    try:
+        idx_max_grau = df_graus['grau'].idxmax() #indexMax
+        bairro_max_grau = df_graus.loc[idx_max_grau, 'bairro']
+        max_grau= df_graus.loc[idx_max_grau, 'grau']
+
+        print(f"\n Bairro com o maior grau {bairro_max_grau}, onde grau = {max_grau}")
+
+    except Exception as e:
+        print(f"Erro ao encontrar maior grau: {e}")
+
+    #Highest density 

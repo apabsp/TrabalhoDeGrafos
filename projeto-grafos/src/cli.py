@@ -1,7 +1,5 @@
-# Em: src/cli.py
-
 import os
-from . import solve 
+from src import solve 
 
 # Define o nome da pasta de saída
 OUTPUT_DIR = 'out'

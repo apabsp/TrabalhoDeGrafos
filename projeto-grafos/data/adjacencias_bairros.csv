@@ -158,97 +158,97 @@ brejo da guabiraba,passarinho,rua santa teresa,,1.0
 brejo da guabiraba,brejo do beberibe,avenida vereador otacilio de azevedo,,1.0
 brejo da guabiraba,nova descoberta,rua alto do reservatorio,,1.0
 brejo da guabiraba,corrego do jenipapo,rua alto do reservatorio,,1.0
-guabiraba,pau-ferro,,,1.0
-guabiraba,passarinho,,,1.0
-guabiraba,corrego do jenipapo,,,1.0
-macaxeira,nova descoberta,,,1.0
-macaxeira,corrego do jenipapo,,,1.0
-nova descoberta,corrego do jenipapo,,,1.0
-nova descoberta,brejo do beberibe,,,1.0
-passarinho,brejo do beberibe,,,1.0
-cordeiro,san martin,,,1.0
-cordeiro,prado,,,1.0
-cordeiro,zumbi,,,1.0
-cordeiro,torroes,,,1.0
-cordeiro,engenho do meio,,,1.0
-cordeiro,iputinga,,,1.0
-cordeiro,torre,,,1.0
-ilha do retiro,afogados,,,1.0
-iputinga,cidade universitaria,,,1.0
-iputinga,varzea,,,1.0
-iputinga,caxanga,,,1.0
-madalena,ilha do retiro,,,1.0
-madalena,prado,,,1.0
-madalena,zumbi,,,1.0
-madalena,torre,,,1.0
-prado,zumbi,,,1.0
-prado,ilha do retiro,,,1.0
-prado,afogados,,,1.0
-prado,bongi,,,1.0
-prado,san martin,,,1.0
-torre,zumbi,,,1.0
-engenho do meio,torroes,,,1.0
-engenho do meio,curado,,,1.0
-engenho do meio,cidade universitaria,,,1.0
-engenho do meio,iputinga,,,1.0
-torroes,san martin,,,1.0
-torroes,curado,,,1.0
-caxanga,varzea,,,1.0
-cidade universitaria,curado,,,1.0
-varzea,cidade universitaria,,,1.0
-varzea,curado,,,1.0
-afogados,bongi,,,1.0
-afogados,mustardinha,,,1.0
-afogados,mangueira,,,1.0
-afogados,jiquia,,,1.0
-afogados,imbiribeira,,,1.0
+guabiraba,pau-ferro,estrada do orfanato,,1.0
+guabiraba,passarinho,br-101,,1.0
+guabiraba,corrego do jenipapo,estrada dos macacos,,1.0
+macaxeira,nova descoberta,rua corrego da areia,,1.0
+macaxeira,corrego do jenipapo,rua anita,,1.0
+nova descoberta,corrego do jenipapo,rua alto da brasileira,,1.0
+nova descoberta,brejo do beberibe,rua nova descoberta,,1.0
+passarinho,brejo do beberibe,rua doutor antonio da rosa borges,,1.0
+cordeiro,san martin,avenida general san martin,,1.0
+cordeiro,prado,rua gregorio junior,,1.0
+cordeiro,zumbi,avenida caxangá,,1.0
+cordeiro,torroes,estrada do forte,,1.0
+cordeiro,engenho do meio,rua miguel vieira ferreira,,1.0
+cordeiro,iputinga,avenida caxanga,,1.0
+cordeiro,torre,rua dianopolis,,1.0
+ilha do retiro,afogados,estrada dos remedios,,1.0
+iputinga,cidade universitaria,br-101,,1.0
+iputinga,varzea,br-101,,1.0
+iputinga,caxanga,avenida caxanga,,1.0
+madalena,ilha do retiro,estarda dos remedios,,1.0
+madalena,prado,rua carlos gomes,,1.0
+madalena,zumbi,avenida caxanga,,1.0
+madalena,torre,rua jose bonifacio,,1.0
+prado,zumbi,rua austro costa,,1.0
+prado,ilha do retiro,avenida engenheiro abdias de carvalho,,1.0
+prado,afogados,rua cosme viana,,1.0
+prado,bongi,avenida engenheiro brandao cavalcante,,1.0
+prado,san martin,rua xavier sobrinho,,1.0
+torre,zumbi,rua conde de iraja,via praca professor barreto campelo,1.0
+engenho do meio,torroes,rua lindolfo color,,1.0
+engenho do meio,curado,br-101,,1.0
+engenho do meio,cidade universitaria,br-101,,1.0
+engenho do meio,iputinga,rua antonio curado,,1.0
+torroes,san martin,avenida engenheiro abdias de carvalho,,1.0
+torroes,curado,avenida engenheiro abdias de carvalho,,1.0
+caxanga,varzea,rua ribeiro pessoa,,1.0
+cidade universitaria,curado,avenida professor luiz freire,,1.0
+varzea,cidade universitaria,rua amaro gomes poroca,,1.0
+varzea,curado,rua ministro mario andreaza,,1.0
+afogados,bongi,estrada do bongi,,1.0
+afogados,mustardinha,rua joselandia,,1.0
+afogados,mangueira,rua 21 de abril,,1.0
+afogados,jiquia,rua sao miguel,,1.0
+afogados,imbiribeira,avenida marechal mascarenhas de morais,,1.0
 afogados,pina,,,1.0
-bongi,mustardinha,,,1.0
-bongi,san martin,,,1.0
-mangueira,jiquia,,,1.0
-mangueira,san martin,,,1.0
-mangueira,mustardinha,,,1.0
-mustardinha,san martin,,,1.0
-san martin,jiquia,,,1.0
-san martin,estancia,,,1.0
-san martin,curado,,,1.0
-san martin,jardim sao paulo,,,1.0
-areias,estancia,,,1.0
-areias,jiquia,,,1.0
-areias,imbiribeira,,,1.0
-areias,ipsep,,,1.0
-areias,cacote,,,1.0
-areias,ibura,,,1.0
-areias,barro,,,1.0
-areias,jardim sao paulo,,,1.0
-cacote,ipsep,,,1.0
-cacote,ibura,,,1.0
-estancia,jardim sao paulo,,,1.0
-estancia,jiquia,,,1.0
-jiquia,imbiribeira,,,1.0
-barro,jardim sao paulo,,,1.0
-barro,tejipio,,,1.0
-barro,ibura,,,1.0
-barro,cohab,,,1.0
-coqueiral,toto,,,1.0
-coqueiral,tejipio,,,1.0
-coqueiral,sancho,,,1.0
-curado,jardim sao paulo,,,1.0
-curado,sancho,,,1.0
-curado,toto,,,1.0
-curado,tejipio,,,1.0
-jardim sao paulo,tejipio,,,1.0
-sancho,toto,,,1.0
-sancho,tejipio,,,1.0
-boa viagem,jordao,,,1.0
-boa viagem,ibura,,,1.0
-boa viagem,imbiribeira,,,1.0
-boa viagem,pina,,,1.0
-brasilia teimosa,pina,,,1.0
+bongi,mustardinha,avenida manoel goncalves da luz,,1.0
+bongi,san martin,rua isaac markman,,1.0
+mangueira,jiquia,avenida central,,1.0
+mangueira,san martin,rua 21 de abril,,1.0
+mangueira,mustardinha,rua joao elisio,,1.0
+mustardinha,san martin,rua 21 de abril,,1.0
+san martin,jiquia,rua tenente mindelo,,1.0
+san martin,estancia,avenida joao cabral de melo neto,,1.0
+san martin,curado,rua 21 de abril,,1.0
+san martin,jardim sao paulo,avenida joao cabral de melo neto,,1.0
+areias,estancia,avenida doutor jose rufino,,1.0
+areias,jiquia,avenida tapajos,,1.0
+areias,imbiribeira,ponte julia santiago,acesso via avenida tapajos,1.0
+areias,ipsep,avenida recife,,1.0
+areias,cacote,avenida recife,,1.0
+areias,ibura,rua jurupata,,1.0
+areias,barro,avenida doutor jose rufino,,1.0
+areias,jardim sao paulo,avenida sao paulo,,1.0
+cacote,ipsep,avenida recife,,1.0
+cacote,ibura,rua dona ana aurora,,1.0
+estancia,jardim sao paulo,rua senador alberto pasqualini,,1.0
+estancia,jiquia,avenida doutor jose rufino,,1.0
+jiquia,imbiribeira,ponte julia santiago,acesso via avenida tapajos,1.0
+barro,jardim sao paulo,br-101,,1.0
+barro,tejipio,rua do sancho,,1.0
+barro,ibura,br-101,,1.0
+barro,cohab,avenida engenheiro serra verde,,1.0
+coqueiral,toto,rua paulino de farias,,1.0
+coqueiral,tejipio,rua alcantara,,1.0
+coqueiral,sancho,rua paulino de farias,,1.0
+curado,jardim sao paulo,avenida piracicaba,,1.0
+curado,sancho,avenida liberdade,,1.0
+curado,toto,avenida liberdade,,1.0
+curado,tejipio,avenida liberdade,,1.0
+jardim sao paulo,tejipio,rua leandro barreto,,1.0
+sancho,toto,rua do nascente,,1.0
+sancho,tejipio,rua aprigio,,1.0
+boa viagem,jordao,avenida marechal mascarenhas de morais,,1.0
+boa viagem,ibura,avenida marechal mascarenhas de morais,,1.0
+boa viagem,imbiribeira,avenida marechal mascarenhas de morais,,1.0
+boa viagem,pina,avenida boa viagem,,1.0
+brasilia teimosa,pina,rua eduardo jorge,,1.0
 imbiribeira,pina,,,1.0
-imbiribeira,ipsep,,,1.0
-imbiribeira,ibura,,,1.0
-ipsep,ibura,,,1.0
-ibura,jordao,,,1.0
-ibura,cohab,,,1.0
-jordao,cohab,,,1.0
+imbiribeira,ipsep,rua jean emile favre,,1.0
+imbiribeira,ibura,avenida marechal mascarenhas de morais,,1.0
+ipsep,ibura,rua sao nicolau,,1.0
+ibura,jordao,avenida maria irene,,1.0
+ibura,cohab,br-101,,1.0
+jordao,cohab,br-101,,1.0

@@ -1,14 +1,14 @@
 bairro_origem,bairro_destino,logradouro,observacao,peso
-recife,santo amaro,avenida norte,acesso via ponte do limoeiro,1.0
-recife,santo antonio,avenida rio branco,acesso via ponte buarque de macedo,1.0
-recife,sao jose,avenida alfredo lisboa,acesso via ponte giratoria,1.0
-santo amaro,santo antonio,rua princesa isabel,acesso via ponte princesa isabel,1.0
+recife,santo amaro,ponte do limoeiro,acesso via avenida norte,1.0
+recife,santo antonio,ponte buarque de macedo,acesso via avenida rio branco,1.0
+recife,sao jose,ponte giratória,acesso via avenida alfredo lisboa,1.0
+santo amaro,santo antonio,ponte princesa isabel,acesso via rua princesa isabel,1.0
 santo amaro,boa vista,rua do hospicio,,1.0
 santo amaro,soledade,rua bispo cardoso ayres,,1.0
 santo amaro,espinheiro,avenida joao de barros,,1.0
 santo amaro,torreao,avenida norte,,1.0
 santo amaro,campo grande,avenida doutor jaime da fonte,,1.0
-boa vista,santo antonio,avenida conde da boa vista,acesso via ponte duarte coelho,1.0
+boa vista,santo antonio,ponte duarte coelho,acesso via avenida conde da boa vista,1.0
 boa vista,coelhos,rua jose de alencar,,1.0
 boa vista,ilha do leite,rua joaquim de brito,,1.0
 boa vista,paissandu,rua general joaquim inacio,,1.0
@@ -16,14 +16,14 @@ boa vista,derby,avenida governador carlos de lima cavalcanti,,1.0
 boa vista,gracas,rua doutor bandeira filho,,1.0
 boa vista,espinheiro,rua buenos aires,,1.0
 boa vista,soledade,rua da soledade,,1.0
-cabanga,pina,rua saturnino de brito,acesso via ponte governador paulo guerra,1.0
+cabanga,pina,ponte governador paulo guerra,acesso via rua saturnino de brito,1.0
 cabanga,afogados,rua nova da cabanga,,1.0
 cabanga,sao jose,rua bituri,acesso via pontilhao - passagem inferior,1.0
 ilha do leite,coelhos,rua estado de israel,,1.0
-ilha do leite,ilha joana bezerra,avenida governador agamenon magalhaes,acesso via ponte jose barros lima,1.0
+ilha do leite,ilha joana bezerra,ponte jose barros lima,acesso via avenida governador agamenon magalhaes,1.0
 ilha do leite,paissandu,rua general joaquim inacio,,1.0
-paissandu,ilha joana bezerra,avenida governador agamenon magalhaes,acesso via ponte jose barros lima,1.0
-paissandu,ilha do retiro,rua sport club do recife,acesso via ponte prefeito lima e castro,1.0
+paissandu,ilha joana bezerra,ponte jose barros lima,acesso via avenida governador agamenon magalhaes,1.0
+paissandu,ilha do retiro,ponte prefeito lima e castro,acesso via rua sport club do recife,1.0
 paissandu,derby,avenida governador agamenon magalhaes,,1.0
 santo antonio,sao jose,avenida dantas barreto,,1.0
 santo antonio,coelhos,rua doutor jose mariano,,1.0
@@ -32,9 +32,9 @@ sao jose,pina,,,1.0
 sao jose,afogados,,,1.0
 sao jose,ilha joana bezerra,rua cabo eutropio,acesso via pontilhao - passagem inferior,1.0
 sao jose,coelhos,,,1.0
-coelhos,ilha joana bezerra,rua dos coelhos,acesso via ponte viaduto poeta joaquim cardoso,1.0
+coelhos,ilha joana bezerra,ponte viaduto poeta joaquim cardoso,acesso via rua dos coelhos,1.0
 ilha joana bezerra,afogados,,,1.0
-ilha joana bezerra,ilha do retiro,avenida beira rio,acesso via ponte gregorio bezerra,1.0
+ilha joana bezerra,ilha do retiro,ponte gregorio bezerra,acesso via avenida beira rio,1.0
 arruda,campo grande,rua maio sete,,1.0
 arruda,ponto de parada,avenida beberibe,,1.0
 arruda,tamarineira,estrada velha de agua fria,,1.0
@@ -117,15 +117,15 @@ casa forte,parnamirim,avenida dezessete de agosto,,1.0
 casa forte,santana,rua samuel de farias,,1.0
 casa forte,poco,estrada das ubaias,,1.0
 derby,ilha do retiro,rua sport club do recife,acesso via ponte prefeito lima e castro,1.0
-derby,madalena,rua doutor severino pinheiro,acesso via ponte estacio coimbra via praca do derby,1.0
+derby,madalena,ponte estacio coimbra,acesso via rua doutor severino pinheiro,1.0
 derby,gracas,rua das creoulas,,1.0
-dois irmaos,caxanga,rua manoel de medeiros,acesso via ponte volta ao mundo,1.0
+dois irmaos,caxanga,ponte volta ao mundo,acesso via rua manoel de medeiros,1.0
 dois irmaos,sitio dos pintos,estrada dos pintos,,1.0
 dois irmaos,guabiraba,estrada sitio sapucaia,,1.0
 dois irmaos,corrego do jenipapo,avenida da recuperacao,,1.0
 espinheiro,gracas,rua da hora,,1.0
-gracas,madalena,rua joaquim nabuco,via ponte professor moraes rego,1.0
-gracas,torre,rua amelia,via ponte da torre,1.0
+gracas,madalena,ponte professor moraes rego,via rua joaquim nabuco,1.0
+gracas,torre,ponte da torre,acesso via rua amelia,1.0
 gracas,jaqueira,rua do futuro,,1.0
 gracas,tamarineira,avenida conselheiro rosa e silva,,1.0
 jaqueira,torre,,,1.0
@@ -139,7 +139,7 @@ parnamirim,tamarineira,rua padre roma,,1.0
 poco da panela,santana,rua santanna,,1.0
 poco da panela,cordeiro,,,1.0
 poco da panela,iputinga,,,1.0
-santana,torre,rua jose bonifacio,via viaduto governador cordeiro farias,1.0
+santana,torre,viaduto governador cordeiro farias,acesso via rua jose bonifacio,1.0
 santana,cordeiro,,,1.0
 sitio dos pintos,caxanga,rua manoel de medeiros,,1.0
 tamarineira,alto jose do pinho,avenida norte,,1.0
@@ -186,7 +186,7 @@ prado,ilha do retiro,avenida engenheiro abdias de carvalho,,1.0
 prado,afogados,rua cosme viana,,1.0
 prado,bongi,avenida engenheiro brandao cavalcante,,1.0
 prado,san martin,rua xavier sobrinho,,1.0
-torre,zumbi,rua conde de iraja,via praca professor barreto campelo,1.0
+torre,zumbi,rua conde de iraja,acesso via praca professor barreto campelo,1.0
 engenho do meio,torroes,rua lindolfo color,,1.0
 engenho do meio,curado,br-101,,1.0
 engenho do meio,cidade universitaria,br-101,,1.0

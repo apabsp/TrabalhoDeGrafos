@@ -27,6 +27,7 @@ def main():
         solve.analisar_grafo_completo(G)
         solve.analisar_microrregioes(df_bairros, df_adj)
         solve.analisar_ego_redes(G, df_adj)
+        solve.analisar_graus_e_rankings(G)            # exibe bairro com maior grau e bairro mais denso
         
         print(f"\nAnálise concluída. Arquivos de saída gerados em '{OUTPUT_DIR}/'.")
     else:

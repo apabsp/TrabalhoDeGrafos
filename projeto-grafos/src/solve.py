@@ -257,7 +257,8 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
         bairro_max_grau = df_graus.loc[idx_max_grau, 'bairro']
         max_grau= df_graus.loc[idx_max_grau, 'grau']
 
-        print(f"\n Bairro com o maior grau {bairro_max_grau}, onde grau = {max_grau}")
+        #Print abaixo comentado, pois o resultado já é exibido em Highest density
+        #print(f"\n Bairro com o maior grau {bairro_max_grau}, onde grau = {max_grau}")
 
     except Exception as e:
         print(f"Erro ao encontrar maior grau: {e}")

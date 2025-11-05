@@ -27,13 +27,10 @@ paissandu,ilha do retiro,ponte prefeito lima e castro,acesso via rua sport club 
 paissandu,derby,avenida governador agamenon magalhaes,,4.0
 santo antonio,sao jose,avenida dantas barreto,,4.0
 santo antonio,coelhos,ponte 6 de marco,acesso via travessa cais da detencao,3.0
-sao jose,brasilia teimosa,,,0.0
-sao jose,pina,,,0.0
 sao jose,afogados,ponte de afogados,acesso via rua imperial,3.0
 sao jose,ilha joana bezerra,rua cabo eutropio,acesso via pontilhao - passagem inferior,3.0
 sao jose,coelhos,ponte viaduto poeta joaquim cardoso,acesso via avenida central,3.0
 coelhos,ilha joana bezerra,ponte viaduto poeta joaquim cardoso,acesso via rua dos coelhos,3.0
-ilha joana bezerra,afogados,,,0.0
 ilha joana bezerra,ilha do retiro,ponte gregorio bezerra,acesso via avenida beira rio,3.0
 arruda,campo grande,rua maio sete,,3.0
 arruda,ponto de parada,avenida beberibe,,4.0
@@ -86,10 +83,10 @@ porto da madeira,beberibe,avenida beberibe,,4.0
 beberibe,linha do tiro,rua uriel de holanda,,3.0
 beberibe,dois unidos,avenida hildebrando de vasconcelos,,4.0
 dois unidos,linha do tiro,rua guaraja,,3.0
-dois unidos,brejo do beberibe,rua da paz,,3.0
+dois unidos,brejo de beberibe,rua da paz,,3.0
 dois unidos,passarinho,rua compositor raul valenca,,3.0
 linha do tiro,alto jose bonifacio,rua alto da saudade,,3.0
-linha do tiro,brejo do beberibe,rua uriel de holanda,,3.0
+linha do tiro,brejo de beberibe,rua uriel de holanda,,3.0
 aflitos,espinheiro,rua quarenta e oito,,3.0
 aflitos,gracas,avenida santos dumont,,4.0
 alto do mandu,casa amarela,rua mandacaru,,3.0
@@ -137,25 +134,22 @@ monteiro,iputinga,ponte engenheiro jaime gusmao,acesso via rua pinto campos,3.0
 parnamirim,santana,rua leonardo cavalcante,,3.0
 parnamirim,tamarineira,rua padre roma,,3.0
 poco da panela,santana,rua santanna,,3.0
-poco da panela,cordeiro,,,0.0
-poco da panela,iputinga,,,0.0
 santana,torre,viaduto governador cordeiro farias,acesso via rua jose bonifacio,4.0
-santana,cordeiro,,,0.0
 sitio dos pintos,caxanga,rua manoel de medeiros,,3.0
 tamarineira,alto jose do pinho,avenida norte,,4.0
 tamarineira,mangabeira,avenida professor jose dos anjos,,4.0
 alto jose bonifacio,alto jose do pinho,rua corrego jose,,3.0
 alto jose bonifacio,morro da conceicao,rua corrego do euclides,,3.0
 alto jose bonifacio,vasco da gama,rua ary peter,,3.0
-alto jose bonifacio,brejo do beberibe,rua uriel de holanda,,3.0
+alto jose bonifacio,brejo de beberibe,rua uriel de holanda,,3.0
 mangabeira,alto jose do pinho,rua severino bernardo pereira,,3.0
 alto jose do pinho,morro da conceicao,rua corrego bartolomeu,,3.0
 morro da conceicao,vasco da gama,rua dois de fevereiro,,3.0
-vasco da gama,brejo do beberibe,avenida vereador otacilio de azevedo,,4.0
+vasco da gama,brejo de beberibe,avenida vereador otacilio de azevedo,,4.0
 vasco da gama,nova descoberta,rua vasco da gama,,3.0
 brejo da guabiraba,guabiraba,br-101,,5.0
 brejo da guabiraba,passarinho,rua santa teresa,,3.0
-brejo da guabiraba,brejo do beberibe,avenida vereador otacilio de azevedo,,4.0
+brejo da guabiraba,brejo de beberibe,avenida vereador otacilio de azevedo,,4.0
 brejo da guabiraba,nova descoberta,rua alto do reservatorio,,3.0
 brejo da guabiraba,corrego do jenipapo,rua alto do reservatorio,,3.0
 guabiraba,pau-ferro,estrada do orfanato,,3.0
@@ -164,8 +158,8 @@ guabiraba,corrego do jenipapo,br-101,,5.0
 macaxeira,nova descoberta,rua corrego do eucalipto,,3.0
 macaxeira,corrego do jenipapo,rua alto do cruzeiro,,3.0
 nova descoberta,corrego do jenipapo,rua alto do reservatorio,,3.0
-nova descoberta,brejo do beberibe,rua nova descoberta,,3.0
-passarinho,brejo do beberibe,rua doutor antonio da rosa borges,,3.0
+nova descoberta,brejo de beberibe,rua nova descoberta,,3.0
+passarinho,brejo de beberibe,rua doutor antonio da rosa borges,,3.0
 cordeiro,san martin,avenida general san martin,,4.0
 cordeiro,prado,rua gomes taborda,,3.0
 cordeiro,zumbi,avenida caxangá,,4.0
@@ -202,7 +196,6 @@ afogados,mustardinha,rua 21 de abril,,3.0
 afogados,mangueira,rua 21 de abril,,3.0
 afogados,jiquia,rua sao miguel,,3.0
 afogados,imbiribeira,ponte motocolombo, acesso via rua motocolombo,3.0
-afogados,pina,,,0.0
 bongi,mustardinha,avenida manoel goncalves da luz,,4.0
 bongi,san martin,rua isaac markman,,3.0
 mangueira,jiquia,rua bom jardim,,3.0
@@ -246,7 +239,6 @@ boa viagem,imbiribeira,avenida dom joao vi,,4.0
 boa viagem,pina,avenida boa viagem,,4.0
 boa viagem,setubal,rua barao de souza leao,,3.0
 brasilia teimosa,pina,rua eduardo jorge,,3.0
-imbiribeira,pina,,,0.0
 imbiribeira,ipsep,rua jean emile favre,,3.0
 imbiribeira,ibura,avenida marechal mascarenhas de morais,,4.0
 ipsep,ibura,rua sao nicolau,,3.0

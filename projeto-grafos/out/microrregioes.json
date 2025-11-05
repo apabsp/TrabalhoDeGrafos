@@ -7,8 +7,8 @@
     },
     {
         "ordem": 7,
-        "tamanho": 10,
-        "densidade": 0.47619047619047616,
+        "tamanho": 7,
+        "densidade": 0.3333333333333333,
         "microrregiao": 1.2
     },
     {
@@ -19,15 +19,21 @@
     },
     {
         "ordem": 9,
-        "tamanho": 12,
-        "densidade": 0.3333333333333333,
+        "tamanho": 16,
+        "densidade": 0.4444444444444444,
         "microrregiao": 2.1
     },
     {
-        "ordem": 9,
-        "tamanho": 9,
-        "densidade": 0.25,
+        "ordem": 6,
+        "tamanho": 8,
+        "densidade": 0.5333333333333333,
         "microrregiao": 2.2
+    },
+    {
+        "ordem": 3,
+        "tamanho": 3,
+        "densidade": 1.0,
+        "microrregiao": 2.3
     },
     {
         "ordem": 16,
@@ -43,32 +49,32 @@
     },
     {
         "ordem": 8,
-        "tamanho": 7,
-        "densidade": 0.25,
+        "tamanho": 13,
+        "densidade": 0.4642857142857143,
         "microrregiao": 3.3
     },
     {
         "ordem": 7,
-        "tamanho": 9,
-        "densidade": 0.42857142857142855,
+        "tamanho": 11,
+        "densidade": 0.5238095238095238,
         "microrregiao": 4.1
     },
     {
         "ordem": 2,
-        "tamanho": 0,
-        "densidade": 0.0,
+        "tamanho": 1,
+        "densidade": 1.0,
         "microrregiao": 4.2
     },
     {
         "ordem": 3,
-        "tamanho": 3,
-        "densidade": 1.0,
+        "tamanho": 2,
+        "densidade": 0.6666666666666666,
         "microrregiao": 4.3
     },
     {
         "ordem": 5,
-        "tamanho": 6,
-        "densidade": 0.6,
+        "tamanho": 8,
+        "densidade": 0.8,
         "microrregiao": 5.1
     },
     {
@@ -79,14 +85,14 @@
     },
     {
         "ordem": 7,
-        "tamanho": 10,
-        "densidade": 0.47619047619047616,
+        "tamanho": 12,
+        "densidade": 0.5714285714285714,
         "microrregiao": 5.3
     },
     {
-        "ordem": 5,
-        "tamanho": 6,
-        "densidade": 0.6,
+        "ordem": 6,
+        "tamanho": 5,
+        "densidade": 0.3333333333333333,
         "microrregiao": 6.1
     },
     {

@@ -268,7 +268,7 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
         idx_max_grau = df_graus['grau'].idxmax()
         bairro_max_grau = df_graus.loc[idx_max_grau, 'bairro']
         max_grau = df_graus.loc[idx_max_grau, 'grau']
-        print(f"\nBairro com maior grau: {bairro_max_grau} (grau = {max_grau})")
+        print(f"\nBairro com maior grau: {bairro_max_grau} (grau = {max_grau})\n")
 
     #Highest densidade_ego
 
@@ -279,6 +279,12 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
             bairro_max_densidade = df_ego.loc[idx_max_densidade, 'bairro']
             max_densidade = df_ego.loc[idx_max_densidade, 'densidade_ego']
             print(f"Bairro mais denso (maior densidade_ego): {bairro_max_densidade} (densidade_ego = {max_densidade:.4f})")
+
+            # Mostrar todos os bairros com a mesma densidade máxima
+            bairros_max_densidade = [b for b in df_ego[df_ego['densidade_ego'] == max_densidade]['bairro'].tolist() if b != bairro_max_densidade]
+            if len(bairros_max_densidade) > 1:
+                print("Outros bairros com a mesma densidade máxima:", ", ".join(bairros_max_densidade))
+
         else:
             print("não foi possível determinar o bairro mais denso. Verifique 'ego_bairro.csv'")
     except Exception as e:

@@ -11,7 +11,7 @@ santo amaro,campo grande,avenida doutor jaime da fonte,,4.0
 boa vista,santo antonio,ponte da boa vista,acesso via rua da imperatriz,2.0
 boa vista,coelhos,rua jose de alencar,,3.0
 boa vista,ilha do leite,rua joaquim de brito,,3.0
-boa vista,paissandu,rua general joaquim inacio,,3.0
+boa vista,paissandu,rua manoel borba,seguindo pela praca chora menino,3.0
 boa vista,derby,avenida governador carlos de lima cavalcanti,,4.0
 boa vista,gracas,rua joao fernandes vieira,acesso via praca parque amorim,3.0
 boa vista,espinheiro,rua doutor leopoldo lins,,3.0
@@ -22,14 +22,14 @@ cabanga,sao jose,rua bituri,acesso via pontilhao - passagem inferior,3.0
 ilha do leite,coelhos,rua francisco alves,,3.0
 ilha do leite,ilha joana bezerra,ponte jose barros lima,acesso via avenida governador agamenon magalhaes,3.0
 ilha do leite,paissandu,rua general joaquim inacio,,3.0
-paissandu,ilha joana bezerra,ponte jose barros lima,acesso via avenida governador agamenon magalhaes,3.0
+paissandu,ilha joana bezerra,viaduto capitao temudo,acesso via avenida governador agamenon magalhaes,3.0
 paissandu,ilha do retiro,ponte prefeito lima e castro,acesso via rua sport club do recife,3.0
 paissandu,derby,avenida governador agamenon magalhaes,,4.0
 santo antonio,sao jose,avenida dantas barreto,,4.0
-santo antonio,coelhos,ponte 6 de marco,acesso via travessa cais da detencao,3.0
+santo antonio,coelhos,travessa cais da detencao,acesso via ponte 6 de marco,3.0
 sao jose,afogados,ponte de afogados,acesso via rua imperial,3.0
 sao jose,ilha joana bezerra,rua cabo eutropio,acesso via pontilhao - passagem inferior,3.0
-sao jose,coelhos,ponte viaduto poeta joaquim cardoso,acesso via avenida central,3.0
+sao jose,coelhos,ponte 6 de marco,acesso via avenida central,3.0
 coelhos,ilha joana bezerra,ponte viaduto poeta joaquim cardoso,acesso via rua dos coelhos,3.0
 ilha joana bezerra,ilha do retiro,ponte gregorio bezerra,acesso via avenida beira rio,3.0
 arruda,campo grande,rua maio sete,,3.0
@@ -37,14 +37,14 @@ arruda,ponto de parada,avenida beberibe,,4.0
 arruda,tamarineira,estrada velha de agua fria,,3.0
 arruda,mangabeira,rua jacob,,3.0
 arruda,bomba do hemeterio,rua bomba do hemeterio,acesso via estrada velha de agua fria,3.0
-arruda,agua fria,avenida beberibe,,4.0
+arruda,agua fria,rua alegre,,3.0
 arruda,campina do barreto,rua das mocas,,3.0
 arruda,peixinhos,avenida professor jose dos anjos,,4.0
 campina do barreto,agua fria,rua marcilio dias,,3.0
 campina do barreto,fundao,rua da constancia,,3.0
 campina do barreto,cajueiro,rua dos peixinhos,,3.0
 campina do barreto,peixinhos,avenida poeta vinicius de moraes,,4.0
-campo grande,torreao,avenida agamenon magalhaes,,4.0
+campo grande,torreao,rua da fronteira,,3.0
 campo grande,encruzilhada,estrada de belem,,3.0
 campo grande,hipodromo,rua marques de abrantes,,3.0
 campo grande,ponto de parada,avenida professor jose dos anjos,,4.0
@@ -54,9 +54,9 @@ encruzilhada,espinheiro,rua marechal deodoro,,3.0
 encruzilhada,aflitos,rua teofilo de vasconcelos,,3.0
 encruzilhada,gracas,avenida santos dumont,,4.0
 encruzilhada,rosarinho,rua amaro coutinho,,3.0
-encruzilhada,ponto de parada,avenida beberibe,,4.0
+encruzilhada,ponto de parada,rua professor jeronimo gueiros,,3.0
 encruzilhada,hipodromo,rua fernando cesar,,3.0
-hipodromo,ponto de parada,rua professor jeronimo gueiros,,3.0
+hipodromo,ponto de parada,rua padre vilemain,,3.0
 ponto de parada,tamarineira,avenida professor jose dos anjos,,4.0
 ponto de parada,rosarinho,rua almirante noronha de carvalho,,3.0
 rosarinho,aflitos,avenida santos dumont,,4.0
@@ -64,7 +64,7 @@ rosarinho,gracas,rua regueira costa,,3.0
 rosarinho,tamarineira,rua doutor jose maria,,3.0
 torreao,espinheiro,rua augusto rodrigues,,3.0
 agua fria,bomba do hemeterio,rua sao sebastiao,,3.0
-agua fria,fundao,avenida beberibe,,4.0
+agua fria,fundao,rua fulgino melo,,3.0
 agua fria,porto da madeira,rua conselheiro barros barreto,,3.0
 agua fria,beberibe,avenida anibal benevolo,,4.0
 agua fria,linha do tiro,ladeira de pedra,,3.0
@@ -74,12 +74,12 @@ alto santa terezinha,alto jose do pinho,rua japura,,3.0
 alto santa terezinha,morro da conceicao,rua padre oliveira,,3.0
 alto santa terezinha,alto jose bonifacio,rua corrego jose,,3.0
 alto santa terezinha,linha do tiro,rua sodrelandia,,3.0
-bomba do hemeterio,mangabeira,rua jacob,,3.0
+bomba do hemeterio,mangabeira,rua desembargador heraclito cavalcanti,,3.0
 bomba do hemeterio,alto jose do pinho,rua arlindo cisneiros,,3.0
-cajueiro,fundao,avenida beberibe,,4.0
+cajueiro,fundao,rua barao de tracunhaem,,3.0
 cajueiro,porto da madeira,rua carahybas,,3.0
-fundao,porto da madeira,avenida beberibe,,4.0
-porto da madeira,beberibe,avenida beberibe,,4.0
+fundao,porto da madeira,rua alto do benjamim,,3.0
+porto da madeira,beberibe,rua do anil,,3.0
 beberibe,linha do tiro,rua uriel de holanda,,3.0
 beberibe,dois unidos,avenida hildebrando de vasconcelos,,4.0
 dois unidos,linha do tiro,rua guaraja,,3.0
@@ -113,7 +113,7 @@ casa amarela,monteiro,rua santa isabel,,3.0
 casa forte,parnamirim,estrada do encanamento,,4.0
 casa forte,santana,avenida dezessete de agosto,,4.0
 casa forte,poco da panela,estrada das ubaias,,3.0
-derby,ilha do retiro,ponte prefeito lima e castro, acesso via rua viscondessa do livramento,3.0
+derby,ilha do retiro,rua sport club do recife,acesso via ponte prefeito lima e castro,3.0
 derby,madalena,ponte estacio coimbra,acesso via praca do derby,3.0
 derby,gracas,rua amaro bezerra,,3.0
 dois irmaos,caxanga,br-101,,5.0
@@ -203,21 +203,20 @@ mangueira,san martin,rua 21 de abril,,3.0
 mangueira,mustardinha,rua joao elisio,,3.0
 mustardinha,san martin,rua 21 de abril,,3.0
 san martin,jiquia,rua tenente mindelo,,3.0
-san martin,estancia,avenida recife,,4.0
+san martin,estancia,1a travessa bezinha,,1.0
 san martin,curado,rua 21 de abril,,3.0
 san martin,jardim sao paulo,avenida recife,,4.0
-areias,estancia,avenida doutor jose rufino,,4.0
+areias,estancia,avenida izabel de gois,,4.0
 areias,jiquia,avenida tapajos,,4.0
-areias,imbiribeira,ponte julia santiago,acesso via avenida tapajos,3.0
-areias,ipsep,avenida recife,,4.0
-areias,cacote,avenida recife,,4.0
+areias,imbiribeira,avenida tapajos,acesso via ponte julia santiago,4.0
+areias,ipsep,ponte sobre o rio tejipio, acesso via avenida recife,3.0
+areias,cacote,rua gregorio caldas,,3.0
 areias,ibura,rua jurupata,,3.0
-areias,barro,avenida doutor jose rufino,,4.0
+areias,barro,rua ipojuca,,3.0
 areias,jardim sao paulo,avenida sao paulo,,4.0
-cacote,ipsep,avenida recife,,4.0
 cacote,ibura,rua dona ana aurora,,3.0
 estancia,jardim sao paulo,rua senador alberto pasqualini,,3.0
-estancia,jiquia,avenida doutor jose rufino,,4.0
+estancia,jiquia,rua joao teixeira,,3.0
 jiquia,imbiribeira,ponte julia santiago,acesso via avenida tapajos,3.0
 barro,jardim sao paulo,br-101,,5.0
 barro,tejipio,avenida doutor jose rufino,,4.0
@@ -227,8 +226,8 @@ coqueiral,toto,rua paulino de farias,,3.0
 coqueiral,tejipio,rua alcantara,,3.0
 coqueiral,sancho,rua paulino de farias,,3.0
 curado,jardim sao paulo,avenida piracicaba,,4.0
-curado,sancho,avenida liberdade,,4.0
-curado,toto,rua onze de agosto,,3.0
+curado,sancho,rua patriarca,,3.0
+curado,toto,rua da encosta,,3.0
 curado,tejipio,avenida liberdade,,4.0
 jardim sao paulo,tejipio,rua leandro barreto,,4.0
 sancho,toto,rua do nascente,,3.0

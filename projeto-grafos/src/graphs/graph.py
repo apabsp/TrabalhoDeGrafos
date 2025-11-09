@@ -43,3 +43,24 @@ class Grafo:
             return self.adj[nome_no] 
         else:
             return []
+        
+
+    # ----------------------------------------------------
+    # Métodos necessários para usar Dijkstra
+    # ----------------------------------------------------
+
+    def is_multigraph(self):
+        
+        return False
+
+    def __contains__(self, node):
+        
+        return node in self.adj
+
+    @property
+    def _adj(self):
+        
+        adj_dict = {}
+        for origem, vizinhos in self.adj.items():
+            adj_dict[origem] = {destino: {'weight': peso} for destino, peso in vizinhos}
+        return adj_dict

@@ -28,6 +28,8 @@ def main():
         solve.analisar_microrregioes(df_bairros, df_adj)
         solve.analisar_ego_redes(G, df_adj)
         solve.analisar_graus_e_rankings(G)            # exibe bairro com maior grau e bairro mais denso
+        solve.calcular_distancias_enderecos(G)   
+
         
         print(f"\nAnálise concluída. Arquivos de saída gerados em '{OUTPUT_DIR}/'.")
     else:

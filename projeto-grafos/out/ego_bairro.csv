@@ -7,7 +7,7 @@ alto jose bonifacio,6,7,13,0.6190476190476191
 alto jose do pinho,7,8,16,0.5714285714285714
 alto santa terezinha,6,7,13,0.6190476190476191
 apipucos,7,8,14,0.5
-areias,8,9,18,0.5
+areias,8,9,17,0.4722222222222222
 arruda,8,9,16,0.4444444444444444
 barro,5,6,9,0.6
 beberibe,4,5,7,0.7
@@ -19,14 +19,14 @@ brasilia teimosa,1,2,1,1.0
 brejo da guabiraba,5,6,10,0.6666666666666666
 brejo de beberibe,7,8,14,0.5
 cabanga,3,4,4,0.6666666666666666
-cacote,3,4,6,1.0
+cacote,2,3,3,1.0
 cajueiro,3,4,5,0.8333333333333334
 campina do barreto,5,6,9,0.6
 campo grande,7,8,14,0.5
 casa amarela,11,12,23,0.3484848484848485
 casa forte,4,5,8,0.8
-caxanga,5,6,9,0.6
-cidade universitaria,4,5,8,0.8
+caxanga,5,6,8,0.5333333333333333
+cidade universitaria,4,5,7,0.7
 coelhos,5,6,10,0.6666666666666666
 coqueiral,3,4,5,0.8333333333333334
 cohab,3,4,5,0.8333333333333334
@@ -44,13 +44,13 @@ fundao,4,5,8,0.8
 gracas,10,11,22,0.4
 guabiraba,5,6,8,0.5333333333333333
 hipodromo,3,4,6,1.0
-ibura,8,9,18,0.5
+ibura,8,9,17,0.4722222222222222
 ilha do leite,4,5,8,0.8
 ilha do retiro,6,7,11,0.5238095238095238
 ilha joana bezerra,5,6,9,0.6
 imbiribeira,6,7,12,0.5714285714285714
-ipsep,4,5,9,0.9
-iputinga,7,8,13,0.4642857142857143
+ipsep,3,4,6,1.0
+iputinga,6,7,10,0.47619047619047616
 jaqueira,5,6,10,0.6666666666666666
 jardim sao paulo,6,7,12,0.5714285714285714
 jiquia,6,7,12,0.5714285714285714
@@ -92,5 +92,5 @@ torreao,4,5,8,0.8
 torroes,4,5,8,0.8
 toto,3,4,5,0.8333333333333334
 vasco da gama,5,6,10,0.6666666666666666
-varzea,4,5,7,0.7
+varzea,3,4,4,0.6666666666666666
 zumbi,4,5,8,0.8

@@ -6,6 +6,7 @@ import os
 
 from .graphs.graph import Grafo 
 from .graphs.io import carregar_dados_principais
+from .graphs.algorithms import dijkstra_path, dijkstra_path_length  
 
 # Define os caminhos de saída obrigatórios
 OUTPUT_DIR = 'out'
@@ -13,6 +14,9 @@ FILE_OUT_GLOBAL = os.path.join(OUTPUT_DIR, 'recife_global.json')
 FILE_OUT_MICRO = os.path.join(OUTPUT_DIR, 'microrregioes.json')
 FILE_OUT_EGO = os.path.join(OUTPUT_DIR, 'ego_bairro.csv')
 FILE_OUT_GRAUS = os.path.join(OUTPUT_DIR, 'graus.csv')
+FILE_IN_ENDERECOS = os.path.join('data', 'enderecos.csv')          
+FILE_OUT_DIST = os.path.join(OUTPUT_DIR, 'distancias_enderecos.csv')
+FILE_OUT_JSON = os.path.join(OUTPUT_DIR, 'percurso_nova_descoberta_setubal.json')         
 
 # ===================================================================
 # PARTE 1: CONSTRUÇÃO DO GRAFO
@@ -291,3 +295,64 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
         print(f"Erro ao ler '{FILE_OUT_EGO}' para ranking de densidade: {e}")
 
     return df_graus;
+
+# Dijkstra para calcular distâncias entre os bairros (enderecos.csv)
+def calcular_distancias_enderecos(grafo):
+    
+    print("\n--- 6. Distância entre endereços (pares origem-destino) ---")
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    try:
+        df_in = pd.read_csv(FILE_IN_ENDERECOS, header=None, names=['origem', 'destino'])
+    except Exception as e:
+        print(f"Erro ao ler '{FILE_IN_ENDERECOS}': {e}")
+        return None
+
+    resultados = []
+    for _, row in df_in.iterrows():
+        origem = str(row['origem']).strip().lower()
+        destino = str(row['destino']).strip().lower()
+        try:
+            caminho = dijkstra_path(grafo, origem, destino, weight="weight")
+            distancia = dijkstra_path_length(grafo, origem, destino, weight="weight")
+
+            resultados.append({
+                "X": origem,
+                "Y": destino,
+                "custo": distancia,
+                "caminho": " -> ".join(caminho)
+            })
+
+            # salva .json do percurso nova descoberta-setúbal
+            if origem == "nova descoberta" and destino == "setubal":
+                with open(FILE_OUT_JSON, 'w', encoding='utf-8') as fjson:
+                    json.dump({"origem": origem, "destino": destino, "caminho": caminho, "distancia": distancia},
+                              fjson, ensure_ascii=False, indent=4)
+                print(f"Arquivo '{FILE_OUT_JSON}' salvo com sucesso.")
+
+        except Exception as e:
+            resultados.append({
+                "X": origem,
+                "Y": destino,
+                "custo": None,
+                "caminho": f"ERRO: {e}"
+            })
+            print(f"  ! Falha em ({origem} -> {destino}): {e}")
+
+    df_out = pd.DataFrame(resultados)
+
+    # exibindo resultados no terminal -precisa? perguntar!
+    print("\nResultados calculados:\n")
+    for _, row in df_out.iterrows():
+        print(f"{row['X']} → {row['Y']}")
+        print(f"  Custo total: {row['custo']}")
+        print(f"  Caminho: {row['caminho']}\n")
+
+    try:
+        df_out.to_csv(FILE_OUT_DIST, index=False)
+        print(f"Resultados salvos em '{FILE_OUT_DIST}'")
+    except Exception as e:
+        print(f"Erro ao salvar '{FILE_OUT_DIST}': {e}")
+
+    return df_out

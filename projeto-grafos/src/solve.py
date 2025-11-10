@@ -8,6 +8,8 @@ from .graphs.graph import Grafo
 from .graphs.io import carregar_dados_principais
 from .graphs.algorithms import dijkstra_path, dijkstra_path_length  
 
+from .viz import exportar_arvore_percurso_png
+
 # Define os caminhos de saída obrigatórios
 OUTPUT_DIR = 'out'
 FILE_OUT_GLOBAL = os.path.join(OUTPUT_DIR, 'recife_global.json')
@@ -356,3 +358,18 @@ def calcular_distancias_enderecos(grafo):
         print(f"Erro ao salvar '{FILE_OUT_DIST}': {e}")
 
     return df_out
+
+# --- 7. Transformar o percurso obrigatório em árvore e mostrar ---
+
+def gerar_arvore_percurso(grafo):
+
+    print("\n--- 7. Árvore de percurso estática Nova Descoberta --> Setúbal")
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    origem = "nova descoberta"
+    destino = "setubal"   
+    caminho = dijkstra_path(grafo, origem, destino, weight="weight")
+    exportar_arvore_percurso_png(
+        caminho,
+        os.path.join(OUTPUT_DIR, "arvore_percurso.png")
+    )

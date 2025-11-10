@@ -29,6 +29,7 @@ def main():
         solve.analisar_ego_redes(G, df_adj)
         solve.analisar_graus_e_rankings(G)            # exibe bairro com maior grau e bairro mais denso
         solve.calcular_distancias_enderecos(G)   
+        solve.gerar_arvore_percurso(G)
 
         
         print(f"\nAnálise concluída. Arquivos de saída gerados em '{OUTPUT_DIR}/'.")

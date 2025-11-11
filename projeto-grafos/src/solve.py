@@ -274,7 +274,7 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
         idx_max_grau = df_graus['grau'].idxmax()
         bairro_max_grau = df_graus.loc[idx_max_grau, 'bairro']
         max_grau = df_graus.loc[idx_max_grau, 'grau']
-        print(f"\nBairro com maior grau: {bairro_max_grau} (grau = {max_grau})\n")
+        #print(f"\nBairro com maior grau: {bairro_max_grau} (grau = {max_grau})\n")
 
     #Highest densidade_ego
 
@@ -284,12 +284,12 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
             idx_max_densidade = df_ego['densidade_ego'].idxmax()
             bairro_max_densidade = df_ego.loc[idx_max_densidade, 'bairro']
             max_densidade = df_ego.loc[idx_max_densidade, 'densidade_ego']
-            print(f"Bairro mais denso (maior densidade_ego): {bairro_max_densidade} (densidade_ego = {max_densidade:.4f})")
+            #print(f"Bairro mais denso (maior densidade_ego): {bairro_max_densidade} (densidade_ego = {max_densidade:.4f})")
 
             # Mostrar todos os bairros com a mesma densidade máxima
             bairros_max_densidade = [b for b in df_ego[df_ego['densidade_ego'] == max_densidade]['bairro'].tolist() if b != bairro_max_densidade]
-            if len(bairros_max_densidade) > 1:
-                print("Outros bairros com a mesma densidade máxima:", ", ".join(bairros_max_densidade))
+            #if len(bairros_max_densidade) > 1:
+                #print("Outros bairros com a mesma densidade máxima:", ", ".join(bairros_max_densidade))
 
         else:
             print("não foi possível determinar o bairro mais denso. Verifique 'ego_bairro.csv'")
@@ -344,13 +344,14 @@ def calcular_distancias_enderecos(grafo):
 
     df_out = pd.DataFrame(resultados)
 
-    # exibindo resultados no terminal -precisa? perguntar!
+    # exibindo resultados no terminal - não precisa mostrar!
+    '''
     print("\nResultados calculados:\n")
     for _, row in df_out.iterrows():
         print(f"{row['X']} → {row['Y']}")
         print(f"  Custo total: {row['custo']}")
         print(f"  Caminho: {row['caminho']}\n")
-
+    '''
     try:
         df_out.to_csv(FILE_OUT_DIST, index=False)
         print(f"Resultados salvos em '{FILE_OUT_DIST}'")

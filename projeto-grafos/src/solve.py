@@ -8,7 +8,7 @@ from .graphs.graph import Grafo
 from .graphs.io import carregar_dados_principais
 from .graphs.algorithms import dijkstra_path, dijkstra_path_length  
 
-from .viz import exportar_arvore_percurso_png, mapa_cores_por_grau, histograma_graus
+from .viz import exportar_arvore_percurso_png, exportar_arvore_percurso_destacada, mapa_cores_por_grau, histograma_graus, ranking_densidade_por_microrregiao
 
 # Define os caminhos de saída obrigatórios
 OUTPUT_DIR = 'out'
@@ -374,8 +374,13 @@ def gerar_arvore_percurso(grafo):
         caminho,
         os.path.join(OUTPUT_DIR, "arvore_percurso.png")
     )
+    exportar_arvore_percurso_destacada(
+        grafo,
+        caminho,
+        raiz="nova descoberta",
+        out_png=os.path.join(OUTPUT_DIR, "arvore_percurso_destacada.png")
+    )
 
-###
 def exploracoes_visuais(df_graus, grafo):
 
     print("\n--- 8. Gerando explorações e visualizações analíticas ---")
@@ -386,9 +391,14 @@ def exploracoes_visuais(df_graus, grafo):
     except Exception as e:
         print(f"Erro ao gerar mapa de cores por grau: {e}")
 
-     # 8.2 – distribuição dos graus (histograma)
+    # 8.2 – distribuição dos graus (histograma)
     try:
         histograma_graus(df_graus)
     except Exception as e:
         print(f"Erro ao gerar histograma de graus: {e}")
     
+    # 8.3 – ranking de densidade de ego-subrede por microrregião
+    try:
+        ranking_densidade_por_microrregiao()
+    except Exception as e:
+        print(f"Erro ao gerar ranking de densidade por microrregião: {e}")

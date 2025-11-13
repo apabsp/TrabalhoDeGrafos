@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 import os
+from collections import deque, defaultdict
 
 
 def exportar_arvore_percurso_png(path, out_png="out/arvore_percurso.png"):
@@ -44,6 +45,103 @@ def exportar_arvore_percurso_png(path, out_png="out/arvore_percurso.png"):
     plt.savefig(out_png, dpi=220, bbox_inches="tight")
     plt.close()
     print(f"Árvore do percurso salva em {out_png}")
+
+def exportar_arvore_percurso_destacada(grafo, path, raiz="nova descoberta",
+                                              out_png="out/arvore_percurso_destacada.png"):
+
+    os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
+
+    nos = grafo.get_todos_os_nos()
+    if not nos:
+        print("Grafo vazio.")
+        return
+
+    raiz = str(raiz).strip().lower()
+    visited, level, parent = set(), {}, {}
+    q = deque()
+
+    if raiz not in nos:
+        print(f"Atenção: raiz '{raiz}' não encontrada. Usando primeiro nó do grafo.")
+        raiz = nos[0]
+
+    visited.add(raiz)
+    level[raiz] = 0
+    parent[raiz] = None
+    q.append(raiz)
+
+    while q:
+        u = q.popleft()
+        for v, _w in grafo.get_vizinhos(u):
+            if v not in visited:
+                visited.add(v)
+                level[v] = level[u] + 1
+                parent[v] = u
+                q.append(v)
+
+    max_lvl = max(level.values())
+    for v in nos:
+        if v not in level:
+            max_lvl += 1
+            level[v] = max_lvl
+            parent[v] = None  # sem pai (componente separado)
+
+    niveis = defaultdict(list)
+    for v in nos:
+        niveis[level[v]].append(v)
+
+    pos = {}
+    x_gap, y_gap = 2.2, 1.3  # espaçamentos
+    for l in sorted(niveis.keys()):
+        grupo = sorted(niveis[l])
+        h = (len(grupo) - 1) * y_gap
+        for i, v in enumerate(grupo):
+            x = l * x_gap
+            y = -h/2 + i * y_gap
+            pos[v] = (x, y)
+
+    # arestas
+    plt.figure(figsize=(max(7, (max(level.values())+1)*1.8), 7))
+    for v in nos:
+        p = parent.get(v)
+        if p is None:
+            continue
+        x1, y1 = pos[p]
+        x2, y2 = pos[v]
+        plt.plot([x1, x2], [y1, y2], linewidth=1.4, color="#d0d7de", zorder=1)
+
+    # nós
+    for v in nos:
+        x, y = pos[v]
+        plt.scatter([x], [y], s=140, color="#eef3f7", edgecolor="black",
+                    linewidth=0.6, zorder=2)
+        plt.text(x+0.18, y, v, ha="left", va="center", fontsize=8.5, color="#222", zorder=3)
+
+    # destaque para o caminho
+    if path and len(path) >= 2:
+
+        # arestas
+        for u, v in zip(path[:-1], path[1:]):
+            x1, y1 = pos[u]
+            x2, y2 = pos[v]
+            plt.plot([x1, x2], [y1, y2], linewidth=4, color="#2b8a3e", zorder=4)
+
+        # nós
+        for i, b in enumerate(path):
+            x, y = pos[b]
+            if i == 0:
+                cor, tam = "#1f77b4", 260  # início
+            elif i == len(path) - 1:
+                cor, tam = "#d62728", 260  # fim
+            else:
+                cor, tam = "#cfead6", 220
+            plt.scatter([x], [y], s=tam, color=cor, edgecolor="black",
+                        linewidth=0.8, zorder=5)
+
+    plt.axis("off")
+    plt.tight_layout()
+    plt.savefig(out_png, dpi=240, bbox_inches="tight")
+    plt.close()
+    print(f"Árvore do percurso destacada salva em {out_png}")
 
 def mapa_cores_por_grau(df_graus, out_png="out/mapa_cores_grau.png"):
 
@@ -112,3 +210,74 @@ def histograma_graus(df_graus, out_png="out/histograma_graus.png"):
     plt.savefig(out_png, dpi=220, bbox_inches="tight")
     plt.close()
     print(f"Histograma de graus salvo em '{out_png}'")
+
+import math
+import matplotlib.pyplot as plt
+import os
+import pandas as pd
+
+def ranking_densidade_por_microrregiao(
+    ego_csv="out/ego_bairro.csv",
+    bairros_csv="data/bairros_unique.csv",
+    out_png="out/ranking_densidade_microrregiao.png"
+):
+    os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
+
+    # carrega densidades por bairro
+    try:
+        df_ego = pd.read_csv(ego_csv)
+    except Exception as e:
+        print(f"Erro ao ler '{ego_csv}': {e}")
+        return
+
+    # carrega mapeamento bairro -> microrregião
+    try:
+        df_bairros = pd.read_csv(bairros_csv)
+    except Exception as e:
+        print(f"Erro ao ler '{bairros_csv}': {e}")
+        return
+
+    if "bairro" not in df_bairros.columns or "microrregiao" not in df_bairros.columns:
+        print("Arquivo de bairros não contém as colunas 'bairro' e 'microrregiao'.")
+        return
+
+    # junta ego_bairro com microrregião
+    df_merge = pd.merge(
+        df_ego,
+        df_bairros[["bairro", "microrregiao"]],
+        on="bairro",
+        how="left"
+    )
+
+    # cálculo: densidade média por microrregião
+    df_agrupado = (
+        df_merge.groupby("microrregiao")["densidade_ego"]
+                .mean()
+                .sort_values(ascending=True)  
+    )
+
+    plt.figure(figsize=(10, 6))
+    df_agrupado.plot(kind="barh")
+
+    ax = plt.gca()
+
+    plt.title("Densidade média de ego-subrede por microrregião")
+    plt.xlabel("Densidade média da ego-subrede")
+    plt.ylabel("Microrregião")
+
+    # valores ao lado das barras
+    for i, (microrregiao, valor) in enumerate(df_agrupado.items()):
+        ax.text(
+            valor + 0.01,     
+            i,                
+            f"{valor:.3f}",  
+            va="center",
+            fontsize=9
+        )
+ 
+
+    plt.tight_layout()
+    plt.savefig(out_png, dpi=300)
+    plt.close()
+
+    print(f"Ranking de densidade média de ego-subrede por microrregião salvo em: {out_png}")

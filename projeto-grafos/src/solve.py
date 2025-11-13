@@ -8,7 +8,7 @@ from .graphs.graph import Grafo
 from .graphs.io import carregar_dados_principais
 from .graphs.algorithms import dijkstra_path, dijkstra_path_length  
 
-from .viz import exportar_arvore_percurso_png
+from .viz import exportar_arvore_percurso_png, mapa_cores_por_grau, histograma_graus
 
 # Define os caminhos de saída obrigatórios
 OUTPUT_DIR = 'out'
@@ -364,7 +364,7 @@ def calcular_distancias_enderecos(grafo):
 
 def gerar_arvore_percurso(grafo):
 
-    print("\n--- 7. Árvore de percurso estática Nova Descoberta --> Setúbal")
+    print("\n--- 7. Árvore de percurso estática Nova Descoberta --> Setúbal ---")
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     origem = "nova descoberta"
@@ -374,3 +374,21 @@ def gerar_arvore_percurso(grafo):
         caminho,
         os.path.join(OUTPUT_DIR, "arvore_percurso.png")
     )
+
+###
+def exploracoes_visuais(df_graus, grafo):
+
+    print("\n--- 8. Gerando explorações e visualizações analíticas ---")
+
+    # 8.1 – mapa de cores por grau
+    try:
+        mapa_cores_por_grau(df_graus)
+    except Exception as e:
+        print(f"Erro ao gerar mapa de cores por grau: {e}")
+
+     # 8.2 – distribuição dos graus (histograma)
+    try:
+        histograma_graus(df_graus)
+    except Exception as e:
+        print(f"Erro ao gerar histograma de graus: {e}")
+    

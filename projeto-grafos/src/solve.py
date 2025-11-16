@@ -8,7 +8,7 @@ from .graphs.graph import Grafo
 from .graphs.io import carregar_dados_principais
 from .graphs.algorithms import dijkstra_path, dijkstra_path_length  
 
-from .viz import exportar_arvore_percurso_png, exportar_arvore_percurso_destacada, mapa_cores_por_grau, histograma_graus, ranking_densidade_por_microrregiao
+from .viz import exportar_arvore_percurso_png, exportar_arvore_percurso_destacada, mapa_cores_por_grau, histograma_graus, ranking_densidade_por_microrregiao, gerar_grafo_interativo
 
 # Define os caminhos de saída obrigatórios
 OUTPUT_DIR = 'out'
@@ -402,3 +402,17 @@ def exploracoes_visuais(df_graus, grafo):
         ranking_densidade_por_microrregiao()
     except Exception as e:
         print(f"Erro ao gerar ranking de densidade por microrregião: {e}")
+
+    # 9 – grafo interativo
+    print("\n--- 9. Gerando Visualização Interativa ---")
+
+    # recarregar DataFrames
+    try:
+        df_bairros = pd.read_csv('data/bairros_unique.csv')
+        df_adjacencias = pd.read_csv('data/adjacencias_bairros.csv')
+        df_ego = pd.read_csv(FILE_OUT_EGO) # arquivo ego_bairro.csv gerado no Ponto 3
+
+        gerar_grafo_interativo(grafo, df_adjacencias, df_bairros, df_ego) 
+
+    except Exception as e:
+        print(f"Erro na visualização interativa (Ponto 9): {e}. Verifique se os arquivos de dados foram gerados.")

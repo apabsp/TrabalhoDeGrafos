@@ -7,7 +7,6 @@ from pyvis.network import Network
 import json
 from .graphs.graph import Grafo
 
-
 def exportar_arvore_percurso_png(path, out_png="out/arvore_percurso.png"):
 
     os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
@@ -214,11 +213,6 @@ def histograma_graus(df_graus, out_png="out/histograma_graus.png"):
     plt.savefig(out_png, dpi=220, bbox_inches="tight")
     plt.close()
     print(f"Histograma de graus salvo em '{out_png}'")
-
-import math
-import matplotlib.pyplot as plt
-import os
-import pandas as pd
 
 def ranking_densidade_por_microrregiao(
     ego_csv="out/ego_bairro.csv",

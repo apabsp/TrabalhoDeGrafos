@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import os
 from collections import deque, defaultdict
 import pandas as pd
-import networkx as nx
 from pyvis.network import Network
 import json
 from .graphs.graph import Grafo
@@ -289,9 +288,6 @@ def ranking_densidade_por_microrregiao(
 
 def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairros: pd.DataFrame, df_ego: pd.DataFrame):
     
-    # converter o grafo customizado pra networkx (pyvis precisa disso)
-    G = nx.Graph(grafo._adj) 
-    
     # juntar dados dos bairros com as métricas de ego-rede
     df_nodes = df_bairros.merge(df_ego, on='bairro', how='left').fillna({'grau': 0, 'densidade_ego': 0, 'microrregiao': 'N/A'})
     df_nodes['bairro'] = df_nodes['bairro'].str.lower()
@@ -305,14 +301,6 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
         '5.1': '#adff2f', '5.2': '#4682b4', '5.3': '#db7093', '6.1': '#f08080', 
         '6.2': '#008080', '6.3': '#daa520', 'N/A': '#cccccc'
     }
-
-    # aplicar cor de cada microrregião nos nós
-    for node in G.nodes():
-        if node in df_nodes.index:
-            data = df_nodes.loc[node]
-            G.nodes[node]['group'] = data['microrregiao']
-            G.nodes[node]['color'] = color_map.get(data['microrregiao'], '#999999')
-            G.nodes[node]['label'] = node.title()
 
     # caminho que vai ser destacado: nova descoberta até setúbal
     target_path_str = 'nova descoberta -> alto do mandu -> monteiro -> iputinga -> cordeiro -> prado -> afogados -> imbiribeira -> boa viagem -> setubal'
@@ -329,7 +317,25 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
         bgcolor='#ffffff',
         font_color='#2c3e50'
     )
-    net.from_nx(G)
+    
+    # adicionar nós ao pyvis
+    for node in grafo.get_todos_os_nos():
+        if node in df_nodes.index:
+            data = df_nodes.loc[node]
+            cor = color_map.get(data['microrregiao'], '#999999')
+            net.add_node(
+                node, 
+                label=node.title(),
+                color=cor,
+                group=data['microrregiao']
+            )
+    
+    # adicionar arestas ao pyvis
+    for _, row in df_adjacencias.iterrows():
+        origem = row['bairro_origem'].lower()
+        destino = row['bairro_destino'].lower()
+        peso = row.get('peso', 1.0)
+        net.add_edge(origem, destino, value=peso)
 
     # configurações de física e interação do grafo
     options_json = {
@@ -373,12 +379,7 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
     
     # preparar dados dos nós pra usar no javascript
     nodes_data = {}
-    for node in G.nodes():
-        if node in df_nodes.index:
-            data = df_nodes.loc[node]
-    # preparar dados dos nós pra usar no javascript
-    nodes_data = {}
-    for node in G.nodes():
+    for node in grafo.get_todos_os_nos():
         if node in df_nodes.index:
             data = df_nodes.loc[node]
             microrregiao = str(data['microrregiao'])

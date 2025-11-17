@@ -3,9 +3,10 @@
 import pandas as pd
 import json
 import os 
+import time
 
 from .graphs.graph import Grafo 
-from .graphs.io import carregar_dados_principais
+from .graphs.io import carregar_dados_principais, carregar_dataset_parte2
 from .graphs.algorithms import dijkstra_path, dijkstra_path_length  
 
 from .viz import exportar_arvore_percurso_png, exportar_arvore_percurso_destacada, mapa_cores_por_grau, histograma_graus, ranking_densidade_por_microrregiao, gerar_grafo_interativo
@@ -18,7 +19,12 @@ FILE_OUT_EGO = os.path.join(OUTPUT_DIR, 'ego_bairro.csv')
 FILE_OUT_GRAUS = os.path.join(OUTPUT_DIR, 'graus.csv')
 FILE_IN_ENDERECOS = os.path.join('data', 'enderecos.csv')          
 FILE_OUT_DIST = os.path.join(OUTPUT_DIR, 'distancias_enderecos.csv')
-FILE_OUT_JSON = os.path.join(OUTPUT_DIR, 'percurso_nova_descoberta_setubal.json')         
+FILE_OUT_JSON = os.path.join(OUTPUT_DIR, 'percurso_nova_descoberta_setubal.json')     
+
+FILE_IN_PARES_PARTE2 = os.path.join('data\dataset_parte2', 'pares_parte2.csv')
+FILE_OUT_PARTE2_DIJKSTRA_CSV = os.path.join(OUTPUT_DIR, 'parte2_dijkstra.csv')
+FILE_OUT_PARTE2_DIJKSTRA_JSON = os.path.join(OUTPUT_DIR, 'parte2_dijkstra.json')
+FILE_OUT_PARTE2_REPORT = os.path.join(OUTPUT_DIR, 'parte2_report.json')
 
 # ===================================================================
 # PARTE 1: CONSTRUÇÃO DO GRAFO
@@ -406,7 +412,7 @@ def exploracoes_visuais(df_graus, grafo):
     # 9 – grafo interativo
     print("\n--- 9. Gerando Visualização Interativa ---")
 
-    # recarregar DataFrames
+    # recarregar dataframes
     try:
         df_bairros = pd.read_csv('data/bairros_unique.csv')
         df_adjacencias = pd.read_csv('data/adjacencias_bairros.csv')
@@ -416,3 +422,158 @@ def exploracoes_visuais(df_graus, grafo):
 
     except Exception as e:
         print(f"Erro na visualização interativa (Ponto 9): {e}. Verifique se os arquivos de dados foram gerados.")
+    
+def construir_grafo_parte2():
+
+    df_rotas, arestas = carregar_dataset_parte2()
+    if df_rotas is None:
+        print("Falha ao carregar o dataset da Parte 2.")
+        return None, None
+
+    # Grafo dirigido para representar as rotas aéreas
+    grafo = Grafo(dirigido=True)
+
+    for origem, destino, peso in arestas:
+        grafo.add_edge(origem, destino, peso)
+
+    #print(f"Grafo Parte 2 construído: {grafo.get_numero_de_nos()} nós, {grafo.get_numero_de_arestas()} arestas.")
+    print(f"Grafo construído. Iniciando análises...")
+    return grafo, df_rotas
+
+def carregar_pares_parte2():
+
+    try:
+        df_pares = pd.read_csv(FILE_IN_PARES_PARTE2)
+    except Exception as e:
+        print(f"Erro ao ler '{FILE_IN_PARES_PARTE2}': {e}")
+        return []
+
+    if not {'origem', 'destino'}.issubset(df_pares.columns):
+        print(f"Erro: CSV da Parte 2 precisa ter colunas 'origem' e 'destino'.")
+        return []
+
+    pares = []
+    for _, row in df_pares.iterrows():
+        origem = str(row['origem']).strip()
+        destino = str(row['destino']).strip()
+        if origem and destino:
+            pares.append((origem, destino))
+
+    return pares
+
+def executar_dijkstra_parte2(pares=None):
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    grafo, df_rotas = construir_grafo_parte2()
+    if grafo is None:
+        print("Não foi possível construir o grafo da Parte 2.")
+        return None
+
+    if pares is None:
+        try:
+            df_pares = pd.read_csv(FILE_IN_PARES_PARTE2)
+        except Exception as e:
+            print(f"Erro ao ler '{FILE_IN_PARES_PARTE2}': {e}")
+            return None
+
+        if not {'origem', 'destino'}.issubset(df_pares.columns):
+            print(f"Erro: '{FILE_IN_PARES_PARTE2}' deve ter colunas 'origem' e 'destino'.")
+            return None
+
+        pares = []
+        for _, row in df_pares.iterrows():
+            origem = str(row['origem']).strip()
+            destino = str(row['destino']).strip()
+            if origem and destino:
+                pares.append((origem, destino))
+
+        if not pares:
+            print(f"Nenhum par válido encontrado em '{FILE_IN_PARES_PARTE2}'.")
+            return None
+
+    resultados = []
+    tempos = []
+
+    for origem, destino in pares:
+        origem = str(origem).strip()
+        destino = str(destino).strip()
+
+        try:
+            t0 = time.perf_counter()
+
+            caminho = dijkstra_path(grafo, origem, destino, weight="weight")
+            custo = dijkstra_path_length(grafo, origem, destino, weight="weight")
+
+            elapsed = time.perf_counter() - t0
+            status = "ok"
+
+            resultados.append({
+                "origem": origem,
+                "destino": destino,
+                "custo": custo,
+                "caminho": " -> ".join(caminho),
+                "status": status
+            })
+
+            tempos.append({
+                "algoritmo": "dijkstra",
+                "origem": origem,
+                "destino": destino,
+                "tempo_segundos": elapsed
+            })
+
+        except Exception as e:
+            msg_erro = str(e)
+            
+            print(f"{origem} -> {destino}  **ERRO**  {msg_erro}")
+            resultados.append({
+                "origem": origem,
+                "destino": destino,
+                "custo": None,
+                "caminho": "",
+                "status": f"erro: {msg_erro}"
+            })
+
+            tempos.append({
+                "algoritmo": "dijkstra",
+                "origem": origem,
+                "destino": destino,
+                "tempo_segundos": None,
+                "erro": msg_erro
+            })
+
+    # salva parte2_dijkstra
+    try:
+        df_out = pd.DataFrame(resultados)
+        df_out.to_csv(FILE_OUT_PARTE2_DIJKSTRA_CSV, index=False)
+        print(f"Resultados Dijkstra salvos em '{FILE_OUT_PARTE2_DIJKSTRA_CSV}'")
+    except Exception as e:
+        print(f"Erro ao salvar CSV da Parte 2: {e}")
+        df_out = None
+
+    # salva parte2_dijkstra.json
+    try:
+        with open(FILE_OUT_PARTE2_DIJKSTRA_JSON, 'w', encoding='utf-8') as fj:
+            json.dump(resultados, fj, ensure_ascii=False, indent=4)
+        print(f"Resultados Dijkstra salvos em '{FILE_OUT_PARTE2_DIJKSTRA_JSON}'")
+    except Exception as e:
+        print(f"Erro ao salvar JSON da Parte 2: {e}")
+    
+    # salva parte2_report.json
+    try:
+        report = {
+            "algoritmo": "dijkstra",
+            "dataset": {
+                "num_nos": grafo.get_numero_de_nos(),
+                "num_arestas": grafo.get_numero_de_arestas(),
+            },
+            "tarefas": tempos
+        }
+        with open(FILE_OUT_PARTE2_REPORT, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=4)
+        print(f"\nMétricas salvas em '{FILE_OUT_PARTE2_REPORT}'")
+    except Exception as e:
+        print(f"Erro ao salvar relatório de desempenho da Parte 2: {e}")
+
+    return df_out

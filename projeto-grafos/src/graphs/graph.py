@@ -1,13 +1,14 @@
 # Em: src/graphs/graph.py
 
 class Grafo: 
-    def __init__(self):
+    def __init__(self, dirigido=False):
         self.adj = {}
         self.num_arestas = 0  # Correto!
+        self.dirigido = dirigido
     
-    def add_node(self, bairro):
-        if bairro not in self.adj:
-            self.adj[bairro] = []
+    def add_node(self, no):
+        if no not in self.adj:
+            self.adj[no] = []
 
     def add_edge(self, origem, destino, peso):
         
@@ -16,8 +17,11 @@ class Grafo:
 
         self.adj[origem].append((destino, peso))
         # print(self)  # <-- COMENTE OU APAGUE ESTA LINHA
-        self.adj[destino].append((origem, peso))
+        #self.adj[destino].append((origem, peso))
         # print(self)  # <-- COMENTE OU APAGUE ESTA LINHA
+
+        if not self.dirigido:
+            self.adj[destino].append((origem, peso))
 
         self.num_arestas += 1 # Correto!
 

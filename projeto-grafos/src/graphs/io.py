@@ -7,6 +7,8 @@ import os
 ARQUIVO_BAIRROS_ORIGINAL = 'data/bairros_recife.csv'
 ARQUIVO_BAIRROS_PROCESSADO = 'data/bairros_unique.csv'
 ARQUIVO_ADJACENCIAS = 'data/adjacencias_bairros.csv'
+ARQUIVO_PARTE2 = 'data/dataset_parte2/europe_air_routes.csv'
+
 
 def _processar_e_salvar_bairros():
     """
@@ -83,3 +85,65 @@ def carregar_dados_principais():
 
     print("Dados de bairros e adjacências carregados.")
     return df_bairros, df_adjacencias
+
+# Parte 2
+
+def carregar_dataset_parte2(caminho=ARQUIVO_PARTE2):
+
+    if not os.path.exists(caminho):
+        print(f"Erro: arquivo da Parte 2 '{caminho}' não encontrado.")
+        return None, []
+
+    try:
+        df = pd.read_csv(caminho)
+    except Exception as e:
+        print(f"Erro ao ler dataset da Parte 2: {e}")
+        return None, []
+
+    possiveis_pares = [
+        ("iata_from", "iata_to"),
+        ("from", "to"),
+        ("source", "target"),
+        ("source_airport", "destination_airport"),
+    ]
+
+    col_origem = None
+    col_destino = None
+
+    for c_from, c_to in possiveis_pares:
+        if c_from in df.columns and c_to in df.columns:
+            col_origem = c_from
+            col_destino = c_to
+            break
+
+    if col_origem is None or col_destino is None:
+        print("Erro: não encontrei colunas de origem/destino esperadas no CSV.")
+        print("Colunas disponíveis:", list(df.columns))
+        return None, []
+
+    if "price" not in df.columns:
+        print("Erro: coluna 'price' não encontrada no CSV.")
+        print("Colunas disponíveis:", list(df.columns))
+        return None, []
+
+    col_preco = "price"
+
+    df = df.dropna(subset=[col_origem, col_destino, col_preco])
+
+    df[col_origem] = df[col_origem].astype(str).str.strip()
+    df[col_destino] = df[col_destino].astype(str).str.strip()
+
+    df = df[(df[col_origem] != "") & (df[col_destino] != "")]
+
+    df = df[df[col_preco] > 0] #perguntar sobre pesos = 0
+
+    arestas = []
+    for _, row in df.iterrows():
+        origem = row[col_origem]
+        destino = row[col_destino]
+        peso = float(row[col_preco])
+        arestas.append((origem, destino, peso))
+
+    #print(f"Dataset Parte 2 carregado com sucesso: {len(arestas)} arestas.")
+    print(f"Dataset carregado com sucesso.")
+    return df, arestas

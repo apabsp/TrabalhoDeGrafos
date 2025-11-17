@@ -1,0 +1,37 @@
+[
+    {
+        "origem": "LIS",
+        "destino": "CDG",
+        "custo": 50.0,
+        "caminho": "LIS -> CDG",
+        "status": "ok"
+    },
+    {
+        "origem": "MAD",
+        "destino": "FRA",
+        "custo": 90.0,
+        "caminho": "MAD -> STN -> DUB -> FRA",
+        "status": "ok"
+    },
+    {
+        "origem": "BCN",
+        "destino": "AMS",
+        "custo": 60.0,
+        "caminho": "BCN -> DUB -> AMS",
+        "status": "ok"
+    },
+    {
+        "origem": "ATH",
+        "destino": "FCO",
+        "custo": 30.0,
+        "caminho": "ATH -> FCO",
+        "status": "ok"
+    },
+    {
+        "origem": "IST",
+        "destino": "LHR",
+        "custo": 110.0,
+        "caminho": "IST -> DLM -> BTS -> CRL -> DUB -> LHR",
+        "status": "ok"
+    }
+]

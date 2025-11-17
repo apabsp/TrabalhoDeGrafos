@@ -1,0 +1,6 @@
+origem,destino,custo,caminho,status
+LIS,CDG,50.0,LIS -> CDG,ok
+MAD,FRA,90.0,MAD -> STN -> DUB -> FRA,ok
+BCN,AMS,60.0,BCN -> DUB -> AMS,ok
+ATH,FCO,30.0,ATH -> FCO,ok
+IST,LHR,110.0,IST -> DLM -> BTS -> CRL -> DUB -> LHR,ok

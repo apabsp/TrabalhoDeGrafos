@@ -37,6 +37,15 @@ def main():
     else:
         print("Falha na construção do grafo. Verifique seus arquivos em 'data/'.")
 
+ 
+    # Parte 2
+
+    print("\n--- Executando Parte 2 (Rotas Aéreas: europe_air_routes.csv) ---")
+
+    solve.executar_dijkstra_parte2()
+
+    print(f"\nAnálise concluída. Arquivos de saída gerados em '{OUTPUT_DIR}/'.")
+
 if __name__ == "__main__":
     # Este é o único arquivo que deve ter o bloco __main__
     main()

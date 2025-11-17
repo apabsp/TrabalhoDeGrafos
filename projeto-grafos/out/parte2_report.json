@@ -1,0 +1,39 @@
+{
+    "algoritmo": "dijkstra",
+    "dataset": {
+        "num_nos": 810,
+        "num_arestas": 16148
+    },
+    "tarefas": [
+        {
+            "algoritmo": "dijkstra",
+            "origem": "LIS",
+            "destino": "CDG",
+            "tempo_segundos": 0.020523600018350407
+        },
+        {
+            "algoritmo": "dijkstra",
+            "origem": "MAD",
+            "destino": "FRA",
+            "tempo_segundos": 0.028833899996243417
+        },
+        {
+            "algoritmo": "dijkstra",
+            "origem": "BCN",
+            "destino": "AMS",
+            "tempo_segundos": 0.008217599999625236
+        },
+        {
+            "algoritmo": "dijkstra",
+            "origem": "ATH",
+            "destino": "FCO",
+            "tempo_segundos": 0.011456699983682483
+        },
+        {
+            "algoritmo": "dijkstra",
+            "origem": "IST",
+            "destino": "LHR",
+            "tempo_segundos": 0.04159269999945536
+        }
+    ]
+}

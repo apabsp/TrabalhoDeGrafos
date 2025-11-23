@@ -1,5 +1,276 @@
 from heapq import heappush, heappop
 from itertools import count
+from collections import deque
+
+# ===================================================================
+# BFS (Breadth-First Search)
+# ===================================================================
+
+def bfs(G, source):
+    """
+    Breadth-First Search algorithm.
+
+    Parameters
+    ----------
+    G : Graph object
+        The graph to search (uses get_vizinhos method)
+    source : node
+        Starting node for BFS
+
+    Returns
+    -------
+    dict
+        Dictionary with:
+        - 'visited': set of visited nodes
+        - 'levels': dict mapping node -> level/distance from source
+        - 'parent': dict mapping node -> parent in BFS tree
+        - 'order': list of nodes in BFS traversal order
+
+    Raises
+    ------
+    Exception
+        If source is not in graph
+    """
+    if source not in G:
+        raise Exception(f"Node {source} not found in graph")
+
+    visited = set()
+    levels = {}
+    parent = {}
+    order = []
+
+    queue = deque()
+    queue.append(source)
+    visited.add(source)
+    levels[source] = 0
+    parent[source] = None
+
+    while queue:
+        current = queue.popleft()
+        order.append(current)
+
+        # Get neighbors (returns list of tuples: [(neighbor, weight), ...])
+        neighbors = G.get_vizinhos(current)
+        if neighbors:
+            for neighbor, weight in neighbors: #
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    levels[neighbor] = levels[current] + 1
+                    parent[neighbor] = current
+                    queue.append(neighbor)
+
+    return {
+        'visited': visited,
+        'levels': levels,
+        'parent': parent,
+        'order': order
+    }
+
+def bfs_path(G, source, target):
+    """
+    Find shortest path using BFS (unweighted).
+
+    Parameters
+    ----------
+    G : Graph object
+        The graph to search
+    source : node
+        Starting node
+    target : node
+        Ending node
+
+    Returns
+    -------
+    list
+        Path from source to target, or None if no path exists
+    """
+    if source not in G:
+        raise Exception(f"Node {source} not found in graph")
+    if target not in G:
+        raise Exception(f"Node {target} not found in graph")
+
+    if source == target:
+        return [source]
+
+    bfs_result = bfs(G, source)
+
+    if target not in bfs_result['visited']:
+        return None
+
+    # Reconstruct path from target to source
+    path = []
+    current = target
+    while current is not None:
+        path.append(current)
+        current = bfs_result['parent'][current]
+
+    path.reverse()
+    return path
+
+
+# ===================================================================
+# DFS (Depth-First Search)
+# ===================================================================
+
+def dfs(G, source):
+    """
+    Depth-First Search algorithm.
+
+    Parameters
+    ----------
+    G : Graph object
+        The graph to search (uses get_vizinhos method)
+    source : node
+        Starting node for DFS
+
+    Returns
+    -------
+    dict
+        Dictionary with:
+        - 'visited': set of visited nodes
+        - 'parent': dict mapping node -> parent in DFS tree
+        - 'order': list of nodes in DFS traversal order
+        - 'discovery_time': dict mapping node -> discovery time
+        - 'finish_time': dict mapping node -> finish time
+        - 'has_cycle': boolean indicating if cycle was detected
+        - 'edge_classification': dict mapping edge tuple -> edge type
+          (tree_edge, back_edge, forward_edge, cross_edge)
+
+    Raises
+    ------
+    Exception
+        If source is not in graph
+    """
+    if source not in G:
+        raise Exception(f"Node {source} not found in graph")
+
+    visited = set()
+    parent = {}
+    order = []
+    discovery_time = {}
+    finish_time = {}
+    edge_classification = {}
+    has_cycle = False
+    time = [0]  
+
+    def dfs_visit(node):
+        nonlocal has_cycle
+
+        visited.add(node)
+        time[0] += 1
+        discovery_time[node] = time[0]
+        order.append(node)
+
+        neighbors = G.get_vizinhos(node)
+        if neighbors:
+            for neighbor, weight in neighbors:
+                edge = (node, neighbor)
+
+                if neighbor not in visited:
+                    # Tree edge
+                    edge_classification[edge] = 'tree_edge'
+                    parent[neighbor] = node
+                    dfs_visit(neighbor)
+
+                elif neighbor in discovery_time and neighbor not in finish_time:
+                    # Back edge (cycle detected)
+                    edge_classification[edge] = 'back_edge'
+                    has_cycle = True
+
+                elif discovery_time[neighbor] > discovery_time[node]:
+                    # Forward edge
+                    edge_classification[edge] = 'forward_edge'
+
+                else:
+                    # Cross edge
+                    edge_classification[edge] = 'cross_edge'
+
+        time[0] += 1
+        finish_time[node] = time[0]
+
+    parent[source] = None
+    dfs_visit(source)
+
+    return {
+        'visited': visited,
+        'parent': parent,
+        'order': order,
+        'discovery_time': discovery_time,
+        'finish_time': finish_time,
+        'has_cycle': has_cycle,
+        'edge_classification': edge_classification
+    }
+
+def dfs_full(G):
+    """
+    Complete DFS traversal of all components in graph.
+
+    Parameters
+    ----------
+    G : Graph object
+        The graph to search
+
+    Returns
+    -------
+    dict
+        Dictionary with same structure as dfs(), but covering all nodes
+    """
+    all_nodes = G.get_todos_os_nos()
+    visited_global = set()
+    parent_global = {}
+    order_global = []
+    discovery_time_global = {}
+    finish_time_global = {}
+    edge_classification_global = {}
+    has_cycle_global = False
+    time = [0]
+
+    def dfs_visit(node):
+        nonlocal has_cycle_global
+
+        visited_global.add(node)
+        time[0] += 1
+        discovery_time_global[node] = time[0]
+        order_global.append(node)
+
+        neighbors = G.get_vizinhos(node)
+        if neighbors:
+            for neighbor, weight in neighbors:
+                edge = (node, neighbor)
+
+                if neighbor not in visited_global:
+                    edge_classification_global[edge] = 'tree_edge'
+                    parent_global[neighbor] = node
+                    dfs_visit(neighbor)
+
+                elif neighbor in discovery_time_global and neighbor not in finish_time_global:
+                    edge_classification_global[edge] = 'back_edge'
+                    has_cycle_global = True
+
+                elif discovery_time_global[neighbor] > discovery_time_global[node]:
+                    edge_classification_global[edge] = 'forward_edge'
+
+                else:
+                    edge_classification_global[edge] = 'cross_edge'
+
+        time[0] += 1
+        finish_time_global[node] = time[0]
+
+    for node in all_nodes:
+        if node not in visited_global:
+            parent_global[node] = None
+            dfs_visit(node)
+
+    return {
+        'visited': visited_global,
+        'parent': parent_global,
+        'order': order_global,
+        'discovery_time': discovery_time_global,
+        'finish_time': finish_time_global,
+        'has_cycle': has_cycle_global,
+        'edge_classification': edge_classification_global
+    }
+# DIJKSTRA'S ALGORITHM
 
 def _weight_function(G, weight):
     """Returns a function that returns the weight of an edge.
@@ -540,4 +811,226 @@ def dijkstra_path_length(G, source, target, weight="weight"):
         return length[target]
     except KeyError as err:
         raise Exception(f"Node {target} not reachable from {source}") from err
-    
+
+# Bellmman Ford
+
+def bellman_ford(G, source, weight="weight"):
+    """
+    Compute shortest paths from a single source using Bellman-Ford algorithm.
+
+    This algorithm can handle negative edge weights and detects negative cycles.
+
+    Parameters
+    ----------
+    G : Graph object
+        The graph to search (uses get_todos_os_nos and get_vizinhos methods)
+    source : node
+        Starting node for paths
+    weight : string, optional (default="weight")
+        Edge weight attribute name. For custom Graph class, this is not used
+        directly as weights are part of the adjacency list structure.
+
+    Returns
+    -------
+    dict
+        Dictionary with:
+        - 'distances': dict mapping node -> shortest distance from source
+        - 'predecessors': dict mapping node -> predecessor in shortest path tree
+        - 'has_negative_cycle': boolean indicating if negative cycle was detected
+        - 'negative_cycle': list of nodes forming the negative cycle (if detected)
+
+    Raises
+    ------
+    Exception
+        If source is not in graph
+
+    Notes
+    -----
+    The Bellman-Ford algorithm runs in O(V*E) time complexity.
+    It relaxes all edges |V|-1 times, then checks for negative cycles.
+
+    Examples
+    --------
+    >>> result = bellman_ford(G, 'A')
+    >>> if result['has_negative_cycle']:
+    ...     print("Negative cycle detected:", result['negative_cycle'])
+    ... else:
+    ...     print("Shortest distances:", result['distances'])
+    """
+    if source not in G:
+        raise Exception(f"Node {source} not found in graph")
+
+    # Initializxe
+    all_nodes = G.get_todos_os_nos()
+    distances = {node: float('inf') for node in all_nodes}
+    predecessors = {node: None for node in all_nodes}
+    distances[source] = 0
+
+    # |V| - 1 
+    num_nodes = len(all_nodes)
+
+    for iteration in range(num_nodes - 1):
+        updated = False
+
+
+        for u in all_nodes:
+            if distances[u] == float('inf'):
+                continue  # Skip 
+
+            neighbors = G.get_vizinhos(u)
+            if neighbors:
+                for v, edge_weight in neighbors:
+
+                    if distances[u] + edge_weight < distances[v]:
+                        distances[v] = distances[u] + edge_weight
+                        predecessors[v] = u
+                        updated = True
+
+
+        if not updated:
+            break
+
+
+    has_negative_cycle = False
+    negative_cycle = []
+
+    for u in all_nodes:
+        if distances[u] == float('inf'):
+            continue
+
+        neighbors = G.get_vizinhos(u)
+        if neighbors:
+            for v, edge_weight in neighbors:
+                if distances[u] + edge_weight < distances[v]:
+
+                    has_negative_cycle = True
+
+
+                    cycle_node = v
+                    visited_in_trace = set()
+
+
+                    for _ in range(num_nodes):
+                        cycle_node = predecessors[cycle_node]
+                        if cycle_node is None:
+                            break
+
+
+                    if cycle_node is not None:
+                        current = cycle_node
+                        cycle_path = []
+                        while True:
+                            if current in visited_in_trace:
+
+                                cycle_start_idx = cycle_path.index(current)
+                                negative_cycle = cycle_path[cycle_start_idx:]
+                                break
+                            visited_in_trace.add(current)
+                            cycle_path.append(current)
+                            current = predecessors[current]
+                            if current is None:
+                                break
+
+                    break
+
+        if has_negative_cycle:
+            break
+
+    return {
+        'distances': distances,
+        'predecessors': predecessors,
+        'has_negative_cycle': has_negative_cycle,
+        'negative_cycle': negative_cycle
+    }
+
+def bellman_ford_path(G, source, target, weight="weight"):
+    """
+    Returns the shortest path from source to target using Bellman-Ford.
+
+    Parameters
+    ----------
+    G : Graph object
+        The graph to search
+    source : node
+        Starting node
+    target : node
+        Ending node
+    weight : string, optional (default="weight")
+        Edge weight attribute name
+
+    Returns
+    -------
+    list or None
+        List of nodes in shortest path, or None if no path exists
+
+    Raises
+    ------
+    Exception
+        If source or target not in graph, or if negative cycle detected
+    """
+    if source not in G:
+        raise Exception(f"Node {source} not found in graph")
+    if target not in G:
+        raise Exception(f"Node {target} not found in graph")
+
+    if source == target:
+        return [source]
+
+    result = bellman_ford(G, source, weight)
+
+    if result['has_negative_cycle']:
+        raise Exception(f"Negative cycle detected: {result['negative_cycle']}")
+
+    if result['distances'][target] == float('inf'):
+        return None  
+
+
+    path = []
+    current = target
+    while current is not None:
+        path.append(current)
+        current = result['predecessors'][current]
+
+    path.reverse()
+    return path
+
+def bellman_ford_path_length(G, source, target, weight="weight"):
+    """
+    Returns the shortest path length from source to target using Bellman-Ford.
+
+    Parameters
+    ----------
+    G : Graph object
+        The graph to search
+    source : node
+        Starting node
+    target : node
+        Ending node
+    weight : string, optional (default="weight")
+        Edge weight attribute name
+
+    Returns
+    -------
+    number
+        Shortest path length, or float('inf') if no path exists
+
+    Raises
+    ------
+    Exception
+        If source or target not in graph, or if negative cycle detected
+    """
+    if source not in G:
+        raise Exception(f"Node {source} not found in graph")
+    if target not in G:
+        raise Exception(f"Node {target} not found in graph")
+
+    if source == target:
+        return 0
+
+    result = bellman_ford(G, source, weight)
+
+    if result['has_negative_cycle']:
+        raise Exception(f"Negative cycle detected: {result['negative_cycle']}")
+
+    return result['distances'][target]
+

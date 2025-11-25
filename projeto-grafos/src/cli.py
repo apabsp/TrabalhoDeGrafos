@@ -42,7 +42,8 @@ def main():
 
     print("\n--- Executando Parte 2 (Rotas Aéreas: europe_air_routes.csv) ---")
 
-    solve.executar_dijkstra_parte2()
+    # solve.executar_dijkstra_parte2()
+    solve.executar_parte2_completa()
 
     print(f"\nAnálise concluída. Arquivos de saída gerados em '{OUTPUT_DIR}/'.")
 

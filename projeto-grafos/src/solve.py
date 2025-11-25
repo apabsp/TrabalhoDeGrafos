@@ -577,3 +577,376 @@ def executar_dijkstra_parte2(pares=None):
         print(f"Erro ao salvar relatório de desempenho da Parte 2: {e}")
 
     return df_out
+
+
+# ===================================================================
+# PARTE 2: BFS, DFS, e Bellman-Ford Analysis
+# ===================================================================
+
+def executar_bfs_parte2(num_sources=3):
+    """
+    Execute BFS from multiple sources on the Part 2 dataset.
+
+    Requirements:
+    - Run BFS from at least 3 different sources
+    - Report order (number of nodes visited) and layers/levels
+    """
+    from .graphs.algorithms import bfs
+
+    print("\n--- Executando BFS (Parte 2) ---")
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    grafo, df_rotas = construir_grafo_parte2()
+    if grafo is None:
+        print("Não foi possível construir o grafo da Parte 2.")
+        return None
+
+    # Get some source nodes from the graph
+    todos_nos = grafo.get_todos_os_nos()
+    if len(todos_nos) < num_sources:
+        num_sources = len(todos_nos)
+
+    # Select sources: first, middle, and last nodes (for variety)
+    sources = [
+        todos_nos[0],
+        todos_nos[len(todos_nos) // 2],
+        todos_nos[-1]
+    ][:num_sources]
+
+    resultados = []
+    tempos = []
+
+    for source in sources:
+        print(f"\nBFS a partir de: {source}")
+
+        try:
+            t0 = time.perf_counter()
+            result = bfs(grafo, source)
+            elapsed = time.perf_counter() - t0
+
+            num_visitados = len(result['visited'])
+            num_niveis = max(result['levels'].values()) if result['levels'] else 0
+
+            # Count nodes at each level
+            niveis_count = {}
+            for node, level in result['levels'].items():
+                niveis_count[level] = niveis_count.get(level, 0) + 1
+
+            print(f"  Nós visitados: {num_visitados}")
+            print(f"  Níveis/camadas: {num_niveis + 1}")
+            print(f"  Tempo: {elapsed:.6f}s")
+
+            resultados.append({
+                "algoritmo": "BFS",
+                "source": source,
+                "nos_visitados": num_visitados,
+                "num_niveis": num_niveis + 1,
+                "niveis_distribuicao": niveis_count,
+                "tempo_segundos": elapsed
+            })
+
+            tempos.append({
+                "algoritmo": "BFS",
+                "source": source,
+                "tempo_segundos": elapsed
+            })
+
+        except Exception as e:
+            print(f"  Erro ao executar BFS de {source}: {e}")
+            resultados.append({
+                "algoritmo": "BFS",
+                "source": source,
+                "erro": str(e)
+            })
+
+    # Save results
+    try:
+        output_file = os.path.join(OUTPUT_DIR, 'parte2_bfs.json')
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(resultados, f, ensure_ascii=False, indent=4)
+        print(f"\nResultados BFS salvos em '{output_file}'")
+    except Exception as e:
+        print(f"Erro ao salvar resultados BFS: {e}")
+
+    return resultados
+
+
+def executar_dfs_parte2(num_sources=3):
+    """
+    Execute DFS from multiple sources on the Part 2 dataset.
+
+    Requirements:
+    - Run DFS from at least 3 different sources
+    - Report order, cycles detected, edge classifications
+    """
+    from .graphs.algorithms import dfs
+
+    print("\n--- Executando DFS (Parte 2) ---")
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    grafo, df_rotas = construir_grafo_parte2()
+    if grafo is None:
+        print("Não foi possível construir o grafo da Parte 2.")
+        return None
+
+    # Get some source nodes
+    todos_nos = grafo.get_todos_os_nos()
+    if len(todos_nos) < num_sources:
+        num_sources = len(todos_nos)
+
+    # Select sources: first, middle, and last nodes
+    sources = [
+        todos_nos[0],
+        todos_nos[len(todos_nos) // 2],
+        todos_nos[-1]
+    ][:num_sources]
+
+    resultados = []
+    tempos = []
+
+    for source in sources:
+        print(f"\nDFS a partir de: {source}")
+
+        try:
+            t0 = time.perf_counter()
+            result = dfs(grafo, source)
+            elapsed = time.perf_counter() - t0
+
+            num_visitados = len(result['visited'])
+            has_cycle = result['has_cycle']
+
+            # Count edge types
+            edge_types_count = {}
+            for edge, edge_type in result['edge_classification'].items():
+                edge_types_count[edge_type] = edge_types_count.get(edge_type, 0) + 1
+
+            print(f"  Nós visitados: {num_visitados}")
+            print(f"  Ciclo detectado: {has_cycle}")
+            print(f"  Classificação de arestas: {edge_types_count}")
+            print(f"  Tempo: {elapsed:.6f}s")
+
+            resultados.append({
+                "algoritmo": "DFS",
+                "source": source,
+                "nos_visitados": num_visitados,
+                "tem_ciclo": has_cycle,
+                "classificacao_arestas": edge_types_count,
+                "tempo_segundos": elapsed
+            })
+
+            tempos.append({
+                "algoritmo": "DFS",
+                "source": source,
+                "tempo_segundos": elapsed
+            })
+
+        except Exception as e:
+            print(f"  Erro ao executar DFS de {source}: {e}")
+            resultados.append({
+                "algoritmo": "DFS",
+                "source": source,
+                "erro": str(e)
+            })
+
+    # Save results
+    try:
+        output_file = os.path.join(OUTPUT_DIR, 'parte2_dfs.json')
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(resultados, f, ensure_ascii=False, indent=4)
+        print(f"\nResultados DFS salvos em '{output_file}'")
+    except Exception as e:
+        print(f"Erro ao salvar resultados DFS: {e}")
+
+    return resultados
+
+
+def executar_bellman_ford_parte2(pares=None):
+    """
+    Execute Bellman-Ford on Part 2 dataset.
+
+    Requirements:
+    - At least one case with negative weight (without negative cycle)
+    - At least one case with negative cycle (detected)
+    - Compare performance with Dijkstra
+    """
+    from .graphs.algorithms import bellman_ford, bellman_ford_path, bellman_ford_path_length
+
+    print("\n--- Executando Bellman-Ford (Parte 2) ---")
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    # Build graph for Bellman-Ford (we'll add some negative weights)
+    grafo, df_rotas = construir_grafo_parte2()
+    if grafo is None:
+        print("Não foi possível construir o grafo da Parte 2.")
+        return None
+
+    print("\nNOTA: O dataset original tem apenas pesos positivos.")
+    print("Para testar Bellman-Ford com pesos negativos, vamos criar casos sintéticos:\n")
+
+    # Load pairs from CSV if not provided
+    if pares is None:
+        pares = carregar_pares_parte2()
+        if not pares:
+            print("Nenhum par encontrado. Usando pares padrão do dataset.")
+            todos_nos = grafo.get_todos_os_nos()
+            pares = [
+                (todos_nos[0], todos_nos[10]),
+                (todos_nos[50], todos_nos[100]),
+                (todos_nos[200], todos_nos[300])
+            ] if len(todos_nos) > 300 else [(todos_nos[0], todos_nos[-1])]
+
+    resultados = []
+    tempos = []
+
+    # Test 1: Normal positive weights (same as Dijkstra)
+    print("=== Teste 1: Pesos Positivos (sem ciclo negativo) ===")
+    for origem, destino in pares[:3]:  # Use first 3 pairs
+        try:
+            t0 = time.perf_counter()
+            result = bellman_ford(grafo, origem)
+            elapsed = time.perf_counter() - t0
+
+            if destino in result['distances']:
+                distancia = result['distances'][destino]
+                tem_ciclo_negativo = result['has_negative_cycle']
+
+                print(f"{origem} -> {destino}: custo={distancia}, ciclo_neg={tem_ciclo_negativo}, tempo={elapsed:.6f}s")
+
+                resultados.append({
+                    "caso": "pesos_positivos",
+                    "algoritmo": "Bellman-Ford",
+                    "origem": origem,
+                    "destino": destino,
+                    "custo": distancia,
+                    "tem_ciclo_negativo": tem_ciclo_negativo,
+                    "tempo_segundos": elapsed
+                })
+
+                tempos.append({
+                    "algoritmo": "Bellman-Ford",
+                    "caso": "pesos_positivos",
+                    "origem": origem,
+                    "destino": destino,
+                    "tempo_segundos": elapsed
+                })
+
+        except Exception as e:
+            print(f"{origem} -> {destino}: ERRO - {e}")
+
+    # Test 2: Create a small graph with negative weights (NO negative cycle)
+    print("\n=== Teste 2: Pesos Negativos SEM Ciclo Negativo ===")
+    print("Criando grafo sintético com pesos negativos...")
+
+    grafo_neg = Grafo(dirigido=True)
+    grafo_neg.add_edge('A', 'B', 10.0)
+    grafo_neg.add_edge('A', 'C', 5.0)
+    grafo_neg.add_edge('B', 'D', -8.0)  # Negative weight
+    grafo_neg.add_edge('C', 'D', -3.0)  # Negative weight
+    grafo_neg.add_edge('D', 'E', 2.0)
+
+    try:
+        t0 = time.perf_counter()
+        result = bellman_ford(grafo_neg, 'A')
+        elapsed = time.perf_counter() - t0
+
+        print(f"  A -> E: custo={result['distances']['E']}")
+        print(f"  Ciclo negativo detectado: {result['has_negative_cycle']}")
+        print(f"  Tempo: {elapsed:.6f}s")
+
+        resultados.append({
+            "caso": "pesos_negativos_sem_ciclo",
+            "algoritmo": "Bellman-Ford",
+            "origem": "A",
+            "destino": "E",
+            "custo": result['distances']['E'],
+            "tem_ciclo_negativo": result['has_negative_cycle'],
+            "tempo_segundos": elapsed,
+            "descricao": "Grafo sintético: A->B(10), A->C(5), B->D(-8), C->D(-3), D->E(2)"
+        })
+
+    except Exception as e:
+        print(f"  Erro: {e}")
+
+    # Test 3: Create graph WITH negative cycle
+    print("\n=== Teste 3: Com Ciclo Negativo (Detectado) ===")
+    print("Criando grafo sintético com ciclo negativo...")
+
+    grafo_ciclo = Grafo(dirigido=True)
+    grafo_ciclo.add_edge('X', 'Y', 1.0)
+    grafo_ciclo.add_edge('Y', 'Z', 1.0)
+    grafo_ciclo.add_edge('Z', 'X', -5.0)  # Creates negative cycle: X->Y->Z->X = 1+1+(-5) = -3
+
+    try:
+        t0 = time.perf_counter()
+        result = bellman_ford(grafo_ciclo, 'X')
+        elapsed = time.perf_counter() - t0
+
+        print(f"  Ciclo negativo detectado: {result['has_negative_cycle']}")
+        print(f"  Ciclo: {result['negative_cycle']}")
+        print(f"  Tempo: {elapsed:.6f}s")
+
+        resultados.append({
+            "caso": "ciclo_negativo",
+            "algoritmo": "Bellman-Ford",
+            "origem": "X",
+            "tem_ciclo_negativo": result['has_negative_cycle'],
+            "ciclo_negativo": result['negative_cycle'],
+            "tempo_segundos": elapsed,
+            "descricao": "Grafo sintético: X->Y(1), Y->Z(1), Z->X(-5), total=-3"
+        })
+
+    except Exception as e:
+        print(f"  Erro: {e}")
+
+    # Save results
+    try:
+        output_file = os.path.join(OUTPUT_DIR, 'parte2_bellman_ford.json')
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(resultados, f, ensure_ascii=False, indent=4)
+        print(f"\nResultados Bellman-Ford salvos em '{output_file}'")
+    except Exception as e:
+        print(f"Erro ao salvar resultados Bellman-Ford: {e}")
+
+    return resultados
+
+
+def executar_parte2_completa():
+    print("\n" + "="*60)
+    print("BFS, DFS, Dijkstra e Bellman-Ford")
+    print("="*60)
+
+    # Rodar todos
+    resultados_bfs = executar_bfs_parte2()
+    resultados_dfs = executar_dfs_parte2()
+    resultados_dijkstra = executar_dijkstra_parte2()
+    resultados_bf = executar_bellman_ford_parte2()
+
+    print("\n--- Atualizando relatório completo da Parte 2 ---")
+
+    try:
+
+        report = {}
+        if os.path.exists(FILE_OUT_PARTE2_REPORT):
+            with open(FILE_OUT_PARTE2_REPORT, 'r', encoding='utf-8') as f:
+                report = json.load(f)
+
+        # Add BFS, DFS, and Bellman-Ford results
+        report['bfs'] = resultados_bfs if resultados_bfs else []
+        report['dfs'] = resultados_dfs if resultados_dfs else []
+        report['bellman_ford'] = resultados_bf if resultados_bf else []
+
+        # Save updated report
+        with open(FILE_OUT_PARTE2_REPORT, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=4)
+
+        print(f"Relatório completo atualizado em '{FILE_OUT_PARTE2_REPORT}'")
+
+    except Exception as e:
+        print(f"Erro ao atualizar relatório: {e}")
+
+    print("\n" + "="*60)
+    print("Análise da Parte 2 concluída!")
+    print("="*60)

@@ -9,31 +9,31 @@
             "algoritmo": "dijkstra",
             "origem": "LIS",
             "destino": "CDG",
-            "tempo_segundos": 0.005873299960512668
+            "tempo_segundos": 0.01273439999204129
         },
         {
             "algoritmo": "dijkstra",
             "origem": "MAD",
             "destino": "FRA",
-            "tempo_segundos": 0.00887770002009347
+            "tempo_segundos": 0.021449300009408034
         },
         {
             "algoritmo": "dijkstra",
             "origem": "BCN",
             "destino": "AMS",
-            "tempo_segundos": 0.008183600031770766
+            "tempo_segundos": 0.015047900000354275
         },
         {
             "algoritmo": "dijkstra",
             "origem": "ATH",
             "destino": "FCO",
-            "tempo_segundos": 0.0034644000115804374
+            "tempo_segundos": 0.004780799994478002
         },
         {
             "algoritmo": "dijkstra",
             "origem": "IST",
             "destino": "LHR",
-            "tempo_segundos": 0.009585799998603761
+            "tempo_segundos": 0.0204853000032017
         }
     ],
     "bfs": [
@@ -49,7 +49,7 @@
                 "3": 504,
                 "4": 12
             },
-            "tempo_segundos": 0.0007042000070214272
+            "tempo_segundos": 0.001743700006045401
         },
         {
             "algoritmo": "BFS",
@@ -59,7 +59,7 @@
             "niveis_distribuicao": {
                 "0": 1
             },
-            "tempo_segundos": 1.309998333454132e-05
+            "tempo_segundos": 4.470000567380339e-05
         },
         {
             "algoritmo": "BFS",
@@ -69,7 +69,7 @@
             "niveis_distribuicao": {
                 "0": 1
             },
-            "tempo_segundos": 1.9000144675374031e-06
+            "tempo_segundos": 2.1799991372972727e-05
         }
     ],
     "dfs": [
@@ -84,7 +84,7 @@
                 "cross_edge": 292,
                 "forward_edge": 8663
             },
-            "tempo_segundos": 0.0030692999716848135
+            "tempo_segundos": 0.009178499996778555
         },
         {
             "algoritmo": "DFS",
@@ -92,7 +92,7 @@
             "nos_visitados": 1,
             "tem_ciclo": false,
             "classificacao_arestas": {},
-            "tempo_segundos": 3.4999684430658817e-06
+            "tempo_segundos": 1.4099990949034691e-05
         },
         {
             "algoritmo": "DFS",
@@ -100,7 +100,7 @@
             "nos_visitados": 1,
             "tem_ciclo": false,
             "classificacao_arestas": {},
-            "tempo_segundos": 2.200016751885414e-06
+            "tempo_segundos": 2.719998883549124e-05
         }
     ],
     "bellman_ford": [
@@ -111,7 +111,7 @@
             "destino": "CDG",
             "custo": 50.0,
             "tem_ciclo_negativo": false,
-            "tempo_segundos": 0.004819399968255311
+            "tempo_segundos": 0.007379299990134314
         },
         {
             "caso": "pesos_positivos",
@@ -120,7 +120,7 @@
             "destino": "FRA",
             "custo": 90.0,
             "tem_ciclo_negativo": false,
-            "tempo_segundos": 0.004169299965724349
+            "tempo_segundos": 0.006055099991499446
         },
         {
             "caso": "pesos_positivos",
@@ -129,7 +129,7 @@
             "destino": "AMS",
             "custo": 60.0,
             "tem_ciclo_negativo": false,
-            "tempo_segundos": 0.003533800016157329
+            "tempo_segundos": 0.008000199988600798
         },
         {
             "caso": "pesos_negativos_sem_ciclo",
@@ -138,7 +138,7 @@
             "destino": "E",
             "custo": 4.0,
             "tem_ciclo_negativo": false,
-            "tempo_segundos": 1.479999627918005e-05,
+            "tempo_segundos": 2.990000939462334e-05,
             "descricao": "Grafo sintético: A->B(10), A->C(5), B->D(-8), C->D(-3), D->E(2)"
         },
         {
@@ -151,7 +151,7 @@
                 "X",
                 "Z"
             ],
-            "tempo_segundos": 1.0200019460171461e-05,
+            "tempo_segundos": 2.5199988158419728e-05,
             "descricao": "Grafo sintético: X->Y(1), Y->Z(1), Z->X(-5), total=-3"
         }
     ]

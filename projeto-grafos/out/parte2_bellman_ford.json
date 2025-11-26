@@ -6,7 +6,7 @@
         "destino": "CDG",
         "custo": 50.0,
         "tem_ciclo_negativo": false,
-        "tempo_segundos": 0.004819399968255311
+        "tempo_segundos": 0.007379299990134314
     },
     {
         "caso": "pesos_positivos",
@@ -15,7 +15,7 @@
         "destino": "FRA",
         "custo": 90.0,
         "tem_ciclo_negativo": false,
-        "tempo_segundos": 0.004169299965724349
+        "tempo_segundos": 0.006055099991499446
     },
     {
         "caso": "pesos_positivos",
@@ -24,7 +24,7 @@
         "destino": "AMS",
         "custo": 60.0,
         "tem_ciclo_negativo": false,
-        "tempo_segundos": 0.003533800016157329
+        "tempo_segundos": 0.008000199988600798
     },
     {
         "caso": "pesos_negativos_sem_ciclo",
@@ -33,7 +33,7 @@
         "destino": "E",
         "custo": 4.0,
         "tem_ciclo_negativo": false,
-        "tempo_segundos": 1.479999627918005e-05,
+        "tempo_segundos": 2.990000939462334e-05,
         "descricao": "Grafo sintético: A->B(10), A->C(5), B->D(-8), C->D(-3), D->E(2)"
     },
     {
@@ -46,7 +46,7 @@
             "X",
             "Z"
         ],
-        "tempo_segundos": 1.0200019460171461e-05,
+        "tempo_segundos": 2.5199988158419728e-05,
         "descricao": "Grafo sintético: X->Y(1), Y->Z(1), Z->X(-5), total=-3"
     }
 ]

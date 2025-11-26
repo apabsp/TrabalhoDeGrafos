@@ -276,35 +276,34 @@ function highlightFilter(filter) {
         border-bottom: 1px solid #e1e8ed;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .path-info {
-        display: inline-block;
-        background: #f0f4ff;
-        padding: 12px 20px;
-        border-radius: 8px;
-        margin-right: 15px;
-        border-left: 4px solid #667eea;
+    .control-section {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e1e8ed;
     }
-    .path-label {
-        font-size: 12px;
-        color: #666;
-        margin-bottom: 4px;
+    .control-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .section-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 10px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
-    .path-text {
-        font-size: 15px;
-        font-weight: 600;
-        color: #2c3e50;
-    }
     .btn {
-        padding: 12px 24px;
+        padding: 10px 20px;
         border: none;
         border-radius: 6px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-right: 10px;
+        margin-right: 8px;
+        margin-bottom: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .btn:hover {
@@ -323,6 +322,34 @@ function highlightFilter(filter) {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
     }
+    .btn-filter {
+        background: #3498db;
+        color: white;
+    }
+    .btn-filter.active {
+        box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.4) !important;
+        transform: scale(1.05);
+    }
+    .input-group {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    .input-group label {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    .input-group select {
+        padding: 8px 12px;
+        border: 2px solid #e1e8ed;
+        border-radius: 6px;
+        font-size: 13px;
+        min-width: 200px;
+        cursor: pointer;
+    }
     .legend-container {
         background: white;
         padding: 15px 30px;
@@ -337,26 +364,550 @@ function highlightFilter(filter) {
     #mynetwork {
         margin-top: 0 !important;
     }
+    #stats-panel {
+        position: fixed;
+        right: 20px;
+        top: 120px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        min-width: 280px;
+        max-width: 350px;
+        display: none;
+        z-index: 1000;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    #stats-panel h3 {
+        margin-top: 0;
+        color: #667eea;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+    #stats-content {
+        font-size: 14px;
+        line-height: 1.8;
+    }
+    #legend-panel {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        min-width: 400px;
+        max-width: 500px;
+        display: none;
+        z-index: 10000;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    #legend-panel h3 {
+        margin-top: 0;
+        color: #667eea;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+        font-size: 20px;
+    }
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        z-index: 9999;
+    }
 </style>
 
 <div class="header-container">
     <div class="header-title">Grafo Interativo dos Bairros do Recife</div>
-    <div class="header-subtitle">Projeto Final - Teoria dos Grafos | Parte 1 - Ponto 9</div>
+    <div class="header-subtitle">Projeto Final - Teoria dos Grafos | Parte 1 - Ponto 9 + Bônus Visual/UX</div>
 </div>
 
 <div class="controls-container">
-    <div class="path-info">
-        <div class="path-label">Caminho em Destaque</div>
-        <div class="path-text">Nova Descoberta → Boa Viagem (Setúbal)</div>
+    
+    <!-- SEÇÃO 1: CAMINHO PERSONALIZADO -->
+    <div class="control-section">
+        <div class="section-title">1. Destaque de Caminho Personalizado</div>
+        <div class="input-group">
+            <label>Origem:</label>
+            <select id="path-origin">
+                <option value="">Selecione o bairro de origem...</option>
+                <option value="aflitos">Aflitos</option>
+                <option value="afogados">Afogados</option>
+                <option value="agua fria">Agua Fria</option>
+                <option value="alto do mandu">Alto Do Mandu</option>
+                <option value="alto jose bonifacio">Alto Jose Bonifacio</option>
+                <option value="alto jose do pinho">Alto Jose Do Pinho</option>
+                <option value="alto santa terezinha">Alto Santa Terezinha</option>
+                <option value="apipucos">Apipucos</option>
+                <option value="areias">Areias</option>
+                <option value="arruda">Arruda</option>
+                <option value="barro">Barro</option>
+                <option value="beberibe">Beberibe</option>
+                <option value="boa viagem">Boa Viagem</option>
+                <option value="boa vista">Boa Vista</option>
+                <option value="bomba do hemeterio">Bomba Do Hemeterio</option>
+                <option value="bongi">Bongi</option>
+                <option value="brasilia teimosa">Brasilia Teimosa</option>
+                <option value="brejo da guabiraba">Brejo Da Guabiraba</option>
+                <option value="brejo de beberibe">Brejo De Beberibe</option>
+                <option value="cabanga">Cabanga</option>
+                <option value="cacote">Cacote</option>
+                <option value="cajueiro">Cajueiro</option>
+                <option value="campina do barreto">Campina Do Barreto</option>
+                <option value="campo grande">Campo Grande</option>
+                <option value="casa amarela">Casa Amarela</option>
+                <option value="casa forte">Casa Forte</option>
+                <option value="caxanga">Caxanga</option>
+                <option value="cidade universitaria">Cidade Universitaria</option>
+                <option value="coelhos">Coelhos</option>
+                <option value="cohab">Cohab</option>
+                <option value="coqueiral">Coqueiral</option>
+                <option value="cordeiro">Cordeiro</option>
+                <option value="corrego do jenipapo">Corrego Do Jenipapo</option>
+                <option value="curado">Curado</option>
+                <option value="derby">Derby</option>
+                <option value="dois irmaos">Dois Irmaos</option>
+                <option value="dois unidos">Dois Unidos</option>
+                <option value="encruzilhada">Encruzilhada</option>
+                <option value="engenho do meio">Engenho Do Meio</option>
+                <option value="espinheiro">Espinheiro</option>
+                <option value="estancia">Estancia</option>
+                <option value="fundao">Fundao</option>
+                <option value="gracas">Gracas</option>
+                <option value="guabiraba">Guabiraba</option>
+                <option value="hipodromo">Hipodromo</option>
+                <option value="ibura">Ibura</option>
+                <option value="ilha do leite">Ilha Do Leite</option>
+                <option value="ilha do retiro">Ilha Do Retiro</option>
+                <option value="ilha joana bezerra">Ilha Joana Bezerra</option>
+                <option value="imbiribeira">Imbiribeira</option>
+                <option value="ipsep">Ipsep</option>
+                <option value="iputinga">Iputinga</option>
+                <option value="jaqueira">Jaqueira</option>
+                <option value="jardim sao paulo">Jardim Sao Paulo</option>
+                <option value="jiquia">Jiquia</option>
+                <option value="jordao">Jordao</option>
+                <option value="linha do tiro">Linha Do Tiro</option>
+                <option value="macaxeira">Macaxeira</option>
+                <option value="madalena">Madalena</option>
+                <option value="mangabeira">Mangabeira</option>
+                <option value="mangueira">Mangueira</option>
+                <option value="monteiro">Monteiro</option>
+                <option value="morro da conceicao">Morro Da Conceicao</option>
+                <option value="mustardinha">Mustardinha</option>
+                <option value="nova descoberta">Nova Descoberta</option>
+                <option value="paissandu">Paissandu</option>
+                <option value="parnamirim">Parnamirim</option>
+                <option value="passarinho">Passarinho</option>
+                <option value="pau-ferro">Pau-Ferro</option>
+                <option value="peixinhos">Peixinhos</option>
+                <option value="pina">Pina</option>
+                <option value="poco da panela">Poco Da Panela</option>
+                <option value="ponto de parada">Ponto De Parada</option>
+                <option value="porto da madeira">Porto Da Madeira</option>
+                <option value="prado">Prado</option>
+                <option value="recife">Recife</option>
+                <option value="rosarinho">Rosarinho</option>
+                <option value="san martin">San Martin</option>
+                <option value="sancho">Sancho</option>
+                <option value="santana">Santana</option>
+                <option value="santo amaro">Santo Amaro</option>
+                <option value="santo antonio">Santo Antonio</option>
+                <option value="sao jose">Sao Jose</option>
+                <option value="setubal">Setubal</option>
+                <option value="sitio dos pintos">Sitio Dos Pintos</option>
+                <option value="soledade">Soledade</option>
+                <option value="tamarineira">Tamarineira</option>
+                <option value="tejipio">Tejipio</option>
+                <option value="torre">Torre</option>
+                <option value="torreao">Torreao</option>
+                <option value="torroes">Torroes</option>
+                <option value="toto">Toto</option>
+                <option value="varzea">Varzea</option>
+                <option value="vasco da gama">Vasco Da Gama</option>
+                <option value="zumbi">Zumbi</option>
+
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Destino:</label>
+            <select id="path-destination">
+                <option value="">Selecione o bairro de destino...</option>
+                <option value="aflitos">Aflitos</option>
+                <option value="afogados">Afogados</option>
+                <option value="agua fria">Agua Fria</option>
+                <option value="alto do mandu">Alto Do Mandu</option>
+                <option value="alto jose bonifacio">Alto Jose Bonifacio</option>
+                <option value="alto jose do pinho">Alto Jose Do Pinho</option>
+                <option value="alto santa terezinha">Alto Santa Terezinha</option>
+                <option value="apipucos">Apipucos</option>
+                <option value="areias">Areias</option>
+                <option value="arruda">Arruda</option>
+                <option value="barro">Barro</option>
+                <option value="beberibe">Beberibe</option>
+                <option value="boa viagem">Boa Viagem</option>
+                <option value="boa vista">Boa Vista</option>
+                <option value="bomba do hemeterio">Bomba Do Hemeterio</option>
+                <option value="bongi">Bongi</option>
+                <option value="brasilia teimosa">Brasilia Teimosa</option>
+                <option value="brejo da guabiraba">Brejo Da Guabiraba</option>
+                <option value="brejo de beberibe">Brejo De Beberibe</option>
+                <option value="cabanga">Cabanga</option>
+                <option value="cacote">Cacote</option>
+                <option value="cajueiro">Cajueiro</option>
+                <option value="campina do barreto">Campina Do Barreto</option>
+                <option value="campo grande">Campo Grande</option>
+                <option value="casa amarela">Casa Amarela</option>
+                <option value="casa forte">Casa Forte</option>
+                <option value="caxanga">Caxanga</option>
+                <option value="cidade universitaria">Cidade Universitaria</option>
+                <option value="coelhos">Coelhos</option>
+                <option value="cohab">Cohab</option>
+                <option value="coqueiral">Coqueiral</option>
+                <option value="cordeiro">Cordeiro</option>
+                <option value="corrego do jenipapo">Corrego Do Jenipapo</option>
+                <option value="curado">Curado</option>
+                <option value="derby">Derby</option>
+                <option value="dois irmaos">Dois Irmaos</option>
+                <option value="dois unidos">Dois Unidos</option>
+                <option value="encruzilhada">Encruzilhada</option>
+                <option value="engenho do meio">Engenho Do Meio</option>
+                <option value="espinheiro">Espinheiro</option>
+                <option value="estancia">Estancia</option>
+                <option value="fundao">Fundao</option>
+                <option value="gracas">Gracas</option>
+                <option value="guabiraba">Guabiraba</option>
+                <option value="hipodromo">Hipodromo</option>
+                <option value="ibura">Ibura</option>
+                <option value="ilha do leite">Ilha Do Leite</option>
+                <option value="ilha do retiro">Ilha Do Retiro</option>
+                <option value="ilha joana bezerra">Ilha Joana Bezerra</option>
+                <option value="imbiribeira">Imbiribeira</option>
+                <option value="ipsep">Ipsep</option>
+                <option value="iputinga">Iputinga</option>
+                <option value="jaqueira">Jaqueira</option>
+                <option value="jardim sao paulo">Jardim Sao Paulo</option>
+                <option value="jiquia">Jiquia</option>
+                <option value="jordao">Jordao</option>
+                <option value="linha do tiro">Linha Do Tiro</option>
+                <option value="macaxeira">Macaxeira</option>
+                <option value="madalena">Madalena</option>
+                <option value="mangabeira">Mangabeira</option>
+                <option value="mangueira">Mangueira</option>
+                <option value="monteiro">Monteiro</option>
+                <option value="morro da conceicao">Morro Da Conceicao</option>
+                <option value="mustardinha">Mustardinha</option>
+                <option value="nova descoberta">Nova Descoberta</option>
+                <option value="paissandu">Paissandu</option>
+                <option value="parnamirim">Parnamirim</option>
+                <option value="passarinho">Passarinho</option>
+                <option value="pau-ferro">Pau-Ferro</option>
+                <option value="peixinhos">Peixinhos</option>
+                <option value="pina">Pina</option>
+                <option value="poco da panela">Poco Da Panela</option>
+                <option value="ponto de parada">Ponto De Parada</option>
+                <option value="porto da madeira">Porto Da Madeira</option>
+                <option value="prado">Prado</option>
+                <option value="recife">Recife</option>
+                <option value="rosarinho">Rosarinho</option>
+                <option value="san martin">San Martin</option>
+                <option value="sancho">Sancho</option>
+                <option value="santana">Santana</option>
+                <option value="santo amaro">Santo Amaro</option>
+                <option value="santo antonio">Santo Antonio</option>
+                <option value="sao jose">Sao Jose</option>
+                <option value="setubal">Setubal</option>
+                <option value="sitio dos pintos">Sitio Dos Pintos</option>
+                <option value="soledade">Soledade</option>
+                <option value="tamarineira">Tamarineira</option>
+                <option value="tejipio">Tejipio</option>
+                <option value="torre">Torre</option>
+                <option value="torreao">Torreao</option>
+                <option value="torroes">Torroes</option>
+                <option value="toto">Toto</option>
+                <option value="varzea">Varzea</option>
+                <option value="vasco da gama">Vasco Da Gama</option>
+                <option value="zumbi">Zumbi</option>
+
+            </select>
+        </div>
+        <button onclick="calcularERealcarCaminho()" class="btn btn-highlight">
+            🔍 Calcular e Realçar Caminho
+        </button>
+        <button onclick="realcarCaminhoDefault()" class="btn btn-highlight">
+            📍 Realçar Nova Descoberta → Setúbal
+        </button>
+        <button onclick="resetHighlight()" class="btn btn-reset">
+            ❌ Remover Realce
+        </button>
     </div>
-    <button onclick="highlightPath()" class="btn btn-highlight">
-        Realçar Caminho
+    
+    <!-- SEÇÃO 2: FILTROS POR MICRORREGIÃO -->
+    <div class="control-section">
+        <div class="section-title">2. Filtrar por Microrregião</div>
+        <button onclick="filtrarPorMicrorregiao('todas')" class="btn btn-filter active" id="btn-todas" 
+                style="background: #2ecc71 !important; color: white !important;">
+            ✓ Todas
+        </button>
+        <button onclick="filtrarPorMicrorregiao('1.1')" class="btn btn-filter" id="btn-1.1" 
+            style="background: #1f77b4 !important; color: #fff !important; border: 2px solid #1f77b4;">
+            RPA 1.1
+        </button>
+        <button onclick="filtrarPorMicrorregiao('1.2')" class="btn btn-filter" id="btn-1.2" 
+            style="background: #ff7f0e !important; color: #fff !important; border: 2px solid #ff7f0e;">
+            RPA 1.2
+        </button>
+        <button onclick="filtrarPorMicrorregiao('1.3')" class="btn btn-filter" id="btn-1.3" 
+            style="background: #2ca02c !important; color: #fff !important; border: 2px solid #2ca02c;">
+            RPA 1.3
+        </button>
+        <button onclick="filtrarPorMicrorregiao('2.1')" class="btn btn-filter" id="btn-2.1" 
+            style="background: #d62728 !important; color: #fff !important; border: 2px solid #d62728;">
+            RPA 2.1
+        </button>
+        <button onclick="filtrarPorMicrorregiao('2.2')" class="btn btn-filter" id="btn-2.2" 
+            style="background: #9467bd !important; color: #fff !important; border: 2px solid #9467bd;">
+            RPA 2.2
+        </button>
+        <button onclick="filtrarPorMicrorregiao('2.3')" class="btn btn-filter" id="btn-2.3" 
+            style="background: #8c564b !important; color: #fff !important; border: 2px solid #8c564b;">
+            RPA 2.3
+        </button>
+        <button onclick="filtrarPorMicrorregiao('3.1')" class="btn btn-filter" id="btn-3.1" 
+            style="background: #e377c2 !important; color: #000 !important; border: 2px solid #e377c2;">
+            RPA 3.1
+        </button>
+        <button onclick="filtrarPorMicrorregiao('3.2')" class="btn btn-filter" id="btn-3.2" 
+            style="background: #7f7f7f !important; color: #fff !important; border: 2px solid #7f7f7f;">
+            RPA 3.2
+        </button>
+        <button onclick="filtrarPorMicrorregiao('3.3')" class="btn btn-filter" id="btn-3.3" 
+            style="background: #bcbd22 !important; color: #000 !important; border: 2px solid #bcbd22;">
+            RPA 3.3
+        </button>
+        <button onclick="filtrarPorMicrorregiao('4.1')" class="btn btn-filter" id="btn-4.1" 
+            style="background: #17becf !important; color: #fff !important; border: 2px solid #17becf;">
+            RPA 4.1
+        </button>
+        <button onclick="filtrarPorMicrorregiao('4.2')" class="btn btn-filter" id="btn-4.2" 
+            style="background: #a0522d !important; color: #fff !important; border: 2px solid #a0522d;">
+            RPA 4.2
+        </button>
+        <button onclick="filtrarPorMicrorregiao('4.3')" class="btn btn-filter" id="btn-4.3" 
+            style="background: #ffebcd !important; color: #000 !important; border: 2px solid #ffebcd;">
+            RPA 4.3
+        </button>
+        <button onclick="filtrarPorMicrorregiao('5.1')" class="btn btn-filter" id="btn-5.1" 
+            style="background: #adff2f !important; color: #000 !important; border: 2px solid #adff2f;">
+            RPA 5.1
+        </button>
+        <button onclick="filtrarPorMicrorregiao('5.2')" class="btn btn-filter" id="btn-5.2" 
+            style="background: #4682b4 !important; color: #fff !important; border: 2px solid #4682b4;">
+            RPA 5.2
+        </button>
+        <button onclick="filtrarPorMicrorregiao('5.3')" class="btn btn-filter" id="btn-5.3" 
+            style="background: #db7093 !important; color: #fff !important; border: 2px solid #db7093;">
+            RPA 5.3
+        </button>
+        <button onclick="filtrarPorMicrorregiao('6.1')" class="btn btn-filter" id="btn-6.1" 
+            style="background: #f08080 !important; color: #000 !important; border: 2px solid #f08080;">
+            RPA 6.1
+        </button>
+        <button onclick="filtrarPorMicrorregiao('6.2')" class="btn btn-filter" id="btn-6.2" 
+            style="background: #008080 !important; color: #fff !important; border: 2px solid #008080;">
+            RPA 6.2
+        </button>
+        <button onclick="filtrarPorMicrorregiao('6.3')" class="btn btn-filter" id="btn-6.3" 
+            style="background: #daa520 !important; color: #000 !important; border: 2px solid #daa520;">
+            RPA 6.3
+        </button>
+
+    </div>
+    
+    <!-- SEÇÃO 3: INFORMAÇÕES -->
+    <div class="control-section">
+        <div class="section-title">ℹ3. Informações</div>
+        <button onclick="showInfo()" class="btn btn-info">
+            📊 Estatísticas do Grafo
+        </button>
+        <button onclick="mostrarLegendaCores()" class="btn btn-info">
+            🎨 Legenda de Cores
+        </button>
+    </div>
+    
+</div>
+
+<!-- Overlay escuro -->
+<div class="overlay" id="overlay" onclick="fecharLegenda()"></div>
+
+<!-- Painel de legenda colorida -->
+<div id="legend-panel">
+    <h3>🎨 Legenda de Cores por Microrregião</h3>
+    <div id="legend-content">
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #1f77b4; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 1.1</strong> - 2 bairros
+                <br><small style="color: #666;">#1f77b4</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #ff7f0e; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 1.2</strong> - 7 bairros
+                <br><small style="color: #666;">#ff7f0e</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #2ca02c; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 1.3</strong> - 2 bairros
+                <br><small style="color: #666;">#2ca02c</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #d62728; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 2.1</strong> - 9 bairros
+                <br><small style="color: #666;">#d62728</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #9467bd; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 2.2</strong> - 6 bairros
+                <br><small style="color: #666;">#9467bd</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #8c564b; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 2.3</strong> - 3 bairros
+                <br><small style="color: #666;">#8c564b</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #e377c2; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 3.1</strong> - 16 bairros
+                <br><small style="color: #666;">#e377c2</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #7f7f7f; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 3.2</strong> - 5 bairros
+                <br><small style="color: #666;">#7f7f7f</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #bcbd22; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 3.3</strong> - 8 bairros
+                <br><small style="color: #666;">#bcbd22</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #17becf; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 4.1</strong> - 7 bairros
+                <br><small style="color: #666;">#17becf</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #a0522d; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 4.2</strong> - 2 bairros
+                <br><small style="color: #666;">#a0522d</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #ffebcd; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 4.3</strong> - 3 bairros
+                <br><small style="color: #666;">#ffebcd</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #adff2f; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 5.1</strong> - 5 bairros
+                <br><small style="color: #666;">#adff2f</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #4682b4; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 5.2</strong> - 4 bairros
+                <br><small style="color: #666;">#4682b4</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #db7093; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 5.3</strong> - 7 bairros
+                <br><small style="color: #666;">#db7093</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #f08080; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 6.1</strong> - 6 bairros
+                <br><small style="color: #666;">#f08080</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #008080; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 6.2</strong> - 2 bairros
+                <br><small style="color: #666;">#008080</small>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: #daa520; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA 6.3</strong> - 1 bairros
+                <br><small style="color: #666;">#daa520</small>
+            </div>
+        </div>
+
+    </div>
+    <button onclick="fecharLegenda()" class="btn btn-reset" style="width: 100%; margin-top: 20px;">
+        Fechar
     </button>
-    <button onclick="resetHighlight()" class="btn btn-reset">
-        Remover Realce
-    </button>
-    <button onclick="showInfo()" class="btn btn-info">
-        Mais Informações
+</div>
+
+<!-- Painel lateral de estatísticas -->
+<div id="stats-panel">
+    <h3>📊 Estatísticas do Bairro</h3>
+    <div id="stats-content"></div>
+    <button onclick="fecharStats()" class="btn btn-reset" style="width: 100%; margin-top: 15px;">
+        Fechar
     </button>
 </div>
 
@@ -617,7 +1168,7 @@ function highlightFilter(filter) {
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"font": {"color": "#2c3e50"}, "group": 3.1, "id": "aflitos", "label": "Aflitos", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.1, "id": "afogados", "label": "Afogados", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.2, "id": "agua fria", "label": "Agua Fria", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "alto do mandu", "label": "Alto Do Mandu", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.2, "id": "alto jose bonifacio", "label": "Alto Jose Bonifacio", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.2, "id": "alto jose do pinho", "label": "Alto Jose Do Pinho", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.2, "id": "alto santa terezinha", "label": "Alto Santa Terezinha", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "apipucos", "label": "Apipucos", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.2, "id": "areias", "label": "Areias", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "arruda", "label": "Arruda", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.3, "id": "barro", "label": "Barro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.3, "id": "beberibe", "label": "Beberibe", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.1, "id": "boa viagem", "label": "Boa Viagem", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.2, "id": "boa vista", "label": "Boa Vista", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.2, "id": "bomba do hemeterio", "label": "Bomba Do Hemeterio", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.1, "id": "bongi", "label": "Bongi", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.1, "id": "brasilia teimosa", "label": "Brasilia Teimosa", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "brejo da guabiraba", "label": "Brejo Da Guabiraba", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "brejo de beberibe", "label": "Brejo De Beberibe", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.2, "id": "cabanga", "label": "Cabanga", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.2, "id": "cacote", "label": "Cacote", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.2, "id": "cajueiro", "label": "Cajueiro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "campina do barreto", "label": "Campina Do Barreto", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "campo grande", "label": "Campo Grande", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "casa amarela", "label": "Casa Amarela", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "casa forte", "label": "Casa Forte", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.3, "id": "caxanga", "label": "Caxanga", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.3, "id": "cidade universitaria", "label": "Cidade Universitaria", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.3, "id": "coelhos", "label": "Coelhos", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.3, "id": "coqueiral", "label": "Coqueiral", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.3, "id": "cohab", "label": "Cohab", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.1, "id": "cordeiro", "label": "Cordeiro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "corrego do jenipapo", "label": "Corrego Do Jenipapo", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.3, "id": "curado", "label": "Curado", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "derby", "label": "Derby", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "dois irmaos", "label": "Dois Irmaos", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.3, "id": "dois unidos", "label": "Dois Unidos", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "encruzilhada", "label": "Encruzilhada", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.2, "id": "engenho do meio", "label": "Engenho Do Meio", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "espinheiro", "label": "Espinheiro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.2, "id": "estancia", "label": "Estancia", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.2, "id": "fundao", "label": "Fundao", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "gracas", "label": "Gracas", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "guabiraba", "label": "Guabiraba", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "hipodromo", "label": "Hipodromo", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.2, "id": "ibura", "label": "Ibura", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.2, "id": "ilha do leite", "label": "Ilha Do Leite", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.1, "id": "ilha do retiro", "label": "Ilha Do Retiro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.3, "id": "ilha joana bezerra", "label": "Ilha Joana Bezerra", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.1, "id": "imbiribeira", "label": "Imbiribeira", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.1, "id": "ipsep", "label": "Ipsep", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.1, "id": "iputinga", "label": "Iputinga", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "jaqueira", "label": "Jaqueira", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.3, "id": "jardim sao paulo", "label": "Jardim Sao Paulo", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.2, "id": "jiquia", "label": "Jiquia", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.2, "id": "jordao", "label": "Jordao", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.3, "id": "linha do tiro", "label": "Linha Do Tiro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "macaxeira", "label": "Macaxeira", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.1, "id": "madalena", "label": "Madalena", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.2, "id": "mangabeira", "label": "Mangabeira", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.1, "id": "mangueira", "label": "Mangueira", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "monteiro", "label": "Monteiro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.2, "id": "morro da conceicao", "label": "Morro Da Conceicao", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.1, "id": "mustardinha", "label": "Mustardinha", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "nova descoberta", "label": "Nova Descoberta", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.2, "id": "paissandu", "label": "Paissandu", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "parnamirim", "label": "Parnamirim", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "passarinho", "label": "Passarinho", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.3, "id": "pau-ferro", "label": "Pau-Ferro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "peixinhos", "label": "Peixinhos", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.1, "id": "pina", "label": "Pina", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "poco da panela", "label": "Poco Da Panela", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "ponto de parada", "label": "Ponto De Parada", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.2, "id": "porto da madeira", "label": "Porto Da Madeira", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.1, "id": "prado", "label": "Prado", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.1, "id": "recife", "label": "Recife", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "rosarinho", "label": "Rosarinho", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.1, "id": "san martin", "label": "San Martin", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.3, "id": "sancho", "label": "Sancho", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "santana", "label": "Santana", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.1, "id": "santo amaro", "label": "Santo Amaro", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.2, "id": "santo antonio", "label": "Santo Antonio", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.2, "id": "sao jose", "label": "Sao Jose", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 6.1, "id": "setubal", "label": "Setubal", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "sitio dos pintos", "label": "Sitio Dos Pintos", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 1.2, "id": "soledade", "label": "Soledade", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.1, "id": "tamarineira", "label": "Tamarineira", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.3, "id": "tejipio", "label": "Tejipio", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.1, "id": "torre", "label": "Torre", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 2.1, "id": "torreao", "label": "Torreao", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.2, "id": "torroes", "label": "Torroes", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 5.3, "id": "toto", "label": "Toto", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 3.2, "id": "vasco da gama", "label": "Vasco Da Gama", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.3, "id": "varzea", "label": "Varzea", "shape": "dot"}, {"font": {"color": "#2c3e50"}, "group": 4.1, "id": "zumbi", "label": "Zumbi", "shape": "dot"}]);
+                  nodes = new vis.DataSet([{"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "aflitos", "label": "Aflitos", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#adff2f", "font": {"color": "#2c3e50"}, "id": "afogados", "label": "Afogados", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9467bd", "font": {"color": "#2c3e50"}, "id": "agua fria", "label": "Agua Fria", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "alto do mandu", "label": "Alto Do Mandu", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#7f7f7f", "font": {"color": "#2c3e50"}, "id": "alto jose bonifacio", "label": "Alto Jose Bonifacio", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#7f7f7f", "font": {"color": "#2c3e50"}, "id": "alto jose do pinho", "label": "Alto Jose Do Pinho", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9467bd", "font": {"color": "#2c3e50"}, "id": "alto santa terezinha", "label": "Alto Santa Terezinha", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "apipucos", "label": "Apipucos", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#4682b4", "font": {"color": "#2c3e50"}, "id": "areias", "label": "Areias", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "arruda", "label": "Arruda", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#db7093", "font": {"color": "#2c3e50"}, "id": "barro", "label": "Barro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#8c564b", "font": {"color": "#2c3e50"}, "id": "beberibe", "label": "Beberibe", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#f08080", "font": {"color": "#2c3e50"}, "id": "boa viagem", "label": "Boa Viagem", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ff7f0e", "font": {"color": "#2c3e50"}, "id": "boa vista", "label": "Boa Vista", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9467bd", "font": {"color": "#2c3e50"}, "id": "bomba do hemeterio", "label": "Bomba Do Hemeterio", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#adff2f", "font": {"color": "#2c3e50"}, "id": "bongi", "label": "Bongi", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#f08080", "font": {"color": "#2c3e50"}, "id": "brasilia teimosa", "label": "Brasilia Teimosa", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "brejo da guabiraba", "label": "Brejo Da Guabiraba", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "brejo de beberibe", "label": "Brejo De Beberibe", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ff7f0e", "font": {"color": "#2c3e50"}, "id": "cabanga", "label": "Cabanga", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#4682b4", "font": {"color": "#2c3e50"}, "id": "cacote", "label": "Cacote", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9467bd", "font": {"color": "#2c3e50"}, "id": "cajueiro", "label": "Cajueiro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "campina do barreto", "label": "Campina Do Barreto", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "campo grande", "label": "Campo Grande", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "casa amarela", "label": "Casa Amarela", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "casa forte", "label": "Casa Forte", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ffebcd", "font": {"color": "#2c3e50"}, "id": "caxanga", "label": "Caxanga", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ffebcd", "font": {"color": "#2c3e50"}, "id": "cidade universitaria", "label": "Cidade Universitaria", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#2ca02c", "font": {"color": "#2c3e50"}, "id": "coelhos", "label": "Coelhos", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#db7093", "font": {"color": "#2c3e50"}, "id": "coqueiral", "label": "Coqueiral", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#daa520", "font": {"color": "#2c3e50"}, "id": "cohab", "label": "Cohab", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#17becf", "font": {"color": "#2c3e50"}, "id": "cordeiro", "label": "Cordeiro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "corrego do jenipapo", "label": "Corrego Do Jenipapo", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#db7093", "font": {"color": "#2c3e50"}, "id": "curado", "label": "Curado", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "derby", "label": "Derby", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "dois irmaos", "label": "Dois Irmaos", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#8c564b", "font": {"color": "#2c3e50"}, "id": "dois unidos", "label": "Dois Unidos", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "encruzilhada", "label": "Encruzilhada", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#a0522d", "font": {"color": "#2c3e50"}, "id": "engenho do meio", "label": "Engenho Do Meio", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "espinheiro", "label": "Espinheiro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#4682b4", "font": {"color": "#2c3e50"}, "id": "estancia", "label": "Estancia", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9467bd", "font": {"color": "#2c3e50"}, "id": "fundao", "label": "Fundao", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "gracas", "label": "Gracas", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "guabiraba", "label": "Guabiraba", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "hipodromo", "label": "Hipodromo", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#008080", "font": {"color": "#2c3e50"}, "id": "ibura", "label": "Ibura", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ff7f0e", "font": {"color": "#2c3e50"}, "id": "ilha do leite", "label": "Ilha Do Leite", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#17becf", "font": {"color": "#2c3e50"}, "id": "ilha do retiro", "label": "Ilha Do Retiro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#2ca02c", "font": {"color": "#2c3e50"}, "id": "ilha joana bezerra", "label": "Ilha Joana Bezerra", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#f08080", "font": {"color": "#2c3e50"}, "id": "imbiribeira", "label": "Imbiribeira", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#f08080", "font": {"color": "#2c3e50"}, "id": "ipsep", "label": "Ipsep", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#17becf", "font": {"color": "#2c3e50"}, "id": "iputinga", "label": "Iputinga", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "jaqueira", "label": "Jaqueira", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#db7093", "font": {"color": "#2c3e50"}, "id": "jardim sao paulo", "label": "Jardim Sao Paulo", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#4682b4", "font": {"color": "#2c3e50"}, "id": "jiquia", "label": "Jiquia", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#008080", "font": {"color": "#2c3e50"}, "id": "jordao", "label": "Jordao", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#8c564b", "font": {"color": "#2c3e50"}, "id": "linha do tiro", "label": "Linha Do Tiro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "macaxeira", "label": "Macaxeira", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#17becf", "font": {"color": "#2c3e50"}, "id": "madalena", "label": "Madalena", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#7f7f7f", "font": {"color": "#2c3e50"}, "id": "mangabeira", "label": "Mangabeira", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#adff2f", "font": {"color": "#2c3e50"}, "id": "mangueira", "label": "Mangueira", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "monteiro", "label": "Monteiro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#7f7f7f", "font": {"color": "#2c3e50"}, "id": "morro da conceicao", "label": "Morro Da Conceicao", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#adff2f", "font": {"color": "#2c3e50"}, "id": "mustardinha", "label": "Mustardinha", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "nova descoberta", "label": "Nova Descoberta", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ff7f0e", "font": {"color": "#2c3e50"}, "id": "paissandu", "label": "Paissandu", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "parnamirim", "label": "Parnamirim", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "passarinho", "label": "Passarinho", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#bcbd22", "font": {"color": "#2c3e50"}, "id": "pau-ferro", "label": "Pau-Ferro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "peixinhos", "label": "Peixinhos", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#f08080", "font": {"color": "#2c3e50"}, "id": "pina", "label": "Pina", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "poco da panela", "label": "Poco Da Panela", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "ponto de parada", "label": "Ponto De Parada", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9467bd", "font": {"color": "#2c3e50"}, "id": "porto da madeira", "label": "Porto Da Madeira", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#17becf", "font": {"color": "#2c3e50"}, "id": "prado", "label": "Prado", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#1f77b4", "font": {"color": "#2c3e50"}, "id": "recife", "label": "Recife", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "rosarinho", "label": "Rosarinho", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#adff2f", "font": {"color": "#2c3e50"}, "id": "san martin", "label": "San Martin", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#db7093", "font": {"color": "#2c3e50"}, "id": "sancho", "label": "Sancho", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "santana", "label": "Santana", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#1f77b4", "font": {"color": "#2c3e50"}, "id": "santo amaro", "label": "Santo Amaro", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ff7f0e", "font": {"color": "#2c3e50"}, "id": "santo antonio", "label": "Santo Antonio", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ff7f0e", "font": {"color": "#2c3e50"}, "id": "sao jose", "label": "Sao Jose", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#f08080", "font": {"color": "#2c3e50"}, "id": "setubal", "label": "Setubal", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "sitio dos pintos", "label": "Sitio Dos Pintos", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ff7f0e", "font": {"color": "#2c3e50"}, "id": "soledade", "label": "Soledade", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#e377c2", "font": {"color": "#2c3e50"}, "id": "tamarineira", "label": "Tamarineira", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#db7093", "font": {"color": "#2c3e50"}, "id": "tejipio", "label": "Tejipio", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#17becf", "font": {"color": "#2c3e50"}, "id": "torre", "label": "Torre", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#d62728", "font": {"color": "#2c3e50"}, "id": "torreao", "label": "Torreao", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#a0522d", "font": {"color": "#2c3e50"}, "id": "torroes", "label": "Torroes", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#db7093", "font": {"color": "#2c3e50"}, "id": "toto", "label": "Toto", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#7f7f7f", "font": {"color": "#2c3e50"}, "id": "vasco da gama", "label": "Vasco Da Gama", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#ffebcd", "font": {"color": "#2c3e50"}, "id": "varzea", "label": "Varzea", "shape": "dot", "size": 15}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#17becf", "font": {"color": "#2c3e50"}, "id": "zumbi", "label": "Zumbi", "shape": "dot", "size": 15}]);
                   edges = new vis.DataSet([{"from": "recife", "to": "santo amaro", "value": 2.0}, {"from": "recife", "to": "santo antonio", "value": 2.0}, {"from": "recife", "to": "sao jose", "value": 2.0}, {"from": "santo amaro", "to": "santo antonio", "value": 2.0}, {"from": "santo amaro", "to": "boa vista", "value": 3.0}, {"from": "santo amaro", "to": "soledade", "value": 3.0}, {"from": "santo amaro", "to": "espinheiro", "value": 4.0}, {"from": "santo amaro", "to": "torreao", "value": 4.0}, {"from": "santo amaro", "to": "campo grande", "value": 4.0}, {"from": "boa vista", "to": "santo antonio", "value": 2.0}, {"from": "boa vista", "to": "coelhos", "value": 3.0}, {"from": "boa vista", "to": "ilha do leite", "value": 3.0}, {"from": "boa vista", "to": "paissandu", "value": 3.0}, {"from": "boa vista", "to": "derby", "value": 4.0}, {"from": "boa vista", "to": "gracas", "value": 3.0}, {"from": "boa vista", "to": "espinheiro", "value": 3.0}, {"from": "boa vista", "to": "soledade", "value": 4.0}, {"from": "cabanga", "to": "pina", "value": 2.0}, {"from": "cabanga", "to": "afogados", "value": 3.0}, {"from": "cabanga", "to": "sao jose", "value": 3.0}, {"from": "ilha do leite", "to": "coelhos", "value": 3.0}, {"from": "ilha do leite", "to": "ilha joana bezerra", "value": 2.0}, {"from": "ilha do leite", "to": "paissandu", "value": 3.0}, {"from": "paissandu", "to": "ilha joana bezerra", "value": 2.0}, {"from": "paissandu", "to": "ilha do retiro", "value": 2.0}, {"from": "paissandu", "to": "derby", "value": 4.0}, {"from": "santo antonio", "to": "sao jose", "value": 4.0}, {"from": "santo antonio", "to": "coelhos", "value": 1.0}, {"from": "sao jose", "to": "afogados", "value": 2.0}, {"from": "sao jose", "to": "ilha joana bezerra", "value": 3.0}, {"from": "sao jose", "to": "coelhos", "value": 2.0}, {"from": "coelhos", "to": "ilha joana bezerra", "value": 2.0}, {"from": "ilha joana bezerra", "to": "ilha do retiro", "value": 2.0}, {"from": "arruda", "to": "campo grande", "value": 3.0}, {"from": "arruda", "to": "ponto de parada", "value": 4.0}, {"from": "arruda", "to": "tamarineira", "value": 3.0}, {"from": "arruda", "to": "mangabeira", "value": 3.0}, {"from": "arruda", "to": "bomba do hemeterio", "value": 3.0}, {"from": "arruda", "to": "agua fria", "value": 3.0}, {"from": "arruda", "to": "campina do barreto", "value": 3.0}, {"from": "arruda", "to": "peixinhos", "value": 4.0}, {"from": "campina do barreto", "to": "agua fria", "value": 3.0}, {"from": "campina do barreto", "to": "fundao", "value": 3.0}, {"from": "campina do barreto", "to": "cajueiro", "value": 3.0}, {"from": "campina do barreto", "to": "peixinhos", "value": 4.0}, {"from": "campo grande", "to": "torreao", "value": 3.0}, {"from": "campo grande", "to": "encruzilhada", "value": 3.0}, {"from": "campo grande", "to": "hipodromo", "value": 3.0}, {"from": "campo grande", "to": "ponto de parada", "value": 3.0}, {"from": "campo grande", "to": "peixinhos", "value": 3.0}, {"from": "encruzilhada", "to": "torreao", "value": 3.0}, {"from": "encruzilhada", "to": "espinheiro", "value": 3.0}, {"from": "encruzilhada", "to": "aflitos", "value": 3.0}, {"from": "encruzilhada", "to": "gracas", "value": 4.0}, {"from": "encruzilhada", "to": "rosarinho", "value": 3.0}, {"from": "encruzilhada", "to": "ponto de parada", "value": 3.0}, {"from": "encruzilhada", "to": "hipodromo", "value": 3.0}, {"from": "hipodromo", "to": "ponto de parada", "value": 3.0}, {"from": "ponto de parada", "to": "tamarineira", "value": 3.0}, {"from": "ponto de parada", "to": "rosarinho", "value": 3.0}, {"from": "rosarinho", "to": "aflitos", "value": 3.0}, {"from": "rosarinho", "to": "gracas", "value": 3.0}, {"from": "rosarinho", "to": "tamarineira", "value": 3.0}, {"from": "torreao", "to": "espinheiro", "value": 3.0}, {"from": "agua fria", "to": "bomba do hemeterio", "value": 3.0}, {"from": "agua fria", "to": "fundao", "value": 3.0}, {"from": "agua fria", "to": "porto da madeira", "value": 3.0}, {"from": "agua fria", "to": "beberibe", "value": 4.0}, {"from": "agua fria", "to": "linha do tiro", "value": 1.0}, {"from": "agua fria", "to": "alto santa terezinha", "value": 3.0}, {"from": "alto santa terezinha", "to": "bomba do hemeterio", "value": 3.0}, {"from": "alto santa terezinha", "to": "alto jose do pinho", "value": 3.0}, {"from": "alto santa terezinha", "to": "morro da conceicao", "value": 3.0}, {"from": "alto santa terezinha", "to": "alto jose bonifacio", "value": 3.0}, {"from": "alto santa terezinha", "to": "linha do tiro", "value": 3.0}, {"from": "bomba do hemeterio", "to": "mangabeira", "value": 3.0}, {"from": "bomba do hemeterio", "to": "alto jose do pinho", "value": 3.0}, {"from": "cajueiro", "to": "fundao", "value": 3.0}, {"from": "cajueiro", "to": "porto da madeira", "value": 3.0}, {"from": "fundao", "to": "porto da madeira", "value": 3.0}, {"from": "porto da madeira", "to": "beberibe", "value": 3.0}, {"from": "beberibe", "to": "linha do tiro", "value": 3.0}, {"from": "beberibe", "to": "dois unidos", "value": 4.0}, {"from": "dois unidos", "to": "linha do tiro", "value": 3.0}, {"from": "dois unidos", "to": "brejo de beberibe", "value": 3.0}, {"from": "dois unidos", "to": "passarinho", "value": 3.0}, {"from": "linha do tiro", "to": "alto jose bonifacio", "value": 3.0}, {"from": "linha do tiro", "to": "brejo de beberibe", "value": 3.0}, {"from": "aflitos", "to": "espinheiro", "value": 3.0}, {"from": "aflitos", "to": "gracas", "value": 3.0}, {"from": "alto do mandu", "to": "casa amarela", "value": 3.0}, {"from": "alto do mandu", "to": "monteiro", "value": 3.0}, {"from": "alto do mandu", "to": "apipucos", "value": 3.0}, {"from": "alto do mandu", "to": "macaxeira", "value": 3.0}, {"from": "alto do mandu", "to": "nova descoberta", "value": 3.0}, {"from": "apipucos", "to": "monteiro", "value": 3.0}, {"from": "apipucos", "to": "iputinga", "value": 2.0}, {"from": "apipucos", "to": "caxanga", "value": 5.0}, {"from": "apipucos", "to": "dois irmaos", "value": 3.0}, {"from": "apipucos", "to": "corrego do jenipapo", "value": 4.0}, {"from": "apipucos", "to": "macaxeira", "value": 3.0}, {"from": "casa amarela", "to": "nova descoberta", "value": 3.0}, {"from": "casa amarela", "to": "vasco da gama", "value": 3.0}, {"from": "casa amarela", "to": "morro da conceicao", "value": 3.0}, {"from": "casa amarela", "to": "alto jose do pinho", "value": 3.0}, {"from": "casa amarela", "to": "mangabeira", "value": 3.0}, {"from": "casa amarela", "to": "tamarineira", "value": 3.0}, {"from": "casa amarela", "to": "parnamirim", "value": 3.0}, {"from": "casa amarela", "to": "casa forte", "value": 3.0}, {"from": "casa amarela", "to": "poco da panela", "value": 3.0}, {"from": "casa amarela", "to": "monteiro", "value": 3.0}, {"from": "casa forte", "to": "parnamirim", "value": 3.0}, {"from": "casa forte", "to": "santana", "value": 4.0}, {"from": "casa forte", "to": "poco da panela", "value": 3.0}, {"from": "derby", "to": "ilha do retiro", "value": 3.0}, {"from": "derby", "to": "madalena", "value": 2.0}, {"from": "derby", "to": "gracas", "value": 3.0}, {"from": "dois irmaos", "to": "caxanga", "value": 3.0}, {"from": "dois irmaos", "to": "sitio dos pintos", "value": 3.0}, {"from": "dois irmaos", "to": "guabiraba", "value": 3.0}, {"from": "dois irmaos", "to": "corrego do jenipapo", "value": 3.0}, {"from": "espinheiro", "to": "gracas", "value": 3.0}, {"from": "gracas", "to": "madalena", "value": 2.0}, {"from": "gracas", "to": "torre", "value": 2.0}, {"from": "gracas", "to": "jaqueira", "value": 3.0}, {"from": "gracas", "to": "tamarineira", "value": 4.0}, {"from": "jaqueira", "to": "torre", "value": 2.0}, {"from": "jaqueira", "to": "santana", "value": 3.0}, {"from": "jaqueira", "to": "parnamirim", "value": 4.0}, {"from": "jaqueira", "to": "tamarineira", "value": 3.0}, {"from": "monteiro", "to": "poco da panela", "value": 3.0}, {"from": "monteiro", "to": "iputinga", "value": 2.0}, {"from": "parnamirim", "to": "santana", "value": 3.0}, {"from": "parnamirim", "to": "tamarineira", "value": 3.0}, {"from": "poco da panela", "to": "santana", "value": 3.0}, {"from": "santana", "to": "torre", "value": 3.0}, {"from": "sitio dos pintos", "to": "caxanga", "value": 3.0}, {"from": "tamarineira", "to": "alto jose do pinho", "value": 4.0}, {"from": "tamarineira", "to": "mangabeira", "value": 3.0}, {"from": "alto jose bonifacio", "to": "alto jose do pinho", "value": 3.0}, {"from": "alto jose bonifacio", "to": "morro da conceicao", "value": 3.0}, {"from": "alto jose bonifacio", "to": "vasco da gama", "value": 3.0}, {"from": "alto jose bonifacio", "to": "brejo de beberibe", "value": 3.0}, {"from": "mangabeira", "to": "alto jose do pinho", "value": 3.0}, {"from": "alto jose do pinho", "to": "morro da conceicao", "value": 3.0}, {"from": "morro da conceicao", "to": "vasco da gama", "value": 3.0}, {"from": "vasco da gama", "to": "brejo de beberibe", "value": 3.0}, {"from": "vasco da gama", "to": "nova descoberta", "value": 3.0}, {"from": "brejo da guabiraba", "to": "guabiraba", "value": 3.0}, {"from": "brejo da guabiraba", "to": "passarinho", "value": 3.0}, {"from": "brejo da guabiraba", "to": "brejo de beberibe", "value": 4.0}, {"from": "brejo da guabiraba", "to": "nova descoberta", "value": 3.0}, {"from": "brejo da guabiraba", "to": "corrego do jenipapo", "value": 3.0}, {"from": "guabiraba", "to": "pau-ferro", "value": 3.0}, {"from": "guabiraba", "to": "passarinho", "value": 3.0}, {"from": "guabiraba", "to": "corrego do jenipapo", "value": 3.0}, {"from": "macaxeira", "to": "nova descoberta", "value": 3.0}, {"from": "macaxeira", "to": "corrego do jenipapo", "value": 3.0}, {"from": "nova descoberta", "to": "corrego do jenipapo", "value": 3.0}, {"from": "nova descoberta", "to": "brejo de beberibe", "value": 3.0}, {"from": "passarinho", "to": "brejo de beberibe", "value": 3.0}, {"from": "cordeiro", "to": "san martin", "value": 4.0}, {"from": "cordeiro", "to": "prado", "value": 3.0}, {"from": "cordeiro", "to": "zumbi", "value": 3.0}, {"from": "cordeiro", "to": "torroes", "value": 3.0}, {"from": "cordeiro", "to": "engenho do meio", "value": 3.0}, {"from": "cordeiro", "to": "iputinga", "value": 4.0}, {"from": "cordeiro", "to": "torre", "value": 3.0}, {"from": "ilha do retiro", "to": "afogados", "value": 3.0}, {"from": "iputinga", "to": "cidade universitaria", "value": 3.0}, {"from": "iputinga", "to": "caxanga", "value": 3.0}, {"from": "madalena", "to": "ilha do retiro", "value": 3.0}, {"from": "madalena", "to": "prado", "value": 3.0}, {"from": "madalena", "to": "zumbi", "value": 4.0}, {"from": "madalena", "to": "torre", "value": 3.0}, {"from": "prado", "to": "zumbi", "value": 3.0}, {"from": "prado", "to": "ilha do retiro", "value": 4.0}, {"from": "prado", "to": "afogados", "value": 3.0}, {"from": "prado", "to": "bongi", "value": 4.0}, {"from": "prado", "to": "san martin", "value": 3.0}, {"from": "torre", "to": "zumbi", "value": 3.0}, {"from": "engenho do meio", "to": "torroes", "value": 3.0}, {"from": "engenho do meio", "to": "curado", "value": 4.0}, {"from": "engenho do meio", "to": "cidade universitaria", "value": 3.0}, {"from": "engenho do meio", "to": "iputinga", "value": 3.0}, {"from": "torroes", "to": "san martin", "value": 3.0}, {"from": "torroes", "to": "curado", "value": 1.0}, {"from": "caxanga", "to": "varzea", "value": 3.0}, {"from": "cidade universitaria", "to": "curado", "value": 4.0}, {"from": "varzea", "to": "cidade universitaria", "value": 3.0}, {"from": "varzea", "to": "curado", "value": 3.0}, {"from": "afogados", "to": "bongi", "value": 3.0}, {"from": "afogados", "to": "mustardinha", "value": 3.0}, {"from": "afogados", "to": "mangueira", "value": 3.0}, {"from": "afogados", "to": "jiquia", "value": 3.0}, {"from": "afogados", "to": "imbiribeira", "value": 2.0}, {"from": "bongi", "to": "mustardinha", "value": 4.0}, {"from": "bongi", "to": "san martin", "value": 3.0}, {"from": "mangueira", "to": "jiquia", "value": 3.0}, {"from": "mangueira", "to": "san martin", "value": 3.0}, {"from": "mangueira", "to": "mustardinha", "value": 3.0}, {"from": "mustardinha", "to": "san martin", "value": 3.0}, {"from": "san martin", "to": "jiquia", "value": 3.0}, {"from": "san martin", "to": "estancia", "value": 1.0}, {"from": "san martin", "to": "curado", "value": 3.0}, {"from": "san martin", "to": "jardim sao paulo", "value": 4.0}, {"from": "areias", "to": "estancia", "value": 4.0}, {"from": "areias", "to": "jiquia", "value": 3.0}, {"from": "areias", "to": "imbiribeira", "value": 4.0}, {"from": "areias", "to": "ipsep", "value": 2.0}, {"from": "areias", "to": "cacote", "value": 3.0}, {"from": "areias", "to": "ibura", "value": 3.0}, {"from": "areias", "to": "barro", "value": 3.0}, {"from": "areias", "to": "jardim sao paulo", "value": 4.0}, {"from": "cacote", "to": "ibura", "value": 3.0}, {"from": "estancia", "to": "jardim sao paulo", "value": 3.0}, {"from": "estancia", "to": "jiquia", "value": 3.0}, {"from": "jiquia", "to": "imbiribeira", "value": 2.0}, {"from": "barro", "to": "jardim sao paulo", "value": 3.0}, {"from": "barro", "to": "tejipio", "value": 4.0}, {"from": "barro", "to": "ibura", "value": 4.0}, {"from": "barro", "to": "cohab", "value": 4.0}, {"from": "coqueiral", "to": "toto", "value": 3.0}, {"from": "coqueiral", "to": "tejipio", "value": 3.0}, {"from": "coqueiral", "to": "sancho", "value": 3.0}, {"from": "curado", "to": "jardim sao paulo", "value": 4.0}, {"from": "curado", "to": "sancho", "value": 3.0}, {"from": "curado", "to": "toto", "value": 3.0}, {"from": "curado", "to": "tejipio", "value": 4.0}, {"from": "jardim sao paulo", "to": "tejipio", "value": 3.0}, {"from": "sancho", "to": "toto", "value": 3.0}, {"from": "sancho", "to": "tejipio", "value": 3.0}, {"from": "boa viagem", "to": "jordao", "value": 4.0}, {"from": "boa viagem", "to": "ibura", "value": 3.0}, {"from": "boa viagem", "to": "imbiribeira", "value": 4.0}, {"from": "boa viagem", "to": "pina", "value": 4.0}, {"from": "boa viagem", "to": "setubal", "value": 3.0}, {"from": "brasilia teimosa", "to": "pina", "value": 3.0}, {"from": "imbiribeira", "to": "ipsep", "value": 3.0}, {"from": "imbiribeira", "to": "ibura", "value": 2.0}, {"from": "ipsep", "to": "ibura", "value": 3.0}, {"from": "ibura", "to": "jordao", "value": 3.0}, {"from": "ibura", "to": "cohab", "value": 4.0}, {"from": "jordao", "to": "cohab", "value": 3.0}]);
 
                   nodeColors = {};
@@ -657,35 +1208,34 @@ function highlightFilter(filter) {
     
 
 <div class="legend-container">
-    <span style="font-weight: bold; margin-right: 15px;">Dicas:</span>
+    <span style="font-weight: bold; margin-right: 15px;">💡 Dicas de Uso:</span>
     <span class="legend-item">Arraste os nós para reorganizar</span>
-    <span class="legend-item">Use Ctrl+Scroll para zoom</span>
+    <span class="legend-item">Ctrl+Scroll para zoom</span>
     <span class="legend-item">Passe o mouse sobre os nós para ver detalhes</span>
-    <span class="legend-item">Use a busca acima para localizar bairros</span>
+    <span class="legend-item">Clique em um bairro para ver estatísticas completas</span>
 </div>
 
 
 <script type="text/javascript">
-var pathNodesGlobal = ["nova descoberta", "alto do mandu", "monteiro", "iputinga", "cordeiro", "prado", "afogados", "imbiribeira", "boa viagem", "setubal"];
+var pathNodesDefault = ["nova descoberta", "alto do mandu", "monteiro", "iputinga", "cordeiro", "prado", "afogados", "imbiribeira", "boa viagem", "setubal"];
 var nodesData = {"aflitos": {"grau": 4, "densidade": 0.9, "microrregiao": "3.1", "cor": "#e377c2"}, "afogados": {"grau": 9, "densidade": 0.3555555555555555, "microrregiao": "5.1", "cor": "#adff2f"}, "agua fria": {"grau": 8, "densidade": 0.4444444444444444, "microrregiao": "2.2", "cor": "#9467bd"}, "alto do mandu": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "3.1", "cor": "#e377c2"}, "alto jose bonifacio": {"grau": 6, "densidade": 0.6190476190476191, "microrregiao": "3.2", "cor": "#7f7f7f"}, "alto jose do pinho": {"grau": 7, "densidade": 0.5714285714285714, "microrregiao": "3.2", "cor": "#7f7f7f"}, "alto santa terezinha": {"grau": 6, "densidade": 0.6190476190476191, "microrregiao": "2.2", "cor": "#9467bd"}, "apipucos": {"grau": 7, "densidade": 0.5, "microrregiao": "3.1", "cor": "#e377c2"}, "areias": {"grau": 8, "densidade": 0.4722222222222222, "microrregiao": "5.2", "cor": "#4682b4"}, "arruda": {"grau": 8, "densidade": 0.4444444444444444, "microrregiao": "2.1", "cor": "#d62728"}, "barro": {"grau": 5, "densidade": 0.6, "microrregiao": "5.3", "cor": "#db7093"}, "beberibe": {"grau": 4, "densidade": 0.7, "microrregiao": "2.3", "cor": "#8c564b"}, "boa viagem": {"grau": 5, "densidade": 0.4666666666666667, "microrregiao": "6.1", "cor": "#f08080"}, "boa vista": {"grau": 9, "densidade": 0.4, "microrregiao": "1.2", "cor": "#ff7f0e"}, "bomba do hemeterio": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "2.2", "cor": "#9467bd"}, "bongi": {"grau": 4, "densidade": 0.8, "microrregiao": "5.1", "cor": "#adff2f"}, "brasilia teimosa": {"grau": 1, "densidade": 1.0, "microrregiao": "6.1", "cor": "#f08080"}, "brejo da guabiraba": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "3.3", "cor": "#bcbd22"}, "brejo de beberibe": {"grau": 7, "densidade": 0.5, "microrregiao": "3.3", "cor": "#bcbd22"}, "cabanga": {"grau": 3, "densidade": 0.6666666666666666, "microrregiao": "1.2", "cor": "#ff7f0e"}, "cacote": {"grau": 2, "densidade": 1.0, "microrregiao": "5.2", "cor": "#4682b4"}, "cajueiro": {"grau": 3, "densidade": 0.8333333333333334, "microrregiao": "2.2", "cor": "#9467bd"}, "campina do barreto": {"grau": 5, "densidade": 0.6, "microrregiao": "2.1", "cor": "#d62728"}, "campo grande": {"grau": 7, "densidade": 0.5, "microrregiao": "2.1", "cor": "#d62728"}, "casa amarela": {"grau": 11, "densidade": 0.3484848484848485, "microrregiao": "3.1", "cor": "#e377c2"}, "casa forte": {"grau": 4, "densidade": 0.8, "microrregiao": "3.1", "cor": "#e377c2"}, "caxanga": {"grau": 5, "densidade": 0.5333333333333333, "microrregiao": "4.3", "cor": "#ffebcd"}, "cidade universitaria": {"grau": 4, "densidade": 0.7, "microrregiao": "4.3", "cor": "#ffebcd"}, "coelhos": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "1.3", "cor": "#2ca02c"}, "coqueiral": {"grau": 3, "densidade": 0.8333333333333334, "microrregiao": "5.3", "cor": "#db7093"}, "cohab": {"grau": 3, "densidade": 0.8333333333333334, "microrregiao": "6.3", "cor": "#daa520"}, "cordeiro": {"grau": 7, "densidade": 0.4642857142857143, "microrregiao": "4.1", "cor": "#17becf"}, "corrego do jenipapo": {"grau": 6, "densidade": 0.5714285714285714, "microrregiao": "3.3", "cor": "#bcbd22"}, "curado": {"grau": 9, "densidade": 0.3777777777777777, "microrregiao": "5.3", "cor": "#db7093"}, "derby": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "3.1", "cor": "#e377c2"}, "dois irmaos": {"grau": 5, "densidade": 0.6, "microrregiao": "3.1", "cor": "#e377c2"}, "dois unidos": {"grau": 4, "densidade": 0.7, "microrregiao": "2.3", "cor": "#8c564b"}, "encruzilhada": {"grau": 8, "densidade": 0.5277777777777778, "microrregiao": "2.1", "cor": "#d62728"}, "engenho do meio": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "4.2", "cor": "#a0522d"}, "espinheiro": {"grau": 6, "densidade": 0.6190476190476191, "microrregiao": "3.1", "cor": "#e377c2"}, "estancia": {"grau": 4, "densidade": 0.8, "microrregiao": "5.2", "cor": "#4682b4"}, "fundao": {"grau": 4, "densidade": 0.8, "microrregiao": "2.2", "cor": "#9467bd"}, "gracas": {"grau": 10, "densidade": 0.4, "microrregiao": "3.1", "cor": "#e377c2"}, "guabiraba": {"grau": 5, "densidade": 0.5333333333333333, "microrregiao": "3.3", "cor": "#bcbd22"}, "hipodromo": {"grau": 3, "densidade": 1.0, "microrregiao": "2.1", "cor": "#d62728"}, "ibura": {"grau": 8, "densidade": 0.4722222222222222, "microrregiao": "6.2", "cor": "#008080"}, "ilha do leite": {"grau": 4, "densidade": 0.8, "microrregiao": "1.2", "cor": "#ff7f0e"}, "ilha do retiro": {"grau": 6, "densidade": 0.5238095238095238, "microrregiao": "4.1", "cor": "#17becf"}, "ilha joana bezerra": {"grau": 5, "densidade": 0.6, "microrregiao": "1.3", "cor": "#2ca02c"}, "imbiribeira": {"grau": 6, "densidade": 0.5714285714285714, "microrregiao": "6.1", "cor": "#f08080"}, "ipsep": {"grau": 3, "densidade": 1.0, "microrregiao": "6.1", "cor": "#f08080"}, "iputinga": {"grau": 6, "densidade": 0.4761904761904761, "microrregiao": "4.1", "cor": "#17becf"}, "jaqueira": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "3.1", "cor": "#e377c2"}, "jardim sao paulo": {"grau": 6, "densidade": 0.5714285714285714, "microrregiao": "5.3", "cor": "#db7093"}, "jiquia": {"grau": 6, "densidade": 0.5714285714285714, "microrregiao": "5.2", "cor": "#4682b4"}, "jordao": {"grau": 3, "densidade": 0.8333333333333334, "microrregiao": "6.2", "cor": "#008080"}, "linha do tiro": {"grau": 6, "densidade": 0.5714285714285714, "microrregiao": "2.3", "cor": "#8c564b"}, "macaxeira": {"grau": 4, "densidade": 0.8, "microrregiao": "3.3", "cor": "#bcbd22"}, "madalena": {"grau": 6, "densidade": 0.5714285714285714, "microrregiao": "4.1", "cor": "#17becf"}, "mangabeira": {"grau": 5, "densidade": 0.7333333333333333, "microrregiao": "3.2", "cor": "#7f7f7f"}, "mangueira": {"grau": 4, "densidade": 0.8, "microrregiao": "5.1", "cor": "#adff2f"}, "monteiro": {"grau": 5, "densidade": 0.6, "microrregiao": "3.1", "cor": "#e377c2"}, "morro da conceicao": {"grau": 5, "densidade": 0.7333333333333333, "microrregiao": "3.2", "cor": "#7f7f7f"}, "mustardinha": {"grau": 4, "densidade": 0.8, "microrregiao": "5.1", "cor": "#adff2f"}, "nova descoberta": {"grau": 7, "densidade": 0.5, "microrregiao": "3.3", "cor": "#bcbd22"}, "paissandu": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "1.2", "cor": "#ff7f0e"}, "parnamirim": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "3.1", "cor": "#e377c2"}, "passarinho": {"grau": 4, "densidade": 0.7, "microrregiao": "3.3", "cor": "#bcbd22"}, "pau-ferro": {"grau": 1, "densidade": 1.0, "microrregiao": "3.3", "cor": "#bcbd22"}, "peixinhos": {"grau": 3, "densidade": 0.8333333333333334, "microrregiao": "2.1", "cor": "#d62728"}, "pina": {"grau": 3, "densidade": 0.5, "microrregiao": "6.1", "cor": "#f08080"}, "poco da panela": {"grau": 4, "densidade": 0.7, "microrregiao": "3.1", "cor": "#e377c2"}, "ponto de parada": {"grau": 6, "densidade": 0.6190476190476191, "microrregiao": "2.1", "cor": "#d62728"}, "porto da madeira": {"grau": 4, "densidade": 0.7, "microrregiao": "2.2", "cor": "#9467bd"}, "prado": {"grau": 7, "densidade": 0.5, "microrregiao": "4.1", "cor": "#17becf"}, "recife": {"grau": 3, "densidade": 0.8333333333333334, "microrregiao": "1.1", "cor": "#1f77b4"}, "rosarinho": {"grau": 5, "densidade": 0.7333333333333333, "microrregiao": "2.1", "cor": "#d62728"}, "san martin": {"grau": 10, "densidade": 0.3636363636363636, "microrregiao": "5.1", "cor": "#adff2f"}, "sancho": {"grau": 4, "densidade": 0.8, "microrregiao": "5.3", "cor": "#db7093"}, "santana": {"grau": 5, "densidade": 0.6, "microrregiao": "3.1", "cor": "#e377c2"}, "santo amaro": {"grau": 7, "densidade": 0.4642857142857143, "microrregiao": "1.1", "cor": "#1f77b4"}, "santo antonio": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "1.2", "cor": "#ff7f0e"}, "sao jose": {"grau": 6, "densidade": 0.4761904761904761, "microrregiao": "1.2", "cor": "#ff7f0e"}, "setubal": {"grau": 1, "densidade": 1.0, "microrregiao": "6.1", "cor": "#f08080"}, "sitio dos pintos": {"grau": 2, "densidade": 1.0, "microrregiao": "3.1", "cor": "#e377c2"}, "soledade": {"grau": 2, "densidade": 1.0, "microrregiao": "1.2", "cor": "#ff7f0e"}, "tamarineira": {"grau": 9, "densidade": 0.4222222222222222, "microrregiao": "3.1", "cor": "#e377c2"}, "tejipio": {"grau": 5, "densidade": 0.6, "microrregiao": "5.3", "cor": "#db7093"}, "torre": {"grau": 6, "densidade": 0.5238095238095238, "microrregiao": "4.1", "cor": "#17becf"}, "torreao": {"grau": 4, "densidade": 0.8, "microrregiao": "2.1", "cor": "#d62728"}, "torroes": {"grau": 4, "densidade": 0.8, "microrregiao": "4.2", "cor": "#a0522d"}, "toto": {"grau": 3, "densidade": 0.8333333333333334, "microrregiao": "5.3", "cor": "#db7093"}, "vasco da gama": {"grau": 5, "densidade": 0.6666666666666666, "microrregiao": "3.2", "cor": "#7f7f7f"}, "varzea": {"grau": 3, "densidade": 0.6666666666666666, "microrregiao": "4.3", "cor": "#ffebcd"}, "zumbi": {"grau": 4, "densidade": 0.8, "microrregiao": "4.1", "cor": "#17becf"}};
+var colorMap = {"1.1": "#1f77b4", "1.2": "#ff7f0e", "1.3": "#2ca02c", "2.1": "#d62728", "2.2": "#9467bd", "2.3": "#8c564b", "3.1": "#e377c2", "3.2": "#7f7f7f", "3.3": "#bcbd22", "4.1": "#17becf", "4.2": "#a0522d", "4.3": "#ffebcd", "5.1": "#adff2f", "5.2": "#4682b4", "5.3": "#db7093", "6.1": "#f08080", "6.2": "#008080", "6.3": "#daa520", "N/A": "#cccccc"};
 var isHighlighted = false;
+var currentHighlightedPath = [];
 var tooltipElement = null;
 var hoverTimeout = null;
 var clickedNode = null;
+var currentFilter = 'todas';
 
-// criar tooltip com a mesma cor do vértice (pegando direto do grafo)
 function createTooltip(nodeId, x, y) {
     var nodeInfo = nodesData[nodeId];
     if (!nodeInfo) return;
     
     removeTooltip();
     
-    // pegar a cor REAL que está sendo exibida no vértice
     var network = window.network;
-    var positions = network.getPositions([nodeId]);
     var canvasNode = network.body.nodes[nodeId];
     
-    // pegar a cor do canvas (cor REAL renderizada)
     var bgColor = '#cccccc';
     if (canvasNode && canvasNode.options && canvasNode.options.color) {
         var colorObj = canvasNode.options.color;
@@ -698,7 +1248,6 @@ function createTooltip(nodeId, x, y) {
         }
     }
     
-    // decidir se o texto vai ser branco ou preto baseado no brilho da cor
     var textColor = getTextColor(bgColor);
     
     tooltipElement = document.createElement('div');
@@ -734,17 +1283,11 @@ function createTooltip(nodeId, x, y) {
     document.body.appendChild(tooltipElement);
 }
 
-// calcular se o texto deve ser branco ou preto baseado no brilho da cor
 function getTextColor(hexColor) {
-    // converter hex pra rgb
     var r = parseInt(hexColor.substr(1,2), 16);
     var g = parseInt(hexColor.substr(3,2), 16);
     var b = parseInt(hexColor.substr(5,2), 16);
-    
-    // calcular brilho (luminância)
     var brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
-    // se for escuro usa branco, se for claro usa preto
     return brightness > 155 ? '#000' : '#fff';
 }
 
@@ -755,19 +1298,363 @@ function removeTooltip() {
     }
 }
 
+function mostrarStats(nodeId) {
+    var nodeInfo = nodesData[nodeId];
+    if (!nodeInfo) return;
+    
+    var network = window.network;
+    var connectedNodes = network.getConnectedNodes(nodeId);
+    var vizinhosHTML = '';
+    
+    if (connectedNodes.length > 0) {
+        vizinhosHTML = '<p><strong>Vizinhos conectados:</strong></p><ul style="margin: 5px 0; padding-left: 20px;">';
+        connectedNodes.slice(0, 10).forEach(function(v) {
+            vizinhosHTML += '<li>' + v.charAt(0).toUpperCase() + v.slice(1) + '</li>';
+        });
+        if (connectedNodes.length > 10) {
+            vizinhosHTML += '<li><em>... e mais ' + (connectedNodes.length - 10) + ' bairros</em></li>';
+        }
+        vizinhosHTML += '</ul>';
+    }
+    
+    document.getElementById('stats-panel').style.display = 'block';
+    document.getElementById('stats-content').innerHTML = `
+        <p><strong>Bairro:</strong> ${nodeId.toUpperCase()}</p>
+        <p><strong>Grau:</strong> ${nodeInfo.grau} conexões</p>
+        <p><strong>Microrregião:</strong> RPA ${nodeInfo.microrregiao}</p>
+        <p><strong>Densidade Ego:</strong> ${nodeInfo.densidade.toFixed(4)}</p>
+        <hr style="margin: 15px 0; border: none; border-top: 1px solid #e1e8ed;">
+        ${vizinhosHTML}
+    `;
+}
+
+function fecharStats() {
+    document.getElementById('stats-panel').style.display = 'none';
+}
+
+function mostrarLegendaCores() {
+    document.getElementById('legend-panel').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
+function fecharLegenda() {
+    document.getElementById('legend-panel').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+
+function filtrarPorMicrorregiao(microrregiao) {
+    var network = window.network;
+    var nodeData = network.body.data.nodes;
+    var edgeData = network.body.data.edges;
+    var updates = [];
+    var edgeUpdates = [];
+    
+    currentFilter = microrregiao;
+    
+    document.querySelectorAll('.btn-filter').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    document.getElementById('btn-' + microrregiao).classList.add('active');
+    
+    if (microrregiao === 'todas') {
+        nodeData.forEach(function(node) {
+            updates.push({
+                id: node.id,
+                opacity: 1.0,
+                size: 15,
+                hidden: false
+            });
+        });
+        edgeData.forEach(function(edge) {
+            edgeUpdates.push({
+                id: edge.id,
+                hidden: false,
+                color: '#848484'
+            });
+        });
+    } else {
+        var nodesVisiveis = new Set();
+        
+        nodeData.forEach(function(node) {
+            var nodeInfo = nodesData[node.id];
+            if (!nodeInfo) return;
+            
+            if (nodeInfo.microrregiao === microrregiao) {
+                nodesVisiveis.add(node.id);
+                updates.push({
+                    id: node.id,
+                    opacity: 1.0,
+                    size: 20,
+                    hidden: false
+                });
+            } else {
+                updates.push({
+                    id: node.id,
+                    opacity: 0.1,
+                    size: 8,
+                    hidden: false
+                });
+            }
+        });
+        
+        edgeData.forEach(function(edge) {
+            if (nodesVisiveis.has(edge.from) && nodesVisiveis.has(edge.to)) {
+                edgeUpdates.push({
+                    id: edge.id,
+                    hidden: false,
+                    color: '#059669',
+                    width: 2
+                });
+            } else {
+                edgeUpdates.push({
+                    id: edge.id,
+                    hidden: true
+                });
+            }
+        });
+    }
+    
+    nodeData.update(updates);
+    edgeData.update(edgeUpdates);
+    
+    if (microrregiao !== 'todas') {
+        var nodesToFit = Array.from(nodesVisiveis);
+        if (nodesToFit.length > 0) {
+            setTimeout(function() {
+                network.fit({ nodes: nodesToFit, animation: { duration: 800 } });
+            }, 100);
+        }
+    }
+}
+
+function dijkstraJS(graph, start, end) {
+    var distances = {};
+    var previous = {};
+    var unvisited = new Set();
+    
+    for (var node in graph) {
+        distances[node] = Infinity;
+        previous[node] = null;
+        unvisited.add(node);
+    }
+    distances[start] = 0;
+    
+    while (unvisited.size > 0) {
+        var current = null;
+        var minDist = Infinity;
+        unvisited.forEach(function(node) {
+            if (distances[node] < minDist) {
+                minDist = distances[node];
+                current = node;
+            }
+        });
+        
+        if (current === null || distances[current] === Infinity) break;
+        if (current === end) break;
+        
+        unvisited.delete(current);
+        
+        if (graph[current]) {
+            graph[current].forEach(function(neighbor) {
+                if (unvisited.has(neighbor.to)) {
+                    var alt = distances[current] + neighbor.weight;
+                    if (alt < distances[neighbor.to]) {
+                        distances[neighbor.to] = alt;
+                        previous[neighbor.to] = current;
+                    }
+                }
+            });
+        }
+    }
+    
+    if (distances[end] === Infinity) return null;
+    
+    var path = [];
+    var current = end;
+    while (current !== null) {
+        path.unshift(current);
+        current = previous[current];
+    }
+    
+    return path;
+}
+
+function calcularERealcarCaminho() {
+    var origem = document.getElementById('path-origin').value;
+    var destino = document.getElementById('path-destination').value;
+    
+    if (!origem || !destino) {
+        alert('⚠️ Por favor, selecione tanto a origem quanto o destino!');
+        return;
+    }
+    
+    if (origem === destino) {
+        alert('⚠️ Origem e destino devem ser diferentes!');
+        return;
+    }
+    
+    var network = window.network;
+    var edgeData = network.body.data.edges;
+    var graph = {};
+    
+    edgeData.forEach(function(edge) {
+        if (!graph[edge.from]) graph[edge.from] = [];
+        if (!graph[edge.to]) graph[edge.to] = [];
+        
+        var weight = edge.value || 1;
+        graph[edge.from].push({ to: edge.to, weight: weight });
+        graph[edge.to].push({ to: edge.from, weight: weight });
+    });
+    
+    var caminho = dijkstraJS(graph, origem, destino);
+    
+    if (!caminho) {
+        alert('❌ Não foi possível encontrar um caminho entre ' + origem.toUpperCase() + ' e ' + destino.toUpperCase() + '!');
+        return;
+    }
+    
+    highlightPath(caminho);
+    
+    alert('✅ Caminho encontrado com ' + caminho.length + ' bairros!\n\n📍 Caminho: ' + 
+          caminho.map(function(b) { return b.toUpperCase(); }).join(' → '));
+}
+
+function realcarCaminhoDefault() {
+    highlightPath(pathNodesDefault);
+}
+
+function highlightPath(pathNodes) {
+    if (isHighlighted) {
+        resetHighlight();
+    }
+    
+    var network = window.network;
+    var nodeData = network.body.data.nodes;
+    var edgeData = network.body.data.edges;
+    var updates = [];
+    var edgeUpdates = [];
+    
+    currentHighlightedPath = pathNodes;
+    
+    for (var i = 0; i < pathNodes.length; i++) {
+        var nodeId = pathNodes[i];
+        var currentNode = nodeData.get(nodeId);
+        
+        if (currentNode) {
+            var originalColor = currentNode.color;
+            if (typeof originalColor === 'object' && originalColor.background) {
+                originalColor = originalColor.background;
+            }
+            
+            var progress = i / (pathNodes.length - 1);
+            var r = Math.round(16 + (5 - 16) * progress);
+            var g = Math.round(185 + (150 - 185) * progress);
+            var b = Math.round(129 + (105 - 129) * progress);
+            var greenShade = 'rgb(' + r + ',' + g + ',' + b + ')';
+            
+            updates.push({
+                id: nodeId,
+                originalColor: originalColor,
+                color: { border: '#059669', background: greenShade },
+                borderWidth: 4,
+                size: 30,
+                font: { size: 16, bold: true }
+            });
+        }
+    }
+    nodeData.update(updates);
+    
+    for (var i = 0; i < pathNodes.length - 1; i++) {
+        var u = pathNodes[i];
+        var v = pathNodes[i + 1];
+        
+        var edgeId = edgeData.getIds({
+            filter: function (item) {
+                return (item.from === u && item.to === v) || (item.from === v && item.to === u);
+            }
+        })[0];
+        
+        if (edgeId) {
+            edgeUpdates.push({ id: edgeId, color: '#059669', width: 6 });
+        }
+    }
+    edgeData.update(edgeUpdates);
+    
+    setTimeout(function() {
+        network.fit({ nodes: pathNodes, animation: { duration: 1000 } });
+    }, 100);
+    
+    isHighlighted = true;
+}
+
+function resetHighlight() {
+    if (!isHighlighted) {
+        alert('ℹ️ Nenhum caminho está realçado no momento!');
+        return;
+    }
+    
+    var network = window.network;
+    var nodeData = network.body.data.nodes;
+    var edgeData = network.body.data.edges;
+    var updates = [];
+    var edgeUpdates = [];
+    
+    nodeData.forEach(function(node) {
+        var resetColor = node.originalColor || node.color;
+        if (typeof resetColor === 'object' && resetColor.background) {
+            resetColor = resetColor.background;
+        }
+        updates.push({
+            id: node.id,
+            color: resetColor,
+            borderWidth: 2,
+            size: 15,
+            font: { size: 14, bold: false }
+        });
+    });
+    nodeData.update(updates);
+    
+    edgeData.forEach(function(edge) {
+        edgeUpdates.push({ id: edge.id, color: '#848484', width: 1 });
+    });
+    edgeData.update(edgeUpdates);
+    
+    network.fit({ animation: { duration: 1000 } });
+    isHighlighted = false;
+    currentHighlightedPath = [];
+    
+    if (currentFilter !== 'todas') {
+        filtrarPorMicrorregiao(currentFilter);
+    }
+}
+
+function showInfo() {
+    var total = Object.keys(nodesData).length;
+    var totalArestas = window.network.body.data.edges.length;
+    
+    alert(
+        '📊 INFORMAÇÕES DO GRAFO\n' +
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+        '🏘️  Total de Bairros: ' + total + '\n' +
+        '🔗 Total de Conexões: ' + totalArestas + '\n\n' +
+        '📍 CAMINHO PADRÃO:\n' +
+        'Nova Descoberta → Alto do Mandu → Monteiro →\n' +
+        'Iputinga → Cordeiro → Prado → Afogados →\n' +
+        'Imbiribeira → Boa Viagem → Setúbal\n\n' +
+        '💡 Use os controles acima para explorar!'
+    );
+}
+
 function setupTooltips() {
     var network = window.network;
     
-    // quando passa o mouse em cima do nó
     network.on("hoverNode", function(params) {
         if (hoverTimeout) clearTimeout(hoverTimeout);
-        
         if (clickedNode !== params.node) {
             createTooltip(params.node, params.pointer.DOM.x, params.pointer.DOM.y);
         }
     });
     
-    // quando tira o mouse do nó
     network.on("blurNode", function(params) {
         if (clickedNode !== params.node) {
             hoverTimeout = setTimeout(function() {
@@ -776,10 +1663,10 @@ function setupTooltips() {
         }
     });
     
-    // quando clica no nó (tooltip fica fixo por 3 segundos)
     network.on("click", function(params) {
         if (params.nodes.length > 0) {
             var nodeId = params.nodes[0];
+            mostrarStats(nodeId);
             clickedNode = nodeId;
             createTooltip(nodeId, params.pointer.DOM.x, params.pointer.DOM.y);
             
@@ -789,24 +1676,18 @@ function setupTooltips() {
                     removeTooltip();
                 }
             }, 3000);
-        }
-    });
-    
-    // remover tooltip ao passar em aresta
-    network.on("hoverEdge", function() {
-        if (!clickedNode) removeTooltip();
-    });
-    
-    // remover ao clicar fora
-    network.on("click", function(params) {
-        if (params.nodes.length === 0) {
+        } else {
+            fecharStats();
             clickedNode = null;
             removeTooltip();
         }
     });
+    
+    network.on("hoverEdge", function() {
+        if (!clickedNode) removeTooltip();
+    });
 }
 
-// traduzir textos do menu de busca
 function traduzirInterface() {
     setTimeout(function() {
         var labels = document.querySelectorAll('label');
@@ -839,127 +1720,6 @@ window.addEventListener('load', function() {
     traduzirInterface();
 });
 
-function showInfo() {
-    var total = Object.keys(nodesData).length;
-    alert(
-        'INFORMAÇÕES DO GRAFO\n\n' +
-        'Total de Bairros: ' + total + '\n' +
-        'Total de Conexões: ' + window.network.body.data.edges.length + '\n\n' +
-        'CAMINHO EM DESTAQUE:\n' +
-        'Nova Descoberta → Alto do Mandu → Monteiro → Iputinga →\n' +
-        'Cordeiro → Prado → Afogados → Imbiribeira →\n' +
-        'Boa Viagem → Setúbal'
-    );
-}
-
-// realçar o caminho com gradiente verde
-function highlightPath() {
-    if (isHighlighted) {
-        alert('O caminho já está realçado!');
-        return;
-    }
-    
-    var network = window.network;
-    var nodeData = network.body.data.nodes;
-    var edgeData = network.body.data.edges;
-    var updates = [];
-    var edgeUpdates = [];
-
-    // aplicar gradiente verde nos nós do caminho
-    for (var i = 0; i < pathNodesGlobal.length; i++) {
-        var nodeId = pathNodesGlobal[i];
-        var currentNode = nodeData.get(nodeId);
-        
-        if (currentNode) {
-            var originalColor = currentNode.color;
-            if (typeof originalColor === 'object' && originalColor.background) {
-                originalColor = originalColor.background;
-            }
-            
-            // calcular tom de verde (do claro ao escuro)
-            var progress = i / (pathNodesGlobal.length - 1);
-            var r = Math.round(16 + (5 - 16) * progress);
-            var g = Math.round(185 + (150 - 185) * progress);
-            var b = Math.round(129 + (105 - 129) * progress);
-            var greenShade = 'rgb(' + r + ',' + g + ',' + b + ')';
-            
-            updates.push({
-                id: nodeId,
-                originalColor: originalColor,
-                color: { border: '#059669', background: greenShade },
-                borderWidth: 4,
-                size: 30,
-                font: { size: 16, bold: true }
-            });
-        }
-    }
-    nodeData.update(updates);
-
-    // destacar arestas do caminho
-    for (var i = 0; i < pathNodesGlobal.length - 1; i++) {
-        var u = pathNodesGlobal[i];
-        var v = pathNodesGlobal[i + 1];
-        
-        var edgeId = edgeData.getIds({
-            filter: function (item) {
-                return (item.from === u && item.to === v) || (item.from === v && item.to === u);
-            }
-        })[0];
-
-        if (edgeId) {
-            edgeUpdates.push({ id: edgeId, color: '#059669', width: 6 });
-        }
-    }
-    edgeData.update(edgeUpdates);
-
-    // dar zoom no caminho
-    setTimeout(function() {
-        network.fit({ nodes: pathNodesGlobal, animation: { duration: 1000 } });
-    }, 100);
-    
-    isHighlighted = true;
-    alert('Caminho realçado com gradiente verde!');
-}
-
-// remover o realce do caminho
-function resetHighlight() {
-    if (!isHighlighted) {
-        alert('O caminho não está realçado!');
-        return;
-    }
-    
-    var network = window.network;
-    var nodeData = network.body.data.nodes;
-    var edgeData = network.body.data.edges;
-    var updates = [];
-    var edgeUpdates = [];
-
-    // voltar cor original dos nós
-    nodeData.forEach(function(node) {
-        var resetColor = node.originalColor || node.color;
-        if (typeof resetColor === 'object' && resetColor.background) {
-            resetColor = resetColor.background;
-        }
-        updates.push({
-            id: node.id,
-            color: resetColor,
-            borderWidth: 2,
-            size: 15,
-            font: { size: 14, bold: false }
-        });
-    });
-    nodeData.update(updates);
-
-    // voltar cor original das arestas
-    edgeData.forEach(function(edge) {
-        edgeUpdates.push({ id: edge.id, color: '#848484', width: 1 });
-    });
-    edgeData.update(edgeUpdates);
-    
-    network.fit({ animation: { duration: 1000 } });
-    isHighlighted = false;
-    alert('Realce removido!');
-}
 </script>
 
 </body>

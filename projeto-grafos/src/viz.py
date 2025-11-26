@@ -296,7 +296,7 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
         '6.2': '#008080', '6.3': '#daa520', 'N/A': '#cccccc'
     }
 
-    # caminho que vai ser destacado: nova descoberta até setúbal
+    # caminho padrão
     target_path_str = 'nova descoberta -> alto do mandu -> monteiro -> iputinga -> cordeiro -> prado -> afogados -> imbiribeira -> boa viagem -> setubal'
     target_path_nodes = [bairro.strip() for bairro in target_path_str.split('->')]
 
@@ -306,8 +306,8 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
         width='100%', 
         notebook=False, 
         cdn_resources='remote',
-        select_menu=True,  # menu de busca por bairro
-        filter_menu=False,  # desativa filtros desnecessários
+        select_menu=True,
+        filter_menu=False,
         bgcolor='#ffffff',
         font_color='#2c3e50'
     )
@@ -316,14 +316,20 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
     for node in grafo.get_todos_os_nos():
         if node in df_nodes.index:
             data = df_nodes.loc[node]
-            cor = color_map.get(data['microrregiao'], '#999999')
+            microrregiao = str(data['microrregiao'])
+            cor = color_map.get(microrregiao, '#999999')
+            
+            # adiciona o nó com cor
             net.add_node(
                 node, 
                 label=node.title(),
                 color=cor,
-                group=data['microrregiao']
+                size=15,
+                borderWidth=2,
+                borderWidthSelected=4,
+                font={'size': 14, 'face': 'Segoe UI'}
             )
-    
+        
     # adicionar arestas ao pyvis
     for _, row in df_adjacencias.iterrows():
         origem = row['bairro_origem'].lower()
@@ -373,6 +379,8 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
     
     # preparar dados dos nós pra usar no javascript
     nodes_data = {}
+    microregioes_count = {}
+    
     for node in grafo.get_todos_os_nos():
         if node in df_nodes.index:
             data = df_nodes.loc[node]
@@ -382,8 +390,55 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
                 'grau': int(data['grau']),
                 'densidade': float(data['densidade_ego']),
                 'microrregiao': microrregiao,
-                'cor': color_map.get(microrregiao, '#cccccc')  # mesma cor do vértice
+                'cor': color_map.get(microrregiao, '#cccccc')
             }
+            
+            # contar bairros por microrregião
+            if microrregiao not in microregioes_count:
+                microregioes_count[microrregiao] = 0
+            microregioes_count[microrregiao] += 1
+    
+    # lista de todos os bairros para o dropdown
+    all_bairros = sorted(grafo.get_todos_os_nos())
+    
+    # lista de todas as microrregiões únicas
+    all_microregioes = sorted([mr for mr in set([info['microrregiao'] for info in nodes_data.values()]) if mr != 'N/A'])
+    
+    # Função para calcular se texto deve ser branco ou preto
+    def get_text_color(hex_color):
+        r = int(hex_color[1:3], 16)
+        g = int(hex_color[3:5], 16)
+        b = int(hex_color[5:7], 16)
+        brightness = (r * 299 + g * 587 + b * 114) / 1000
+        return '#fff' if brightness < 155 else '#000'
+    
+    # gerar botões coloridos para cada RPA
+    botoes_rpa_html = ""
+    for mr in all_microregioes:
+        cor = color_map.get(mr, '#3498db')
+        text_color = get_text_color(cor)
+        
+        botoes_rpa_html += f'''        <button onclick="filtrarPorMicrorregiao('{mr}')" class="btn btn-filter" id="btn-{mr}" 
+            style="background: {cor} !important; color: {text_color} !important; border: 2px solid {cor};">
+            RPA {mr}
+        </button>\n'''
+    
+    # gerar HTML da legenda colorida
+    legenda_html = ""
+    for mr in sorted(all_microregioes):
+        if mr in microregioes_count:
+            cor = color_map.get(mr, '#cccccc')
+            text_color = get_text_color(cor)
+            count = microregioes_count[mr]
+            
+            legenda_html += f'''
+        <div style="display: flex; align-items: center; margin: 8px 0;">
+            <div style="width: 30px; height: 30px; background: {cor}; border-radius: 5px; margin-right: 12px; border: 2px solid #333;"></div>
+            <div style="flex: 1;">
+                <strong>RPA {mr}</strong> - {count} bairros
+                <br><small style="color: #666;">{cor}</small>
+            </div>
+        </div>\n'''
     
     # cabeçalho e estilos
     header_and_css = """
@@ -414,35 +469,34 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
         border-bottom: 1px solid #e1e8ed;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .path-info {
-        display: inline-block;
-        background: #f0f4ff;
-        padding: 12px 20px;
-        border-radius: 8px;
-        margin-right: 15px;
-        border-left: 4px solid #667eea;
+    .control-section {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e1e8ed;
     }
-    .path-label {
-        font-size: 12px;
-        color: #666;
-        margin-bottom: 4px;
+    .control-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .section-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 10px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
-    .path-text {
-        font-size: 15px;
-        font-weight: 600;
-        color: #2c3e50;
-    }
     .btn {
-        padding: 12px 24px;
+        padding: 10px 20px;
         border: none;
         border-radius: 6px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-right: 10px;
+        margin-right: 8px;
+        margin-bottom: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .btn:hover {
@@ -461,6 +515,34 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
     }
+    .btn-filter {
+        background: #3498db;
+        color: white;
+    }
+    .btn-filter.active {
+        box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.4) !important;
+        transform: scale(1.05);
+    }
+    .input-group {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    .input-group label {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    .input-group select {
+        padding: 8px 12px;
+        border: 2px solid #e1e8ed;
+        border-radius: 6px;
+        font-size: 13px;
+        min-width: 200px;
+        cursor: pointer;
+    }
     .legend-container {
         background: white;
         padding: 15px 30px;
@@ -475,63 +557,180 @@ def gerar_grafo_interativo(grafo: Grafo, df_adjacencias: pd.DataFrame, df_bairro
     #mynetwork {
         margin-top: 0 !important;
     }
+    #stats-panel {
+        position: fixed;
+        right: 20px;
+        top: 120px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        min-width: 280px;
+        max-width: 350px;
+        display: none;
+        z-index: 1000;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    #stats-panel h3 {
+        margin-top: 0;
+        color: #667eea;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+    #stats-content {
+        font-size: 14px;
+        line-height: 1.8;
+    }
+    #legend-panel {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        min-width: 400px;
+        max-width: 500px;
+        display: none;
+        z-index: 10000;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    #legend-panel h3 {
+        margin-top: 0;
+        color: #667eea;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+        font-size: 20px;
+    }
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        z-index: 9999;
+    }
 </style>
 
 <div class="header-container">
     <div class="header-title">Grafo Interativo dos Bairros do Recife</div>
-    <div class="header-subtitle">Projeto Final - Teoria dos Grafos | Parte 1 - Ponto 9</div>
+    <div class="header-subtitle">Projeto Final - Teoria dos Grafos | Parte 1 - Ponto 9 + Bônus Visual/UX</div>
 </div>
 
 <div class="controls-container">
-    <div class="path-info">
-        <div class="path-label">Caminho em Destaque</div>
-        <div class="path-text">Nova Descoberta → Boa Viagem (Setúbal)</div>
+    
+    <!-- SEÇÃO 1: CAMINHO PERSONALIZADO -->
+    <div class="control-section">
+        <div class="section-title">1. Destaque de Caminho Personalizado</div>
+        <div class="input-group">
+            <label>Origem:</label>
+            <select id="path-origin">
+                <option value="">Selecione o bairro de origem...</option>
+""" + ''.join([f'                <option value="{b}">{b.title()}</option>\n' for b in all_bairros]) + """
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Destino:</label>
+            <select id="path-destination">
+                <option value="">Selecione o bairro de destino...</option>
+""" + ''.join([f'                <option value="{b}">{b.title()}</option>\n' for b in all_bairros]) + """
+            </select>
+        </div>
+        <button onclick="calcularERealcarCaminho()" class="btn btn-highlight">
+            🔍 Calcular e Realçar Caminho
+        </button>
+        <button onclick="realcarCaminhoDefault()" class="btn btn-highlight">
+            📍 Realçar Nova Descoberta → Setúbal
+        </button>
+        <button onclick="resetHighlight()" class="btn btn-reset">
+            ❌ Remover Realce
+        </button>
     </div>
-    <button onclick="highlightPath()" class="btn btn-highlight">
-        Realçar Caminho
+    
+    <!-- SEÇÃO 2: FILTROS POR MICRORREGIÃO -->
+    <div class="control-section">
+        <div class="section-title">2. Filtrar por Microrregião</div>
+        <button onclick="filtrarPorMicrorregiao('todas')" class="btn btn-filter active" id="btn-todas" 
+                style="background: #2ecc71 !important; color: white !important;">
+            ✓ Todas
+        </button>
+""" + botoes_rpa_html + """
+    </div>
+    
+    <!-- SEÇÃO 3: INFORMAÇÕES -->
+    <div class="control-section">
+        <div class="section-title">ℹ3. Informações</div>
+        <button onclick="showInfo()" class="btn btn-info">
+            📊 Estatísticas do Grafo
+        </button>
+        <button onclick="mostrarLegendaCores()" class="btn btn-info">
+            🎨 Legenda de Cores
+        </button>
+    </div>
+    
+</div>
+
+<!-- Overlay escuro -->
+<div class="overlay" id="overlay" onclick="fecharLegenda()"></div>
+
+<!-- Painel de legenda colorida -->
+<div id="legend-panel">
+    <h3>🎨 Legenda de Cores por Microrregião</h3>
+    <div id="legend-content">
+""" + legenda_html + """
+    </div>
+    <button onclick="fecharLegenda()" class="btn btn-reset" style="width: 100%; margin-top: 20px;">
+        Fechar
     </button>
-    <button onclick="resetHighlight()" class="btn btn-reset">
-        Remover Realce
-    </button>
-    <button onclick="showInfo()" class="btn btn-info">
-        Mais Informações
+</div>
+
+<!-- Painel lateral de estatísticas -->
+<div id="stats-panel">
+    <h3>📊 Estatísticas do Bairro</h3>
+    <div id="stats-content"></div>
+    <button onclick="fecharStats()" class="btn btn-reset" style="width: 100%; margin-top: 15px;">
+        Fechar
     </button>
 </div>
 """
     
     footer_html = """
 <div class="legend-container">
-    <span style="font-weight: bold; margin-right: 15px;">Dicas:</span>
+    <span style="font-weight: bold; margin-right: 15px;">💡 Dicas de Uso:</span>
     <span class="legend-item">Arraste os nós para reorganizar</span>
-    <span class="legend-item">Use Ctrl+Scroll para zoom</span>
+    <span class="legend-item">Ctrl+Scroll para zoom</span>
     <span class="legend-item">Passe o mouse sobre os nós para ver detalhes</span>
-    <span class="legend-item">Use a busca acima para localizar bairros</span>
+    <span class="legend-item">Clique em um bairro para ver estatísticas completas</span>
 </div>
 """
     
-    # javascript com tooltip customizado
+    # javascript (continua no próximo comentário devido ao limite)
     js_code = """
 <script type="text/javascript">
-var pathNodesGlobal = """ + json.dumps(target_path_nodes) + """;
+var pathNodesDefault = """ + json.dumps(target_path_nodes) + """;
 var nodesData = """ + json.dumps(nodes_data) + """;
+var colorMap = """ + json.dumps(color_map) + """;
 var isHighlighted = false;
+var currentHighlightedPath = [];
 var tooltipElement = null;
 var hoverTimeout = null;
 var clickedNode = null;
+var currentFilter = 'todas';
 
-// criar tooltip com a mesma cor do vértice (pegando direto do grafo)
 function createTooltip(nodeId, x, y) {
     var nodeInfo = nodesData[nodeId];
     if (!nodeInfo) return;
     
     removeTooltip();
     
-    // pegar a cor REAL que está sendo exibida no vértice
     var network = window.network;
-    var positions = network.getPositions([nodeId]);
     var canvasNode = network.body.nodes[nodeId];
     
-    // pegar a cor do canvas (cor REAL renderizada)
     var bgColor = '#cccccc';
     if (canvasNode && canvasNode.options && canvasNode.options.color) {
         var colorObj = canvasNode.options.color;
@@ -544,7 +743,6 @@ function createTooltip(nodeId, x, y) {
         }
     }
     
-    // decidir se o texto vai ser branco ou preto baseado no brilho da cor
     var textColor = getTextColor(bgColor);
     
     tooltipElement = document.createElement('div');
@@ -580,17 +778,11 @@ function createTooltip(nodeId, x, y) {
     document.body.appendChild(tooltipElement);
 }
 
-// calcular se o texto deve ser branco ou preto baseado no brilho da cor
 function getTextColor(hexColor) {
-    // converter hex pra rgb
     var r = parseInt(hexColor.substr(1,2), 16);
     var g = parseInt(hexColor.substr(3,2), 16);
     var b = parseInt(hexColor.substr(5,2), 16);
-    
-    // calcular brilho (luminância)
     var brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
-    // se for escuro usa branco, se for claro usa preto
     return brightness > 155 ? '#000' : '#fff';
 }
 
@@ -601,19 +793,363 @@ function removeTooltip() {
     }
 }
 
+function mostrarStats(nodeId) {
+    var nodeInfo = nodesData[nodeId];
+    if (!nodeInfo) return;
+    
+    var network = window.network;
+    var connectedNodes = network.getConnectedNodes(nodeId);
+    var vizinhosHTML = '';
+    
+    if (connectedNodes.length > 0) {
+        vizinhosHTML = '<p><strong>Vizinhos conectados:</strong></p><ul style="margin: 5px 0; padding-left: 20px;">';
+        connectedNodes.slice(0, 10).forEach(function(v) {
+            vizinhosHTML += '<li>' + v.charAt(0).toUpperCase() + v.slice(1) + '</li>';
+        });
+        if (connectedNodes.length > 10) {
+            vizinhosHTML += '<li><em>... e mais ' + (connectedNodes.length - 10) + ' bairros</em></li>';
+        }
+        vizinhosHTML += '</ul>';
+    }
+    
+    document.getElementById('stats-panel').style.display = 'block';
+    document.getElementById('stats-content').innerHTML = `
+        <p><strong>Bairro:</strong> ${nodeId.toUpperCase()}</p>
+        <p><strong>Grau:</strong> ${nodeInfo.grau} conexões</p>
+        <p><strong>Microrregião:</strong> RPA ${nodeInfo.microrregiao}</p>
+        <p><strong>Densidade Ego:</strong> ${nodeInfo.densidade.toFixed(4)}</p>
+        <hr style="margin: 15px 0; border: none; border-top: 1px solid #e1e8ed;">
+        ${vizinhosHTML}
+    `;
+}
+
+function fecharStats() {
+    document.getElementById('stats-panel').style.display = 'none';
+}
+
+function mostrarLegendaCores() {
+    document.getElementById('legend-panel').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
+function fecharLegenda() {
+    document.getElementById('legend-panel').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+
+function filtrarPorMicrorregiao(microrregiao) {
+    var network = window.network;
+    var nodeData = network.body.data.nodes;
+    var edgeData = network.body.data.edges;
+    var updates = [];
+    var edgeUpdates = [];
+    
+    currentFilter = microrregiao;
+    
+    document.querySelectorAll('.btn-filter').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    document.getElementById('btn-' + microrregiao).classList.add('active');
+    
+    if (microrregiao === 'todas') {
+        nodeData.forEach(function(node) {
+            updates.push({
+                id: node.id,
+                opacity: 1.0,
+                size: 15,
+                hidden: false
+            });
+        });
+        edgeData.forEach(function(edge) {
+            edgeUpdates.push({
+                id: edge.id,
+                hidden: false,
+                color: '#848484'
+            });
+        });
+    } else {
+        var nodesVisiveis = new Set();
+        
+        nodeData.forEach(function(node) {
+            var nodeInfo = nodesData[node.id];
+            if (!nodeInfo) return;
+            
+            if (nodeInfo.microrregiao === microrregiao) {
+                nodesVisiveis.add(node.id);
+                updates.push({
+                    id: node.id,
+                    opacity: 1.0,
+                    size: 20,
+                    hidden: false
+                });
+            } else {
+                updates.push({
+                    id: node.id,
+                    opacity: 0.1,
+                    size: 8,
+                    hidden: false
+                });
+            }
+        });
+        
+        edgeData.forEach(function(edge) {
+            if (nodesVisiveis.has(edge.from) && nodesVisiveis.has(edge.to)) {
+                edgeUpdates.push({
+                    id: edge.id,
+                    hidden: false,
+                    color: '#059669',
+                    width: 2
+                });
+            } else {
+                edgeUpdates.push({
+                    id: edge.id,
+                    hidden: true
+                });
+            }
+        });
+    }
+    
+    nodeData.update(updates);
+    edgeData.update(edgeUpdates);
+    
+    if (microrregiao !== 'todas') {
+        var nodesToFit = Array.from(nodesVisiveis);
+        if (nodesToFit.length > 0) {
+            setTimeout(function() {
+                network.fit({ nodes: nodesToFit, animation: { duration: 800 } });
+            }, 100);
+        }
+    }
+}
+
+function dijkstraJS(graph, start, end) {
+    var distances = {};
+    var previous = {};
+    var unvisited = new Set();
+    
+    for (var node in graph) {
+        distances[node] = Infinity;
+        previous[node] = null;
+        unvisited.add(node);
+    }
+    distances[start] = 0;
+    
+    while (unvisited.size > 0) {
+        var current = null;
+        var minDist = Infinity;
+        unvisited.forEach(function(node) {
+            if (distances[node] < minDist) {
+                minDist = distances[node];
+                current = node;
+            }
+        });
+        
+        if (current === null || distances[current] === Infinity) break;
+        if (current === end) break;
+        
+        unvisited.delete(current);
+        
+        if (graph[current]) {
+            graph[current].forEach(function(neighbor) {
+                if (unvisited.has(neighbor.to)) {
+                    var alt = distances[current] + neighbor.weight;
+                    if (alt < distances[neighbor.to]) {
+                        distances[neighbor.to] = alt;
+                        previous[neighbor.to] = current;
+                    }
+                }
+            });
+        }
+    }
+    
+    if (distances[end] === Infinity) return null;
+    
+    var path = [];
+    var current = end;
+    while (current !== null) {
+        path.unshift(current);
+        current = previous[current];
+    }
+    
+    return path;
+}
+
+function calcularERealcarCaminho() {
+    var origem = document.getElementById('path-origin').value;
+    var destino = document.getElementById('path-destination').value;
+    
+    if (!origem || !destino) {
+        alert('⚠️ Por favor, selecione tanto a origem quanto o destino!');
+        return;
+    }
+    
+    if (origem === destino) {
+        alert('⚠️ Origem e destino devem ser diferentes!');
+        return;
+    }
+    
+    var network = window.network;
+    var edgeData = network.body.data.edges;
+    var graph = {};
+    
+    edgeData.forEach(function(edge) {
+        if (!graph[edge.from]) graph[edge.from] = [];
+        if (!graph[edge.to]) graph[edge.to] = [];
+        
+        var weight = edge.value || 1;
+        graph[edge.from].push({ to: edge.to, weight: weight });
+        graph[edge.to].push({ to: edge.from, weight: weight });
+    });
+    
+    var caminho = dijkstraJS(graph, origem, destino);
+    
+    if (!caminho) {
+        alert('❌ Não foi possível encontrar um caminho entre ' + origem.toUpperCase() + ' e ' + destino.toUpperCase() + '!');
+        return;
+    }
+    
+    highlightPath(caminho);
+    
+    alert('✅ Caminho encontrado com ' + caminho.length + ' bairros!\\n\\n📍 Caminho: ' + 
+          caminho.map(function(b) { return b.toUpperCase(); }).join(' → '));
+}
+
+function realcarCaminhoDefault() {
+    highlightPath(pathNodesDefault);
+}
+
+function highlightPath(pathNodes) {
+    if (isHighlighted) {
+        resetHighlight();
+    }
+    
+    var network = window.network;
+    var nodeData = network.body.data.nodes;
+    var edgeData = network.body.data.edges;
+    var updates = [];
+    var edgeUpdates = [];
+    
+    currentHighlightedPath = pathNodes;
+    
+    for (var i = 0; i < pathNodes.length; i++) {
+        var nodeId = pathNodes[i];
+        var currentNode = nodeData.get(nodeId);
+        
+        if (currentNode) {
+            var originalColor = currentNode.color;
+            if (typeof originalColor === 'object' && originalColor.background) {
+                originalColor = originalColor.background;
+            }
+            
+            var progress = i / (pathNodes.length - 1);
+            var r = Math.round(16 + (5 - 16) * progress);
+            var g = Math.round(185 + (150 - 185) * progress);
+            var b = Math.round(129 + (105 - 129) * progress);
+            var greenShade = 'rgb(' + r + ',' + g + ',' + b + ')';
+            
+            updates.push({
+                id: nodeId,
+                originalColor: originalColor,
+                color: { border: '#059669', background: greenShade },
+                borderWidth: 4,
+                size: 30,
+                font: { size: 16, bold: true }
+            });
+        }
+    }
+    nodeData.update(updates);
+    
+    for (var i = 0; i < pathNodes.length - 1; i++) {
+        var u = pathNodes[i];
+        var v = pathNodes[i + 1];
+        
+        var edgeId = edgeData.getIds({
+            filter: function (item) {
+                return (item.from === u && item.to === v) || (item.from === v && item.to === u);
+            }
+        })[0];
+        
+        if (edgeId) {
+            edgeUpdates.push({ id: edgeId, color: '#059669', width: 6 });
+        }
+    }
+    edgeData.update(edgeUpdates);
+    
+    setTimeout(function() {
+        network.fit({ nodes: pathNodes, animation: { duration: 1000 } });
+    }, 100);
+    
+    isHighlighted = true;
+}
+
+function resetHighlight() {
+    if (!isHighlighted) {
+        alert('ℹ️ Nenhum caminho está realçado no momento!');
+        return;
+    }
+    
+    var network = window.network;
+    var nodeData = network.body.data.nodes;
+    var edgeData = network.body.data.edges;
+    var updates = [];
+    var edgeUpdates = [];
+    
+    nodeData.forEach(function(node) {
+        var resetColor = node.originalColor || node.color;
+        if (typeof resetColor === 'object' && resetColor.background) {
+            resetColor = resetColor.background;
+        }
+        updates.push({
+            id: node.id,
+            color: resetColor,
+            borderWidth: 2,
+            size: 15,
+            font: { size: 14, bold: false }
+        });
+    });
+    nodeData.update(updates);
+    
+    edgeData.forEach(function(edge) {
+        edgeUpdates.push({ id: edge.id, color: '#848484', width: 1 });
+    });
+    edgeData.update(edgeUpdates);
+    
+    network.fit({ animation: { duration: 1000 } });
+    isHighlighted = false;
+    currentHighlightedPath = [];
+    
+    if (currentFilter !== 'todas') {
+        filtrarPorMicrorregiao(currentFilter);
+    }
+}
+
+function showInfo() {
+    var total = Object.keys(nodesData).length;
+    var totalArestas = window.network.body.data.edges.length;
+    
+    alert(
+        '📊 INFORMAÇÕES DO GRAFO\\n' +
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n\\n' +
+        '🏘️  Total de Bairros: ' + total + '\\n' +
+        '🔗 Total de Conexões: ' + totalArestas + '\\n\\n' +
+        '📍 CAMINHO PADRÃO:\\n' +
+        'Nova Descoberta → Alto do Mandu → Monteiro →\\n' +
+        'Iputinga → Cordeiro → Prado → Afogados →\\n' +
+        'Imbiribeira → Boa Viagem → Setúbal\\n\\n' +
+        '💡 Use os controles acima para explorar!'
+    );
+}
+
 function setupTooltips() {
     var network = window.network;
     
-    // quando passa o mouse em cima do nó
     network.on("hoverNode", function(params) {
         if (hoverTimeout) clearTimeout(hoverTimeout);
-        
         if (clickedNode !== params.node) {
             createTooltip(params.node, params.pointer.DOM.x, params.pointer.DOM.y);
         }
     });
     
-    // quando tira o mouse do nó
     network.on("blurNode", function(params) {
         if (clickedNode !== params.node) {
             hoverTimeout = setTimeout(function() {
@@ -622,10 +1158,10 @@ function setupTooltips() {
         }
     });
     
-    // quando clica no nó (tooltip fica fixo por 3 segundos)
     network.on("click", function(params) {
         if (params.nodes.length > 0) {
             var nodeId = params.nodes[0];
+            mostrarStats(nodeId);
             clickedNode = nodeId;
             createTooltip(nodeId, params.pointer.DOM.x, params.pointer.DOM.y);
             
@@ -635,24 +1171,18 @@ function setupTooltips() {
                     removeTooltip();
                 }
             }, 3000);
-        }
-    });
-    
-    // remover tooltip ao passar em aresta
-    network.on("hoverEdge", function() {
-        if (!clickedNode) removeTooltip();
-    });
-    
-    // remover ao clicar fora
-    network.on("click", function(params) {
-        if (params.nodes.length === 0) {
+        } else {
+            fecharStats();
             clickedNode = null;
             removeTooltip();
         }
     });
+    
+    network.on("hoverEdge", function() {
+        if (!clickedNode) removeTooltip();
+    });
 }
 
-// traduzir textos do menu de busca
 function traduzirInterface() {
     setTimeout(function() {
         var labels = document.querySelectorAll('label');
@@ -685,127 +1215,6 @@ window.addEventListener('load', function() {
     traduzirInterface();
 });
 
-function showInfo() {
-    var total = Object.keys(nodesData).length;
-    alert(
-        'INFORMAÇÕES DO GRAFO\\n\\n' +
-        'Total de Bairros: ' + total + '\\n' +
-        'Total de Conexões: ' + window.network.body.data.edges.length + '\\n\\n' +
-        'CAMINHO EM DESTAQUE:\\n' +
-        'Nova Descoberta → Alto do Mandu → Monteiro → Iputinga →\\n' +
-        'Cordeiro → Prado → Afogados → Imbiribeira →\\n' +
-        'Boa Viagem → Setúbal'
-    );
-}
-
-// realçar o caminho com gradiente verde
-function highlightPath() {
-    if (isHighlighted) {
-        alert('O caminho já está realçado!');
-        return;
-    }
-    
-    var network = window.network;
-    var nodeData = network.body.data.nodes;
-    var edgeData = network.body.data.edges;
-    var updates = [];
-    var edgeUpdates = [];
-
-    // aplicar gradiente verde nos nós do caminho
-    for (var i = 0; i < pathNodesGlobal.length; i++) {
-        var nodeId = pathNodesGlobal[i];
-        var currentNode = nodeData.get(nodeId);
-        
-        if (currentNode) {
-            var originalColor = currentNode.color;
-            if (typeof originalColor === 'object' && originalColor.background) {
-                originalColor = originalColor.background;
-            }
-            
-            // calcular tom de verde (do claro ao escuro)
-            var progress = i / (pathNodesGlobal.length - 1);
-            var r = Math.round(16 + (5 - 16) * progress);
-            var g = Math.round(185 + (150 - 185) * progress);
-            var b = Math.round(129 + (105 - 129) * progress);
-            var greenShade = 'rgb(' + r + ',' + g + ',' + b + ')';
-            
-            updates.push({
-                id: nodeId,
-                originalColor: originalColor,
-                color: { border: '#059669', background: greenShade },
-                borderWidth: 4,
-                size: 30,
-                font: { size: 16, bold: true }
-            });
-        }
-    }
-    nodeData.update(updates);
-
-    // destacar arestas do caminho
-    for (var i = 0; i < pathNodesGlobal.length - 1; i++) {
-        var u = pathNodesGlobal[i];
-        var v = pathNodesGlobal[i + 1];
-        
-        var edgeId = edgeData.getIds({
-            filter: function (item) {
-                return (item.from === u && item.to === v) || (item.from === v && item.to === u);
-            }
-        })[0];
-
-        if (edgeId) {
-            edgeUpdates.push({ id: edgeId, color: '#059669', width: 6 });
-        }
-    }
-    edgeData.update(edgeUpdates);
-
-    // dar zoom no caminho
-    setTimeout(function() {
-        network.fit({ nodes: pathNodesGlobal, animation: { duration: 1000 } });
-    }, 100);
-    
-    isHighlighted = true;
-    alert('Caminho realçado com gradiente verde!');
-}
-
-// remover o realce do caminho
-function resetHighlight() {
-    if (!isHighlighted) {
-        alert('O caminho não está realçado!');
-        return;
-    }
-    
-    var network = window.network;
-    var nodeData = network.body.data.nodes;
-    var edgeData = network.body.data.edges;
-    var updates = [];
-    var edgeUpdates = [];
-
-    // voltar cor original dos nós
-    nodeData.forEach(function(node) {
-        var resetColor = node.originalColor || node.color;
-        if (typeof resetColor === 'object' && resetColor.background) {
-            resetColor = resetColor.background;
-        }
-        updates.push({
-            id: node.id,
-            color: resetColor,
-            borderWidth: 2,
-            size: 15,
-            font: { size: 14, bold: false }
-        });
-    });
-    nodeData.update(updates);
-
-    // voltar cor original das arestas
-    edgeData.forEach(function(edge) {
-        edgeUpdates.push({ id: edge.id, color: '#848484', width: 1 });
-    });
-    edgeData.update(edgeUpdates);
-    
-    network.fit({ animation: { duration: 1000 } });
-    isHighlighted = false;
-    alert('Realce removido!');
-}
 </script>
 """
     

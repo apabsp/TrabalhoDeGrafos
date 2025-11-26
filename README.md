@@ -152,9 +152,11 @@ Todas as visualizações estáticas estão em formato PNG na pasta `out/`.
 
 Os pesos das arestas no grafo dos bairros (arquivo `data/adjacencias_bairros.csv`) foram definidos com base na categoria das vias:
 
-- **Peso 2.0**: Pontes e viadutos principais
-- **Peso 3.0**: Ruas e avenidas locais
-- **Peso 4.0**: Avenidas de grande porte
+- **Peso 1.0**: Travessas e ladeiras
+- **Peso 2.0**: Pontes e viadutos
+- **Peso 3.0**: Ruas e estradas
+- **Peso 4.0**: Avenidas
+- **Peso 5.0**: BR
 
 ## Desempenho dos algoritmos
 

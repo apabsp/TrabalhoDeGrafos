@@ -1244,5 +1244,180 @@ window.addEventListener('load', function() {
             
     except Exception as e:
         print(f"Erro ao salvar '{output_file}': {e}")
-        
+
     return html_content
+
+
+def histograma_graus_parte2(grafo: Grafo, out_png="out/parte2_histograma_graus.png"):
+    import matplotlib.pyplot as plt
+
+    graus = []
+    for no in grafo.get_todos_os_nos():
+        vizinhos = grafo.get_vizinhos(no)
+        grau = len(vizinhos) if vizinhos else 0
+        graus.append(grau)
+
+    plt.figure(figsize=(12, 6))
+    plt.hist(graus, bins=50, color='#3498db', edgecolor='black', alpha=0.7)
+    plt.xlabel('Grau', fontsize=12)
+    plt.ylabel('Frequência', fontsize=12)
+    plt.title('Distribuição de Graus - Rotas Aéreas Europa', fontsize=14, fontweight='bold')
+    plt.grid(axis='y', alpha=0.3)
+
+    # Adicionar estatísticas
+    grau_medio = sum(graus) / len(graus)
+    grau_max = max(graus)
+    grau_min = min(graus)
+
+    plt.text(0.7, 0.95, f'Grau médio: {grau_medio:.2f}\nGrau máximo: {grau_max}\nGrau mínimo: {grau_min}',
+             transform=plt.gca().transAxes, fontsize=10,
+             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+    plt.tight_layout()
+    plt.savefig(out_png, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print(f"Histograma de graus (Parte 2) salvo em '{out_png}'")
+
+    return {
+        'grau_medio': grau_medio,
+        'grau_max': grau_max,
+        'grau_min': grau_min,
+        'num_nos': len(graus)
+    }
+
+
+def grafo_interativo_parte2_amostra(grafo: Grafo, num_nos_amostra=100, out_html="out/parte2_grafo_amostra.html"):
+    """
+    Gera um grafo interativo com uma amostra do dataset da Parte 2.
+    Como o grafo completo tem 810 nós e 16k arestas, mostramos apenas uma amostra.
+    """
+    from pyvis.network import Network
+    import random
+
+    todos_nos = grafo.get_todos_os_nos()
+
+    # Selecionar amostra de nós (os com maior grau para melhor visualização)
+    nos_com_grau = []
+    for no in todos_nos:
+        vizinhos = grafo.get_vizinhos(no)
+        grau = len(vizinhos) if vizinhos else 0
+        nos_com_grau.append((no, grau))
+    nos_com_grau.sort(key=lambda x: x[1], reverse=True)
+
+    # Pegar os top N nós com maior grau
+    nos_amostra = set([no for no, _ in nos_com_grau[:num_nos_amostra]])
+
+    net = Network(
+        height='800px',
+        width='100%',
+        notebook=False,
+        cdn_resources='remote',
+        select_menu=True,
+        filter_menu=True,
+        bgcolor='#ffffff',
+        font_color='#2c3e50'
+    )
+
+    # Configurar física para melhor layout
+    net.barnes_hut(gravity=-8000, central_gravity=0.3, spring_length=100, spring_strength=0.001)
+
+    # Adicionar nós
+    for no in nos_amostra:
+        vizinhos = grafo.get_vizinhos(no)
+        grau = len(vizinhos) if vizinhos else 0
+        # Tamanho do nó proporcional ao grau
+        tamanho = 10 + (grau * 2)
+        cor = f'#{random.randint(100, 255):02x}{random.randint(100, 200):02x}{random.randint(150, 255):02x}'
+
+        net.add_node(
+            no,
+            label=no,
+            title=f'{no}\nGrau: {grau}',
+            size=tamanho,
+            color=cor
+        )
+
+    # Adicionar arestas (apenas entre nós da amostra)
+    arestas_adicionadas = 0
+    for no_origem in nos_amostra:
+        vizinhos = grafo.get_vizinhos(no_origem)
+        if vizinhos:
+            for no_destino, peso in vizinhos:
+                if no_destino in nos_amostra:
+                    net.add_edge(no_origem, no_destino, value=peso, title=f'Peso: {peso}')
+                    arestas_adicionadas += 1
+
+
+    temp_file = 'temp_parte2.html'
+    net.save_graph(temp_file)
+
+    try:
+        with open(temp_file, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+
+
+        html_header = f"""
+        <div style='text-align: center; padding: 20px; background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;'>
+            <h1 style='color: #2c3e50; margin: 0;'>Rotas Aéreas Europa - Amostra ({num_nos_amostra} aeroportos)</h1>
+            <p style='color: #7f8c8d; margin: 10px 0 0 0;'>
+                Mostrando os {num_nos_amostra} aeroportos com maior conectividade | {arestas_adicionadas} rotas visualizadas
+            </p>
+        </div>
+        """
+
+        html_content = html_content.replace('<body>', f'<body>{html_header}')
+
+        with open(out_html, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+        print(f"Grafo interativo (amostra Parte 2) salvo em '{out_html}'")
+
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
+
+    except Exception as e:
+        print(f"Erro ao salvar '{out_html}': {e}")
+
+    return {
+        'nos_visualizados': len(nos_amostra),
+        'arestas_visualizadas': arestas_adicionadas
+    }
+
+
+def top_aeroportos_parte2(grafo: Grafo, out_png="out/parte2_top_aeroportos.png"):
+# maior grau
+    import matplotlib.pyplot as plt
+
+    nos_com_grau = []
+    for no in grafo.get_todos_os_nos():
+        vizinhos = grafo.get_vizinhos(no)
+        grau = len(vizinhos) if vizinhos else 0
+        nos_com_grau.append((no, grau))
+
+    # top 20
+    nos_com_grau.sort(key=lambda x: x[1], reverse=True)
+    top_20 = nos_com_grau[:20]
+
+    aeroportos = [no for no, _ in top_20]
+    graus = [grau for _, grau in top_20]
+
+    plt.figure(figsize=(14, 8))
+    bars = plt.barh(aeroportos, graus, color='#e74c3c', edgecolor='black', alpha=0.8)
+
+
+    for i, (aeroporto, grau) in enumerate(top_20):
+        plt.text(grau + 1, i, str(grau), va='center', fontsize=9)
+
+    plt.xlabel('Número de Conexões (Grau)', fontsize=12)
+    plt.ylabel('Aeroporto (Código IATA)', fontsize=12)
+    plt.title('Top 20 Aeroportos Mais Conectados - Europa', fontsize=14, fontweight='bold')
+    plt.gca().invert_yaxis()
+    plt.grid(axis='x', alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(out_png, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print(f"Gráfico de top aeroportos (Parte 2) salvo em '{out_png}'")
+
+    return top_20

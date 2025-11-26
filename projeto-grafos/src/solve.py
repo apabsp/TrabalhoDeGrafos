@@ -9,7 +9,10 @@ from .graphs.graph import Grafo
 from .graphs.io import carregar_dados_principais, carregar_dataset_parte2
 from .graphs.algorithms import dijkstra_path, dijkstra_path_length  
 
-from .viz import exportar_arvore_percurso_png, exportar_arvore_percurso_destacada, mapa_cores_por_grau, histograma_graus, ranking_densidade_por_microrregiao, gerar_grafo_interativo
+from .viz import (exportar_arvore_percurso_png, exportar_arvore_percurso_destacada,
+                  mapa_cores_por_grau, histograma_graus, ranking_densidade_por_microrregiao,
+                  gerar_grafo_interativo, histograma_graus_parte2,
+                  grafo_interativo_parte2_amostra, top_aeroportos_parte2)
 
 # Define os caminhos de saída obrigatórios
 OUTPUT_DIR = 'out'
@@ -913,21 +916,52 @@ def executar_bellman_ford_parte2(pares=None):
     return resultados
 
 
+def gerar_visualizacoes_parte2():
+
+    print("\n Gerando View Parte 2 ")
+
+    grafo, _ = construir_grafo_parte2()
+    if grafo is None:
+        print("Não foi possível construir o grafo da Parte 2.")
+        return
+
+    try:
+        stats_graus = histograma_graus_parte2(grafo)
+
+        top_20 = top_aeroportos_parte2(grafo)
+
+        info_grafo = grafo_interativo_parte2_amostra(grafo, num_nos_amostra=100)
+
+        print(f"\nEstatísticas do grafo:")
+        print(f"  - Número de nós: {stats_graus['num_nos']}")
+        print(f"  - Grau médio: {stats_graus['grau_medio']:.2f}")
+        print(f"  - Grau máximo: {stats_graus['grau_max']}")
+        print(f"  - Grau mínimo: {stats_graus['grau_min']}")
+        print(f"  - Aeroporto mais conectado: {top_20[0][0]} ({top_20[0][1]} conexões)")
+
+        print("\nVisualizações geradas:")
+        print("  - out/parte2_histograma_graus.png")
+        print("  - out/parte2_top_aeroportos.png")
+        print("  - out/parte2_grafo_amostra.html")
+
+    except Exception as e:
+        print(f"Erro ao gerar visualizações: {e}")
+
+
 def executar_parte2_completa():
     print("\n" + "="*60)
     print("BFS, DFS, Dijkstra e Bellman-Ford")
     print("="*60)
-
-    # Rodar todos
     resultados_bfs = executar_bfs_parte2()
     resultados_dfs = executar_dfs_parte2()
     resultados_dijkstra = executar_dijkstra_parte2()
     resultados_bf = executar_bellman_ford_parte2()
 
+    gerar_visualizacoes_parte2()
+
     print("\n--- Atualizando relatório completo da Parte 2 ---")
 
     try:
-
         report = {}
         if os.path.exists(FILE_OUT_PARTE2_REPORT):
             with open(FILE_OUT_PARTE2_REPORT, 'r', encoding='utf-8') as f:

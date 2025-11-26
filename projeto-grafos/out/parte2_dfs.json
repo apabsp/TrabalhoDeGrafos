@@ -1,0 +1,31 @@
+[
+    {
+        "algoritmo": "DFS",
+        "source": "TZL",
+        "nos_visitados": 810,
+        "tem_ciclo": true,
+        "classificacao_arestas": {
+            "tree_edge": 809,
+            "back_edge": 6384,
+            "cross_edge": 292,
+            "forward_edge": 8663
+        },
+        "tempo_segundos": 0.0030692999716848135
+    },
+    {
+        "algoritmo": "DFS",
+        "source": "HOV",
+        "nos_visitados": 1,
+        "tem_ciclo": false,
+        "classificacao_arestas": {},
+        "tempo_segundos": 3.4999684430658817e-06
+    },
+    {
+        "algoritmo": "DFS",
+        "source": "ACH",
+        "nos_visitados": 1,
+        "tem_ciclo": false,
+        "classificacao_arestas": {},
+        "tempo_segundos": 2.200016751885414e-06
+    }
+]

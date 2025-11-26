@@ -1,0 +1,36 @@
+[
+    {
+        "algoritmo": "BFS",
+        "source": "TZL",
+        "nos_visitados": 810,
+        "num_niveis": 5,
+        "niveis_distribuicao": {
+            "0": 1,
+            "1": 11,
+            "2": 282,
+            "3": 504,
+            "4": 12
+        },
+        "tempo_segundos": 0.0007042000070214272
+    },
+    {
+        "algoritmo": "BFS",
+        "source": "HOV",
+        "nos_visitados": 1,
+        "num_niveis": 1,
+        "niveis_distribuicao": {
+            "0": 1
+        },
+        "tempo_segundos": 1.309998333454132e-05
+    },
+    {
+        "algoritmo": "BFS",
+        "source": "ACH",
+        "nos_visitados": 1,
+        "num_niveis": 1,
+        "niveis_distribuicao": {
+            "0": 1
+        },
+        "tempo_segundos": 1.9000144675374031e-06
+    }
+]

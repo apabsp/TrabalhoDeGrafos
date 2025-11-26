@@ -9,31 +9,150 @@
             "algoritmo": "dijkstra",
             "origem": "LIS",
             "destino": "CDG",
-            "tempo_segundos": 0.020523600018350407
+            "tempo_segundos": 0.005873299960512668
         },
         {
             "algoritmo": "dijkstra",
             "origem": "MAD",
             "destino": "FRA",
-            "tempo_segundos": 0.028833899996243417
+            "tempo_segundos": 0.00887770002009347
         },
         {
             "algoritmo": "dijkstra",
             "origem": "BCN",
             "destino": "AMS",
-            "tempo_segundos": 0.008217599999625236
+            "tempo_segundos": 0.008183600031770766
         },
         {
             "algoritmo": "dijkstra",
             "origem": "ATH",
             "destino": "FCO",
-            "tempo_segundos": 0.011456699983682483
+            "tempo_segundos": 0.0034644000115804374
         },
         {
             "algoritmo": "dijkstra",
             "origem": "IST",
             "destino": "LHR",
-            "tempo_segundos": 0.04159269999945536
+            "tempo_segundos": 0.009585799998603761
+        }
+    ],
+    "bfs": [
+        {
+            "algoritmo": "BFS",
+            "source": "TZL",
+            "nos_visitados": 810,
+            "num_niveis": 5,
+            "niveis_distribuicao": {
+                "0": 1,
+                "1": 11,
+                "2": 282,
+                "3": 504,
+                "4": 12
+            },
+            "tempo_segundos": 0.0007042000070214272
+        },
+        {
+            "algoritmo": "BFS",
+            "source": "HOV",
+            "nos_visitados": 1,
+            "num_niveis": 1,
+            "niveis_distribuicao": {
+                "0": 1
+            },
+            "tempo_segundos": 1.309998333454132e-05
+        },
+        {
+            "algoritmo": "BFS",
+            "source": "ACH",
+            "nos_visitados": 1,
+            "num_niveis": 1,
+            "niveis_distribuicao": {
+                "0": 1
+            },
+            "tempo_segundos": 1.9000144675374031e-06
+        }
+    ],
+    "dfs": [
+        {
+            "algoritmo": "DFS",
+            "source": "TZL",
+            "nos_visitados": 810,
+            "tem_ciclo": true,
+            "classificacao_arestas": {
+                "tree_edge": 809,
+                "back_edge": 6384,
+                "cross_edge": 292,
+                "forward_edge": 8663
+            },
+            "tempo_segundos": 0.0030692999716848135
+        },
+        {
+            "algoritmo": "DFS",
+            "source": "HOV",
+            "nos_visitados": 1,
+            "tem_ciclo": false,
+            "classificacao_arestas": {},
+            "tempo_segundos": 3.4999684430658817e-06
+        },
+        {
+            "algoritmo": "DFS",
+            "source": "ACH",
+            "nos_visitados": 1,
+            "tem_ciclo": false,
+            "classificacao_arestas": {},
+            "tempo_segundos": 2.200016751885414e-06
+        }
+    ],
+    "bellman_ford": [
+        {
+            "caso": "pesos_positivos",
+            "algoritmo": "Bellman-Ford",
+            "origem": "LIS",
+            "destino": "CDG",
+            "custo": 50.0,
+            "tem_ciclo_negativo": false,
+            "tempo_segundos": 0.004819399968255311
+        },
+        {
+            "caso": "pesos_positivos",
+            "algoritmo": "Bellman-Ford",
+            "origem": "MAD",
+            "destino": "FRA",
+            "custo": 90.0,
+            "tem_ciclo_negativo": false,
+            "tempo_segundos": 0.004169299965724349
+        },
+        {
+            "caso": "pesos_positivos",
+            "algoritmo": "Bellman-Ford",
+            "origem": "BCN",
+            "destino": "AMS",
+            "custo": 60.0,
+            "tem_ciclo_negativo": false,
+            "tempo_segundos": 0.003533800016157329
+        },
+        {
+            "caso": "pesos_negativos_sem_ciclo",
+            "algoritmo": "Bellman-Ford",
+            "origem": "A",
+            "destino": "E",
+            "custo": 4.0,
+            "tem_ciclo_negativo": false,
+            "tempo_segundos": 1.479999627918005e-05,
+            "descricao": "Grafo sintético: A->B(10), A->C(5), B->D(-8), C->D(-3), D->E(2)"
+        },
+        {
+            "caso": "ciclo_negativo",
+            "algoritmo": "Bellman-Ford",
+            "origem": "X",
+            "tem_ciclo_negativo": true,
+            "ciclo_negativo": [
+                "Y",
+                "X",
+                "Z"
+            ],
+            "tempo_segundos": 1.0200019460171461e-05,
+            "descricao": "Grafo sintético: X->Y(1), Y->Z(1), Z->X(-5), total=-3"
         }
     ]
 }

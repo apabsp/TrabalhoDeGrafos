@@ -462,7 +462,7 @@ def carregar_pares_parte2():
     return pares
 
 def executar_dijkstra_parte2(pares=None):
-
+    print("\n--- Executando Dijkstra (Parte 2) ---")
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     grafo, df_rotas = construir_grafo_parte2()
@@ -543,16 +543,8 @@ def executar_dijkstra_parte2(pares=None):
                 "erro": msg_erro
             })
 
-    # salva parte2_dijkstra
-    try:
-        df_out = pd.DataFrame(resultados)
-        df_out.to_csv(FILE_OUT_PARTE2_DIJKSTRA_CSV, index=False)
-        print(f"Resultados Dijkstra salvos em '{FILE_OUT_PARTE2_DIJKSTRA_CSV}'")
-    except Exception as e:
-        print(f"Erro ao salvar CSV da Parte 2: {e}")
-        df_out = None
+    df_out = pd.DataFrame(resultados)
 
-    # salva parte2_dijkstra.json
     try:
         with open(FILE_OUT_PARTE2_DIJKSTRA_JSON, 'w', encoding='utf-8') as fj:
             json.dump(resultados, fj, ensure_ascii=False, indent=4)

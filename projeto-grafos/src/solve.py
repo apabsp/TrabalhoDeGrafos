@@ -14,7 +14,7 @@ from .viz import (exportar_arvore_percurso_png, exportar_arvore_percurso_destaca
                   gerar_grafo_interativo, histograma_graus_parte2,
                   grafo_interativo_parte2_amostra, top_aeroportos_parte2)
 
-# Define os caminhos de saída obrigatórios
+# define os caminhos de saída obrigatórios
 OUTPUT_DIR = 'out'
 FILE_OUT_GLOBAL = os.path.join(OUTPUT_DIR, 'recife_global.json')
 FILE_OUT_MICRO = os.path.join(OUTPUT_DIR, 'microrregioes.json')
@@ -34,8 +34,7 @@ FILE_OUT_PARTE2_REPORT = os.path.join(OUTPUT_DIR, 'parte2_report.json')
 # ===================================================================
 
 def construir_grafo_principal():
-    # ... (Esta função está perfeita, não precisa mudar) ...
-    # ... (Vou omiti-la aqui para ser breve) ...
+   
     """
     Orquestra o carregamento dos dados e a construção do grafo principal.
     
@@ -43,21 +42,21 @@ def construir_grafo_principal():
         Grafo: O objeto Grafo de Recife.
         (pd.DataFrame, pd.DataFrame): Os dataframes carregados.
     """
-    # 1. Carregar os dados processados
+    # 1. carregar os dados processados
     df_bairros, df_adjacencias = carregar_dados_principais()
     
     if df_bairros is None or df_adjacencias is None:
         print("Falha ao carregar dados. Abortando construção do grafo.")
         return None, None, None
     
-    # 2. Criar a instância do Grafo
+    # 2. criar a instância do Grafo
     G_recife = Grafo()
 
-    # 3. Adicionar todos os bairros como nós (vértices)
+    # 3. adicionar todos os bairros como nós (vértices)
     for bairro in df_bairros['bairro'].unique():
         G_recife.add_node(bairro) # add_node está em graph.py
 
-    # 4. Adicionar todas as adjacências como arestas
+    # 4. adicionar todas as adjacências como arestas
     for index, linha in df_adjacencias.iterrows():
         G_recife.add_edge(
             linha['bairro_origem'],
@@ -75,8 +74,7 @@ def construir_grafo_principal():
 # ===================================================================
 
 def _calcular_metricas_basicas(grafo: Grafo):
-    # ... (Esta função está perfeita, não precisa mudar) ...
-    # ... (Vou omiti-la aqui para ser breve) ...
+ 
     """
     Função auxiliar para calcular Ordem (N), Tamanho (M) e Densidade (D).
     """
@@ -87,7 +85,7 @@ def _calcular_metricas_basicas(grafo: Grafo):
         if ordem <= 1:
             densidade = 0.0
         else:
-            # Fórmula para grafo não-direcionado
+            # fórmula para grafo não-direcionado
             densidade = (2 * tamanho) / (ordem * (ordem - 1))
             
         return {'ordem': ordem, 'tamanho': tamanho, 'densidade': densidade}
@@ -103,13 +101,7 @@ def analisar_grafo_completo(grafo_principal: Grafo):
     print("\n--- 1. Análise: Cidade do Recife (Grafo Completo) ---")
     metricas = _calcular_metricas_basicas(grafo_principal)
     
-    if metricas:
-        # --- MUDANÇA: Comente as linhas de print ---
-        # print(f"Ordem (N): {metricas['ordem']}")
-        # print(f"Tamanho (M): {metricas['tamanho']}")
-        # print(f"Densidade (D): {metricas['densidade']:.4f}")
-        # --- FIM DA MUDANÇA ---
-        
+    if metricas:       
         try:
             with open(FILE_OUT_GLOBAL, 'w', encoding='utf-8') as f:
                 json.dump(metricas, f, indent=4, ensure_ascii=False)
@@ -148,12 +140,6 @@ def analisar_microrregioes(df_bairros: pd.DataFrame, df_adjacencias: pd.DataFram
         metricas_subgrafo = _calcular_metricas_basicas(subgrafo)
         resultados_rpa[rpa] = metricas_subgrafo
     
-    # --- MUDANÇA: Comente o loop de print ---
-    # for rpa, metricas in resultados_rpa.items():
-    #     if metricas:
-    #         print(f"  > {rpa}: Ordem={metricas['ordem']}, Tamanho={metricas['tamanho']}, Densidade={metricas['densidade']:.4f}")
-    # --- FIM DA MUDANÇA ---
-
     try:
         resultados_lista = []
         for rpa, metricas in resultados_rpa.items():
@@ -189,7 +175,7 @@ def analisar_ego_redes(grafo_principal: Grafo, df_adjacencias: pd.DataFrame):
                  for vizinho, peso in vizinhos_com_peso:
                     vizinhos.add(vizinho)
 
-            grau = len(vizinhos) # A linha do SyntaxError que corrigimos
+            grau = len(vizinhos)
             nos_da_ego_rede = set(vizinhos)
             nos_da_ego_rede.add(bairro_v) 
 
@@ -218,11 +204,6 @@ def analisar_ego_redes(grafo_principal: Grafo, df_adjacencias: pd.DataFrame):
 
     df_ego_final = pd.DataFrame(resultados_ego)
     
-    # --- MUDANÇA: Comente os prints da amostra ---
-    # print("Tabela de ego-redes gerada (amostra):")
-    # print(df_ego_final.head())
-    # --- FIM DA MUDANÇA ---
-    
     try:
         df_ego_final.to_csv(FILE_OUT_EGO, index=False)
         print(f"Tabela completa salva em '{FILE_OUT_EGO}'")
@@ -249,23 +230,22 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
 
     lista_graus = []
     for bairro in grafo_principal.get_todos_os_nos():
-        # Adding every bairo's grau
         vizinhos = grafo_principal.get_vizinhos(bairro)
-        grau = len(vizinhos) if vizinhos is not None else 0 #gotta be a better way to write this though. checklater
+        grau = len(vizinhos) if vizinhos is not None else 0
 
         lista_graus.append({"bairro": bairro, "grau": grau})
     
     df_graus = pd.DataFrame(lista_graus)
 
 
-    # Save
+    # salvar
     try:
         df_graus.to_csv(FILE_OUT_GRAUS, index = False)
         print(f"Lista de graus salva em '{FILE_OUT_GRAUS}'")
     except Exception as e:
         print(f"Erro ao salvar '{FILE_OUT_GRAUS}': {e}")
 
-    #Highest grau
+    # maior grau
 
     try:
         idx_max_grau = df_graus['grau'].idxmax() #indexMax
@@ -278,7 +258,7 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
     except Exception as e:
         print(f"Erro ao encontrar maior grau: {e}")
 
-    #Highest density 
+    # maior densidade
     if not df_graus.empty:
         idx_max_grau = df_graus['grau'].idxmax()
         bairro_max_grau = df_graus.loc[idx_max_grau, 'bairro']
@@ -295,7 +275,7 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
             max_densidade = df_ego.loc[idx_max_densidade, 'densidade_ego']
             #print(f"Bairro mais denso (maior densidade_ego): {bairro_max_densidade} (densidade_ego = {max_densidade:.4f})")
 
-            # Mostrar todos os bairros com a mesma densidade máxima
+            # mostrar todos os bairros com a mesma densidade máxima
             bairros_max_densidade = [b for b in df_ego[df_ego['densidade_ego'] == max_densidade]['bairro'].tolist() if b != bairro_max_densidade]
             #if len(bairros_max_densidade) > 1:
                 #print("Outros bairros com a mesma densidade máxima:", ", ".join(bairros_max_densidade))
@@ -369,7 +349,7 @@ def calcular_distancias_enderecos(grafo):
 
     return df_out
 
-# --- 7. Transformar o percurso obrigatório em árvore e mostrar ---
+# --- 7. transformar o percurso obrigatório em árvore e mostrar ---
 
 def gerar_arvore_percurso(grafo):
 
@@ -433,7 +413,7 @@ def construir_grafo_parte2():
         print("Falha ao carregar o dataset da Parte 2.")
         return None, None
 
-    # Grafo dirigido para representar as rotas aéreas
+    # grafo dirigido para representar as rotas aéreas
     grafo = Grafo(dirigido=True)
 
     for origem, destino, peso in arestas:
@@ -597,12 +577,10 @@ def executar_bfs_parte2(num_sources=3):
         print("Não foi possível construir o grafo da Parte 2.")
         return None
 
-    # Get some source nodes from the graph
     todos_nos = grafo.get_todos_os_nos()
     if len(todos_nos) < num_sources:
         num_sources = len(todos_nos)
 
-    # Select sources: first, middle, and last nodes (for variety)
     sources = [
         todos_nos[0],
         todos_nos[len(todos_nos) // 2],
@@ -623,7 +601,6 @@ def executar_bfs_parte2(num_sources=3):
             num_visitados = len(result['visited'])
             num_niveis = max(result['levels'].values()) if result['levels'] else 0
 
-            # Count nodes at each level
             niveis_count = {}
             for node, level in result['levels'].items():
                 niveis_count[level] = niveis_count.get(level, 0) + 1
@@ -655,7 +632,6 @@ def executar_bfs_parte2(num_sources=3):
                 "erro": str(e)
             })
 
-    # Save results
     try:
         output_file = os.path.join(OUTPUT_DIR, 'parte2_bfs.json')
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -686,12 +662,10 @@ def executar_dfs_parte2(num_sources=3):
         print("Não foi possível construir o grafo da Parte 2.")
         return None
 
-    # Get some source nodes
     todos_nos = grafo.get_todos_os_nos()
     if len(todos_nos) < num_sources:
         num_sources = len(todos_nos)
 
-    # Select sources: first, middle, and last nodes
     sources = [
         todos_nos[0],
         todos_nos[len(todos_nos) // 2],
@@ -712,7 +686,6 @@ def executar_dfs_parte2(num_sources=3):
             num_visitados = len(result['visited'])
             has_cycle = result['has_cycle']
 
-            # Count edge types
             edge_types_count = {}
             for edge, edge_type in result['edge_classification'].items():
                 edge_types_count[edge_type] = edge_types_count.get(edge_type, 0) + 1
@@ -745,7 +718,6 @@ def executar_dfs_parte2(num_sources=3):
                 "erro": str(e)
             })
 
-    # Save results
     try:
         output_file = os.path.join(OUTPUT_DIR, 'parte2_dfs.json')
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -772,7 +744,6 @@ def executar_bellman_ford_parte2(pares=None):
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    # Build graph for Bellman-Ford (we'll add some negative weights)
     grafo, df_rotas = construir_grafo_parte2()
     if grafo is None:
         print("Não foi possível construir o grafo da Parte 2.")
@@ -781,7 +752,6 @@ def executar_bellman_ford_parte2(pares=None):
     print("\nNOTA: O dataset original tem apenas pesos positivos.")
     print("Para testar Bellman-Ford com pesos negativos, vamos criar casos sintéticos:\n")
 
-    # Load pairs from CSV if not provided
     if pares is None:
         pares = carregar_pares_parte2()
         if not pares:
@@ -796,7 +766,7 @@ def executar_bellman_ford_parte2(pares=None):
     resultados = []
     tempos = []
 
-    # Test 1: Normal positive weights (same as Dijkstra)
+    # teste 1
     print("=== Teste 1: Pesos Positivos (sem ciclo negativo) ===")
     for origem, destino in pares[:3]:  # Use first 3 pairs
         try:
@@ -831,15 +801,15 @@ def executar_bellman_ford_parte2(pares=None):
         except Exception as e:
             print(f"{origem} -> {destino}: ERRO - {e}")
 
-    # Test 2: Create a small graph with negative weights (NO negative cycle)
+    # teste 2
     print("\n=== Teste 2: Pesos Negativos SEM Ciclo Negativo ===")
     print("Criando grafo sintético com pesos negativos...")
 
     grafo_neg = Grafo(dirigido=True)
     grafo_neg.add_edge('A', 'B', 10.0)
     grafo_neg.add_edge('A', 'C', 5.0)
-    grafo_neg.add_edge('B', 'D', -8.0)  # Negative weight
-    grafo_neg.add_edge('C', 'D', -3.0)  # Negative weight
+    grafo_neg.add_edge('B', 'D', -8.0)
+    grafo_neg.add_edge('C', 'D', -3.0)
     grafo_neg.add_edge('D', 'E', 2.0)
 
     try:
@@ -865,14 +835,14 @@ def executar_bellman_ford_parte2(pares=None):
     except Exception as e:
         print(f"  Erro: {e}")
 
-    # Test 3: Create graph WITH negative cycle
+    # teste 3
     print("\n=== Teste 3: Com Ciclo Negativo (Detectado) ===")
     print("Criando grafo sintético com ciclo negativo...")
 
     grafo_ciclo = Grafo(dirigido=True)
     grafo_ciclo.add_edge('X', 'Y', 1.0)
     grafo_ciclo.add_edge('Y', 'Z', 1.0)
-    grafo_ciclo.add_edge('Z', 'X', -5.0)  # Creates negative cycle: X->Y->Z->X = 1+1+(-5) = -3
+    grafo_ciclo.add_edge('Z', 'X', -5.0)
 
     try:
         t0 = time.perf_counter()
@@ -896,7 +866,7 @@ def executar_bellman_ford_parte2(pares=None):
     except Exception as e:
         print(f"  Erro: {e}")
 
-    # Save results
+    # salvar
     try:
         output_file = os.path.join(OUTPUT_DIR, 'parte2_bellman_ford.json')
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -964,7 +934,7 @@ def executar_parte2_completa():
         report['dfs'] = resultados_dfs if resultados_dfs else []
         report['bellman_ford'] = resultados_bf if resultados_bf else []
 
-        # Save updated report
+        # Salvar report atualizado
         with open(FILE_OUT_PARTE2_REPORT, 'w', encoding='utf-8') as f:
             json.dump(report, f, ensure_ascii=False, indent=4)
 

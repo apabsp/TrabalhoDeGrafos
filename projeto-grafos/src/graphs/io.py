@@ -1,9 +1,7 @@
-# Em: src/io.py
-
 import pandas as pd
 import os
 
-# Define os caminhos dos arquivos
+# define os caminhos dos arquivos
 ARQUIVO_BAIRROS_ORIGINAL = 'data/bairros_recife.csv'
 ARQUIVO_BAIRROS_PROCESSADO = 'data/bairros_unique.csv'
 ARQUIVO_ADJACENCIAS = 'data/adjacencias_bairros.csv'
@@ -19,22 +17,22 @@ def _processar_e_salvar_bairros():
     try:
         df_largo = pd.read_csv(ARQUIVO_BAIRROS_ORIGINAL)
         
-        # Derretendo o data set
+        # derretendo o data set
         df_longo = pd.melt(df_largo, var_name='microrregiao', value_name='bairro')
 
-        # 1. Remove linhas que não têm bairro (células vazias)
+        # 1. remove linhas que não têm bairro (células vazias)
         df_limpo = df_longo.dropna(subset=['bairro'])
 
-        # 2. Remove bairros duplicados
+        # 2. remove bairros duplicados
         df_limpo = df_limpo.drop_duplicates(subset=['bairro'])
 
-        # 3. Remove espaços em branco
+        # 3. remove espaços em branco
         df_limpo['bairro'] = df_limpo['bairro'].str.strip()
 
-        # 4. Ordena
+        # 4. ordena
         df_limpo = df_limpo.sort_values(by='bairro')
 
-        # Salva o arquivo limpo e "derretido"
+        # salva o arquivo limpo e "derretido"
         df_limpo.to_csv(ARQUIVO_BAIRROS_PROCESSADO, index=False)
         print(f"Arquivo '{ARQUIVO_BAIRROS_PROCESSADO}' criado com sucesso.")
         
@@ -59,13 +57,13 @@ def carregar_dados_principais():
     df_bairros = None
     df_adjacencias = None
     
-    # --- 1. Carregar/Processar Bairros ---
+    # --- 1. carregar/Processar Bairros ---
     try:
         if not os.path.exists(ARQUIVO_BAIRROS_PROCESSADO):
             print(f"'{ARQUIVO_BAIRROS_PROCESSADO}' não encontrado. Gerando agora...")
             df_bairros = _processar_e_salvar_bairros()
             if df_bairros is None:
-                return None, None # Falha no processamento
+                return None, None # falha no processamento
         else:
             df_bairros = pd.read_csv(ARQUIVO_BAIRROS_PROCESSADO)
             
@@ -73,7 +71,7 @@ def carregar_dados_principais():
         print(f"Erro ao carregar '{ARQUIVO_BAIRROS_PROCESSADO}': {e}")
         return None, None
         
-    # --- 2. Carregar Adjacências ---
+    # --- 2. carregar Adjacências ---
     try:
         df_adjacencias = pd.read_csv(ARQUIVO_ADJACENCIAS)
     except FileNotFoundError:
@@ -86,7 +84,7 @@ def carregar_dados_principais():
     print("Dados de bairros e adjacências carregados.")
     return df_bairros, df_adjacencias
 
-# Parte 2
+# parte 2
 
 def carregar_dataset_parte2(caminho=ARQUIVO_PARTE2):
 

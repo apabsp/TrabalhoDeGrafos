@@ -1264,7 +1264,7 @@ def histograma_graus_parte2(grafo: Grafo, out_png="out/parte2_histograma_graus.p
     plt.title('Distribuição de Graus - Rotas Aéreas Europa', fontsize=14, fontweight='bold')
     plt.grid(axis='y', alpha=0.3)
 
-    # Adicionar estatísticas
+    # adicionar estatísticas
     grau_medio = sum(graus) / len(graus)
     grau_max = max(graus)
     grau_min = min(graus)
@@ -1297,7 +1297,7 @@ def grafo_interativo_parte2_amostra(grafo: Grafo, num_nos_amostra=100, out_html=
 
     todos_nos = grafo.get_todos_os_nos()
 
-    # Selecionar amostra de nós (os com maior grau para melhor visualização)
+    # selecionar amostra de nós (os com maior grau para melhor visualização)
     nos_com_grau = []
     for no in todos_nos:
         vizinhos = grafo.get_vizinhos(no)
@@ -1305,7 +1305,7 @@ def grafo_interativo_parte2_amostra(grafo: Grafo, num_nos_amostra=100, out_html=
         nos_com_grau.append((no, grau))
     nos_com_grau.sort(key=lambda x: x[1], reverse=True)
 
-    # Pegar os top N nós com maior grau
+    # pegar os top N nós com maior grau
     nos_amostra = set([no for no, _ in nos_com_grau[:num_nos_amostra]])
 
     net = Network(
@@ -1319,14 +1319,14 @@ def grafo_interativo_parte2_amostra(grafo: Grafo, num_nos_amostra=100, out_html=
         font_color='#2c3e50'
     )
 
-    # Configurar física para melhor layout
+    # configurar física para melhor layout
     net.barnes_hut(gravity=-8000, central_gravity=0.3, spring_length=100, spring_strength=0.001)
 
-    # Adicionar nós
+    # adicionar nós
     for no in nos_amostra:
         vizinhos = grafo.get_vizinhos(no)
         grau = len(vizinhos) if vizinhos else 0
-        # Tamanho do nó proporcional ao grau
+        # tamanho do nó proporcional ao grau
         tamanho = 10 + (grau * 2)
         cor = f'#{random.randint(100, 255):02x}{random.randint(100, 200):02x}{random.randint(150, 255):02x}'
 
@@ -1338,7 +1338,7 @@ def grafo_interativo_parte2_amostra(grafo: Grafo, num_nos_amostra=100, out_html=
             color=cor
         )
 
-    # Adicionar arestas (apenas entre nós da amostra)
+    # adicionar arestas (apenas entre nós da amostra)
     arestas_adicionadas = 0
     for no_origem in nos_amostra:
         vizinhos = grafo.get_vizinhos(no_origem)

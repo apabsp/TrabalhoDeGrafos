@@ -10,7 +10,7 @@
             "cross_edge": 292,
             "forward_edge": 8663
         },
-        "tempo_segundos": 0.009178499996778555
+        "tempo_segundos": 0.005933799999183975
     },
     {
         "algoritmo": "DFS",
@@ -18,7 +18,7 @@
         "nos_visitados": 1,
         "tem_ciclo": false,
         "classificacao_arestas": {},
-        "tempo_segundos": 1.4099990949034691e-05
+        "tempo_segundos": 3.0800001695752144e-05
     },
     {
         "algoritmo": "DFS",
@@ -26,6 +26,6 @@
         "nos_visitados": 1,
         "tem_ciclo": false,
         "classificacao_arestas": {},
-        "tempo_segundos": 2.719998883549124e-05
+        "tempo_segundos": 2.8800001018680632e-05
     }
 ]

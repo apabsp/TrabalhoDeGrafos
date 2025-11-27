@@ -16,18 +16,11 @@ class Grafo:
         self.add_node(destino)
 
         self.adj[origem].append((destino, peso))
-        # print(self)  # <-- COMENTE OU APAGUE ESTA LINHA
-        #self.adj[destino].append((origem, peso))
-        # print(self)  # <-- COMENTE OU APAGUE ESTA LINHA
 
         if not self.dirigido:
             self.adj[destino].append((origem, peso))
 
-        self.num_arestas += 1 # Correto!
-
-    # ----------------------------------------------------
-    # VERSÃO CORRIGIDA DOS MÉTODOS GET
-    # ----------------------------------------------------
+        self.num_arestas += 1
 
     def get_numero_de_nos(self):
         """ Retorna o número de nós (vértices) no grafo. """
@@ -48,7 +41,6 @@ class Grafo:
         else:
             return []
         
-
     # ----------------------------------------------------
     # Métodos necessários para usar Dijkstra
     # ----------------------------------------------------

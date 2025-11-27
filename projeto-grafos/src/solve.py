@@ -1,5 +1,3 @@
-# Em: src/solve.py
-
 import pandas as pd
 import json
 import os 
@@ -98,7 +96,6 @@ def analisar_grafo_completo(grafo_principal: Grafo):
     Ponto 1 da entrega: Calcula as métricas para a Cidade do Recife
     e salva em 'out/recife_global.json'.
     """
-    print("\n--- 1. Análise: Cidade do Recife (Grafo Completo) ---")
     metricas = _calcular_metricas_basicas(grafo_principal)
     
     if metricas:       
@@ -116,7 +113,8 @@ def analisar_microrregioes(df_bairros: pd.DataFrame, df_adjacencias: pd.DataFram
     Ponto 2 da entrega: Calcula métricas para os subgrafos das Microrregiões
     e salva em 'out/microrregioes.json'.
     """
-    print("\n--- 2. Análise: Microrregiões (Subgrafos Induzidos) ---")
+    print("\nPontos 1-2: Métricas Globais e por Microrregião")
+    print("-" * 80)
     
     coluna_rpa = 'microrregiao' 
     if coluna_rpa not in df_bairros.columns:
@@ -149,7 +147,9 @@ def analisar_microrregioes(df_bairros: pd.DataFrame, df_adjacencias: pd.DataFram
 
         with open(FILE_OUT_MICRO, 'w', encoding='utf-8') as f:
             json.dump(resultados_lista, f, indent=4, ensure_ascii=False)
-        print(f"Resultados salvos em '{FILE_OUT_MICRO}'")
+        print(f"  ✓ Análise completa")
+        print(f"  ✓ out/recife_global.json")
+        print(f"  ✓ out/microrregioes.json\n")
     except Exception as e:
         print(f"Erro ao salvar '{FILE_OUT_MICRO}': {e}")
 
@@ -160,7 +160,8 @@ def analisar_ego_redes(grafo_principal: Grafo, df_adjacencias: pd.DataFrame):
     Ponto 3 da entrega: Calcula métricas da ego-rede para cada bairro
     e salva em 'out/ego_bairro.csv'.
     """
-    print("\n--- 3. Análise: Ego-Rede por Bairro ---")
+    print("Ponto 3: Ego-Redes por Bairro")
+    print("-" * 80)
     resultados_ego = []
 
     if not hasattr(grafo_principal, 'get_todos_os_nos') or not hasattr(grafo_principal, 'get_vizinhos'):
@@ -206,7 +207,8 @@ def analisar_ego_redes(grafo_principal: Grafo, df_adjacencias: pd.DataFrame):
     
     try:
         df_ego_final.to_csv(FILE_OUT_EGO, index=False)
-        print(f"Tabela completa salva em '{FILE_OUT_EGO}'")
+        print(f"  ✓ Ego-redes calculadas")
+        print(f"  ✓ out/ego_bairro.csv\n")
     except Exception as e:
         print(f"Erro ao salvar '{FILE_OUT_EGO}': {e}")
     
@@ -226,7 +228,8 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
     
     """
 
-    print("\n--- 4. Análise: Graus e Rankings")
+    print("Ponto 4: Graus e Rankings")
+    print("-" * 80)
 
     lista_graus = []
     for bairro in grafo_principal.get_todos_os_nos():
@@ -241,56 +244,48 @@ def analisar_graus_e_rankings(grafo_principal: Grafo):
     # salvar
     try:
         df_graus.to_csv(FILE_OUT_GRAUS, index = False)
-        print(f"Lista de graus salva em '{FILE_OUT_GRAUS}'")
+        print(f"  ✓ Lista de graus gerada")
+        print(f"  ✓ out/graus.csv")
     except Exception as e:
         print(f"Erro ao salvar '{FILE_OUT_GRAUS}': {e}")
-
-    # maior grau
-
+    
+    # calcular e printar maior grau
     try:
-        idx_max_grau = df_graus['grau'].idxmax() #indexMax
-        bairro_max_grau = df_graus.loc[idx_max_grau, 'bairro']
-        max_grau= df_graus.loc[idx_max_grau, 'grau']
-
-        #Print abaixo comentado, pois o resultado já é exibido em Highest density
-        #print(f"\n Bairro com o maior grau {bairro_max_grau}, onde grau = {max_grau}")
-
-    except Exception as e:
-        print(f"Erro ao encontrar maior grau: {e}")
-
-    # maior densidade
-    if not df_graus.empty:
         idx_max_grau = df_graus['grau'].idxmax()
         bairro_max_grau = df_graus.loc[idx_max_grau, 'bairro']
         max_grau = df_graus.loc[idx_max_grau, 'grau']
-        #print(f"\nBairro com maior grau: {bairro_max_grau} (grau = {max_grau})\n")
+        print(f"  ✓ Bairro com maior grau: {bairro_max_grau.title()} (grau {max_grau})")
+    except Exception as e:
+        print(f"  ! Erro ao encontrar maior grau: {e}")
 
-    #Highest densidade_ego
-
+    # calcular e printar mais denso
     try:
         df_ego = pd.read_csv(FILE_OUT_EGO)
         if not df_ego.empty and 'densidade_ego' in df_ego.columns:
             idx_max_densidade = df_ego['densidade_ego'].idxmax()
             bairro_max_densidade = df_ego.loc[idx_max_densidade, 'bairro']
             max_densidade = df_ego.loc[idx_max_densidade, 'densidade_ego']
-            #print(f"Bairro mais denso (maior densidade_ego): {bairro_max_densidade} (densidade_ego = {max_densidade:.4f})")
-
-            # mostrar todos os bairros com a mesma densidade máxima
-            bairros_max_densidade = [b for b in df_ego[df_ego['densidade_ego'] == max_densidade]['bairro'].tolist() if b != bairro_max_densidade]
-            #if len(bairros_max_densidade) > 1:
-                #print("Outros bairros com a mesma densidade máxima:", ", ".join(bairros_max_densidade))
-
+            print(f"  ✓ Bairro mais denso: {bairro_max_densidade.title()} (densidade {max_densidade:.4f})")
         else:
-            print("não foi possível determinar o bairro mais denso. Verifique 'ego_bairro.csv'")
+            print("  ! Não foi possível determinar o bairro mais denso. Verifique 'ego_bairro.csv'")
     except Exception as e:
-        print(f"Erro ao ler '{FILE_OUT_EGO}' para ranking de densidade: {e}")
+        print(f"  ! Erro ao ler densidade: {e}")
+    
+    print(f"  ✓ Análise detalhada: Ver Relatório Técnico (PDF)\n")
+
+    # PONTO 5: Pesos das Arestas
+    print("Ponto 5: Pesos das Arestas")
+    print("-" * 80)
+    print("  ✓ Pesos definidos em data/adjacencias_bairros.csv")
+    print("  ✓ Especificação completa: Ver Relatório Técnico (PDF)\n")
 
     return df_graus;
 
 # Dijkstra para calcular distâncias entre os bairros (enderecos.csv)
 def calcular_distancias_enderecos(grafo):
     
-    print("\n--- 6. Distância entre endereços (pares origem-destino) ---")
+    print("Ponto 6: Distâncias entre Endereços")
+    print("-" * 80)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -320,7 +315,6 @@ def calcular_distancias_enderecos(grafo):
                 with open(FILE_OUT_JSON, 'w', encoding='utf-8') as fjson:
                     json.dump({"origem": origem, "destino": destino, "caminho": caminho, "distancia": distancia},
                               fjson, ensure_ascii=False, indent=4)
-                print(f"Arquivo '{FILE_OUT_JSON}' salvo com sucesso.")
 
         except Exception as e:
             resultados.append({
@@ -343,7 +337,9 @@ def calcular_distancias_enderecos(grafo):
     '''
     try:
         df_out.to_csv(FILE_OUT_DIST, index=False)
-        print(f"Resultados salvos em '{FILE_OUT_DIST}'")
+        print(f"  ✓ Distâncias calculadas")
+        print(f"  ✓ out/percurso_nova_descoberta_setubal.json")
+        print(f"  ✓ out/distancias_enderecos.csv\n")
     except Exception as e:
         print(f"Erro ao salvar '{FILE_OUT_DIST}': {e}")
 
@@ -353,7 +349,8 @@ def calcular_distancias_enderecos(grafo):
 
 def gerar_arvore_percurso(grafo):
 
-    print("\n--- 7. Árvore de percurso estática Nova Descoberta --> Setúbal ---")
+    print("Ponto 7: Árvore do Percurso")
+    print("-" * 80)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     origem = "nova descoberta"
@@ -369,10 +366,14 @@ def gerar_arvore_percurso(grafo):
         raiz="nova descoberta",
         out_png=os.path.join(OUTPUT_DIR, "arvore_percurso_destacada.png")
     )
+    print("  ✓ Árvore gerada")
+    print("  ✓ out/arvore_percurso.png")
+    print("  ✓ out/arvore_percurso_destacada.png\n")
 
 def exploracoes_visuais(df_graus, grafo):
 
-    print("\n--- 8. Gerando explorações e visualizações analíticas ---")
+    print("Ponto 8: Explorações e Visualizações Analíticas")
+    print("-" * 80)
 
     # 8.1 – mapa de cores por grau
     try:
@@ -389,11 +390,17 @@ def exploracoes_visuais(df_graus, grafo):
     # 8.3 – ranking de densidade de ego-subrede por microrregião
     try:
         ranking_densidade_por_microrregiao()
+        print("  ✓ Visualizações geradas:")
+        print("    - out/mapa_cores_grau.png")
+        print("    - out/histograma_graus.png")
+        print("    - out/ranking_densidade_microrregiao.png")
+        print("  ✓ Notas analíticas: Ver Relatório Técnico (PDF)\n")
     except Exception as e:
         print(f"Erro ao gerar ranking de densidade por microrregião: {e}")
 
     # 9 – grafo interativo
-    print("\n--- 9. Gerando Visualização Interativa ---")
+    print("Ponto 9: Apresentação Interativa do Grafo")
+    print("-" * 80)
 
     # recarregar dataframes
     try:
@@ -402,6 +409,12 @@ def exploracoes_visuais(df_graus, grafo):
         df_ego = pd.read_csv(FILE_OUT_EGO) # arquivo ego_bairro.csv gerado no Ponto 3
 
         gerar_grafo_interativo(grafo, df_adjacencias, df_bairros, df_ego) 
+        print("  ✓ Grafo interativo gerado")
+        print("  ✓ out/grafo_interativo.html\n")
+        
+        print("="*80)
+        print("PARTE 1 CONCLUÍDA")
+        print("="*80 + "\n")
 
     except Exception as e:
         print(f"Erro na visualização interativa (Ponto 9): {e}. Verifique se os arquivos de dados foram gerados.")
@@ -911,9 +924,11 @@ def gerar_visualizacoes_parte2():
 
 
 def executar_parte2_completa():
-    print("\n" + "="*60)
-    print("BFS, DFS, Dijkstra e Bellman-Ford")
-    print("="*60)
+    print("\n" + "="*80)
+    print(" "*20 + "PARTE 2: DATASET EUROPA")
+    print("="*80 + "\n")
+    
+    print("Executando algoritmos...")
     resultados_bfs = executar_bfs_parte2()
     resultados_dfs = executar_dfs_parte2()
     resultados_dijkstra = executar_dijkstra_parte2()
@@ -943,6 +958,15 @@ def executar_parte2_completa():
     except Exception as e:
         print(f"Erro ao atualizar relatório: {e}")
 
-    print("\n" + "="*60)
-    print("Análise da Parte 2 concluída!")
-    print("="*60)
+        print("\n  ✓ Algoritmos executados")
+    print("  ✓ out/parte2_bfs.json")
+    print("  ✓ out/parte2_dfs.json")
+    print("  ✓ out/parte2_dijkstra.csv")
+    print("  ✓ out/parte2_dijkstra.json")
+    print("  ✓ out/parte2_bellman_ford.json")
+    print("  ✓ out/parte2_report.json")
+    print("  ✓ Discussão crítica: Ver Relatório Técnico (PDF)\n")
+    
+    print("="*80)
+    print("PARTE 2 CONCLUÍDA")
+    print("="*80 + "\n")

@@ -11,7 +11,7 @@
             "3": 504,
             "4": 12
         },
-        "tempo_segundos": 0.0026511999894864857
+        "tempo_segundos": 0.0034865999914472923
     },
     {
         "algoritmo": "BFS",
@@ -21,7 +21,7 @@
         "niveis_distribuicao": {
             "0": 1
         },
-        "tempo_segundos": 0.0001674999948590994
+        "tempo_segundos": 6.979999307077378e-05
     },
     {
         "algoritmo": "BFS",
@@ -31,6 +31,6 @@
         "niveis_distribuicao": {
             "0": 1
         },
-        "tempo_segundos": 2.7699992642737925e-05
+        "tempo_segundos": 3.2800002372823656e-05
     }
 ]
